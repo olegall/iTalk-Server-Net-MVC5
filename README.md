@@ -57,8 +57,8 @@
 </ul>
 
 
-3. Спроектировать выходные JSON-ы API методов
-Файл с API JSON-м: REST методы и JSON-ы.js
+3. Спроектировать выходные JSON-ы API методов<br>
+Файл с API JSON-м: <a href="#">REST методы и JSON-ы.js</a>
 
 4. Реализовать 5 типов авторизаций - firebase, facebook, odnoklassniki, vkontakte, google+
 
