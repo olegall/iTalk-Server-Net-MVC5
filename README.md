@@ -70,7 +70,7 @@
 
 
 3. Спроектировать выходные JSON-ы API методов<br>
-Файл с API JSON-м: <a href="#">REST методы и JSON-ы.js</a>
+Файл с API JSON-м: <a href="https://github.com/olegall/iTalk-Server/blob/master/REST%20%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D1%8B%20%D0%B8%20JSON-%D1%8B.js">REST методы и JSON-ы.js</a>
 
 4. Реализовать 5 типов авторизаций - firebase, facebook, odnoklassniki, vkontakte, google+
 
