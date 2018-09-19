@@ -1,0 +1,199 @@
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\obj\Debug\WebApplication1.csproj.CoreCompileInputs.cache
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ApplicationInsights.config
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\WebApplication1.dll.config
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\WebApplication1.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\WebApplication1.pdb
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Antlr3.Runtime.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\EntityFramework.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\EntityFramework.SqlServer.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.Agent.Intercept.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.DependencyCollector.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.Web.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.WindowsServer.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.ApplicationInsights.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.Web.Infrastructure.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Newtonsoft.Json.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Net.Http.Formatting.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Helpers.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Http.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Http.WebHost.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Mvc.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Optimization.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Razor.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.WebPages.Deployment.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.WebPages.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.WebPages.Razor.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\WebGrease.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\EntityFramework.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\EntityFramework.SqlServer.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Newtonsoft.Json.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Net.Http.Formatting.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Helpers.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Http.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Http.WebHost.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Mvc.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Optimization.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.Razor.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.WebPages.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.WebPages.Deployment.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\System.Web.WebPages.Razor.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Antlr3.Runtime.pdb
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.ApplicationInsights.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.DependencyCollector.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.ServerTelemetryChannel.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.WindowsServer.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\Microsoft.AI.Web.xml
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Net.Http.Formatting.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.Helpers.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.Http.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.Http.WebHost.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.Mvc.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.Optimization.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.Razor.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.WebPages.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.WebPages.Deployment.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\bin\ru\System.Web.WebPages.Razor.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\obj\Debug\WebApplication1.dll
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\obj\Debug\WebApplication1.pdb
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb.resources
+D:\Работа\Компании\AppCraft\iTalk\REST сервис\WebApplication1\obj\Debug\WebApplication1.csproj.GenerateResource.Cache
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ApplicationInsights.config
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\WebApplication1.dll.config
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\WebApplication1.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\WebApplication1.pdb
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Antlr3.Runtime.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\EntityFramework.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\EntityFramework.SqlServer.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.Agent.Intercept.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.DependencyCollector.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.Web.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.WindowsServer.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.ApplicationInsights.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Web.Infrastructure.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Newtonsoft.Json.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Net.Http.Formatting.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Helpers.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Http.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Http.WebHost.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Mvc.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Optimization.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Razor.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.WebPages.Deployment.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.WebPages.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.WebPages.Razor.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\WebGrease.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\EntityFramework.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\EntityFramework.SqlServer.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Newtonsoft.Json.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Net.Http.Formatting.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Helpers.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Http.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Http.WebHost.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Mvc.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Optimization.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.Razor.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.WebPages.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.WebPages.Deployment.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Web.WebPages.Razor.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Antlr3.Runtime.pdb
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.ApplicationInsights.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.DependencyCollector.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.ServerTelemetryChannel.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.WindowsServer.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AI.Web.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Net.Http.Formatting.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.Helpers.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.Http.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.Http.WebHost.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.Mvc.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.Optimization.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.Razor.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.WebPages.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.WebPages.Deployment.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\ru\System.Web.WebPages.Razor.resources.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.csproj.GenerateResource.Cache
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.csproj.CoreCompileInputs.cache
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.pdb
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb2.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb3.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb4.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb5.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb6.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb7.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb8.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb9.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb10.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb11.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb12.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb13.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb14.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb15.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb16.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\RestSharp.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Firebase.Auth.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Win32.Primitives.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.AppContext.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Console.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Diagnostics.DiagnosticSource.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Globalization.Calendars.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.IO.Compression.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.IO.Compression.ZipFile.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.IO.FileSystem.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.IO.FileSystem.Primitives.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Net.Http.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Net.Sockets.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Security.Cryptography.Algorithms.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Security.Cryptography.Encoding.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Security.Cryptography.Primitives.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Security.Cryptography.X509Certificates.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Xml.ReaderWriter.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\System.Diagnostics.DiagnosticSource.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb17.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb18.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb19.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb20.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb21.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb22.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb23.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb24.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb25.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb26.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb27.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb28.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb29.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb30.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb31.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb32.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb33.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Fleck.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.MigrateDB1.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AspNet.Identity.Core.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AspNet.Identity.Owin.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.Security.Cookies.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.Security.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.Security.OAuth.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Owin.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AspNet.Identity.Core.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.AspNet.Identity.Owin.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.Security.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.Security.Cookies.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.Security.OAuth.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb34.resources
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\Работа\Компании\AppCraft\iTalk\italk-server\WebApplication1\obj\Debug\WebApplication1.Migrations.migratedb35.resources

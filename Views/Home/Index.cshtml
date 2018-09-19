@@ -1,0 +1,117 @@
+﻿<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
+            a broad range of clients, including browsers and mobile devices. ASP.NET Web API
+            is an ideal platform for building RESTful applications on the .NET Framework.
+        </p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Get more libraries</h2>
+        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Web Hosting</h2>
+        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+                                                //$.ajax({
+                                                //    //type: 'POST',
+                                                //    //url: 'http://localhost:54788/api/values',
+                                                //    url: 'http://localhost:54788/api/consultants',
+                                                //    //url: 'http://localhost:54788/api/common/consultants',
+                                                //    dataType: 'json',
+                                                //    cache: false,
+                                                //    contentType: 'application/json; charset=utf-8',
+                                                //    //data: {sectionId: 111},
+                                                //    success: function (data) {
+                                                //        debugger;
+                                                //    },
+                                                //    complete: function () {
+                                                //        debugger;
+                                                //    },
+                                                //    beforeSend: function (xhr) {
+                                                //        debugger;
+                                                //    }
+                                                //});
+
+</script>
+
+@*@using (Html.BeginForm("Upload", "api/test/", new { enctype = "multipart/form-data" }))*@
+@*@using (Html.BeginForm("SaveImage", "api/test/", new { enctype = "multipart/form-data" }))*@
+@*@using (Html.BeginForm("SaveImage", "Home", new { enctype = "multipart/form-data" }))
+{
+    <input class="file" type="file" name="file">
+    <input class="save-image btn btn-primary" type="submit" value="Изменить изображение">
+}*@
+
+
+<header>
+    <div class="content-wrapper">
+        <div class="float-left">
+            <p class="site-title">
+                <a href="~/">ASP.NET Web API</a>
+            </p>
+        </div>
+    </div>
+</header>
+<div id="body">
+    <h2>Тестирование регистрации физлица</h2>
+    <section class="main-content clear-fix">
+        <form name="form1" method="post" enctype="multipart/form-data" action="http://localhost:54788/api/consultants/registerprivate">
+            <input type="text" name="name" value="Лавров" />
+            <input type="text" name="surname" value="Сергей" />
+            <input type="text" name="patronymic" value="Петрович" />
+            <input type="text" name="phone" value="9537448298" />
+            <input type="text" name="email" value="test@gmail.com" />
+            <br>
+            <label for="photo">Фото</label>
+            <input name="photo" type="file" />
+            <label for="passportscan">Скан паспорта</label>
+            <input name="passportscan" type="file" />
+            <label for="doc1">Диплом №1112</label>
+            <input name="doc1" type="file" />
+            <label for="doc2">Диплом №4447</label>
+            <input name="doc2" type="file" />
+            <input type="submit" value="Submit" />
+        </form>
+    </section>
+    <h2>Тестирование регистрации юрлица</h2>
+    <section class="main-content clear-fix">
+        <form name="form1" method="post" enctype="multipart/form-data" action="http://localhost:54788/api/consultants/registerjuridic">
+            <input type="text" name="ltdtitle" value="Окна профи" />
+            <input type="text" name="ogrn" value="123456789" />
+            <input type="text" name="inn" value="987654321" />
+            <input type="text" name="phone" value="9537448298" />
+            <input type="text" name="siteurl" value="site.com" />
+            <br>
+            <label for="logo">Лого</label>
+            <input name="logo" type="file" />
+            <label for="doc1">Сертификат №1112</label>
+            <input name="doc1" type="file" />
+            <label for="doc2">Свидетельство №4447</label>
+            <input name="doc2" type="file" />
+            <input type="submit" value="Submit" />
+        </form>
+    </section>
+    <h2>Тестирование добавления изображения</h2>
+    <section class="main-content clear-fix">
+        <form name="form1" method="post" enctype="multipart/form-data" action="http://localhost:54788/api/consultants/14/image">
+            <label for="logo">Лого</label>
+            <input name="logo" type="file" />
+            <input type="submit" value="Submit" />
+        </form>
+    </section>
+</div>
