@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Caching;
 using System.Web.Mvc;
 using WebApplication1.Utils;
@@ -13,7 +12,7 @@ namespace WebApplication1.Controllers
     {
         [HttpGet]
         [ImageOutputCache(VaryByParam = "categoryId", Duration = CACHE_DURATION)]
-        public async Task<ActionResult> Index(long categoryId)  // !!! избавиться от зелёного подчёркивания
+        public ActionResult Index(long categoryId)
         {
             IGenericRepository<CategoryImage> rep = new Repositories().CategoryImages;
             CategoryImage image = rep.Get().SingleOrDefault(x => x.CategoryId == categoryId);

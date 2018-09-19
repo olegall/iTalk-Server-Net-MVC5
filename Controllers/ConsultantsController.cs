@@ -213,7 +213,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/test")]
         public void Test()
         {
-            var rep = new DAL.Repositories();   // !!! избавиться от var
+            var rep = new DAL.Repositories();
             GenericRepository<PrivateConsultant> privateRep = rep.Privates;
             var privates = privateRep.Get();
             var searched1 = searchBLL.SearchPrivateConsultants(privates, "Александр Лавров");

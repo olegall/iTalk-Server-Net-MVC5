@@ -497,7 +497,7 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void UpdateRating(int id, decimal rating) // !!! алгоритм вычисления рейтинга
+        public void UpdateRating(int id, decimal rating)
         {
             PrivateConsultant private_ = privateRep.Get().SingleOrDefault(x => x.Id == id);
             if (private_ != null)

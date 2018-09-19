@@ -9,7 +9,7 @@ namespace WebApplication1.Controllers
 {
     public class ChatController : BaseApiController<Misc.Auth.ConsultantManager>
     {
-        static ServerObject server; // сервер !!! избавиться от подчёркивания
+        static ServerObject server;
 
         /// <summary>
         /// Запустить websocket серверу
@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
         /// Получить историю сообщений
         /// </summary>
         [HttpGet]
-        [Route("api/chat/history/{orderId}/{lastMessageId}")] // !!! вернуть изображение
+        [Route("api/chat/history/{orderId}/{lastMessageId}")]
         public Object GetHistory(long orderId, long lastMessageId)
         {
             return Ok(new WebSocketChatServer().GetHistoryVMs(orderId, lastMessageId));

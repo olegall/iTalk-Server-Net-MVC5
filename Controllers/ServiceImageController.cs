@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Caching;
 using System.Web.Mvc;
 using WebApplication1.Utils;
@@ -13,7 +12,7 @@ namespace WebApplication1.Controllers
     {
         [HttpGet]
         [ImageOutputCache(VaryByParam = "serviceId", Duration = CACHE_DURATION)]
-        public async Task<ActionResult> Index(long serviceId)
+        public ActionResult Index(long serviceId)
         {
             IGenericRepository<ServiceImage> rep = new Repositories().ServiceImages;
             ServiceImage image = rep.Get().SingleOrDefault(x => x.ServiceId == serviceId);

@@ -14,7 +14,7 @@ namespace WebApplication1.Controllers
         private readonly SubcategoryBLL subcategoryBLL = new SubcategoryBLL();
 
         /// <summary>
-        /// Получить категории с подкатегориями !!! перенести в BLL
+        /// Получить категории с подкатегориями
         /// </summary>
         [HttpGet]
         [Route("api/categories/{offset}/{limit}")]
