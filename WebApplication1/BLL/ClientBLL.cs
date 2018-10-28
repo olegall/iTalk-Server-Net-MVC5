@@ -27,25 +27,20 @@ namespace WebApplication1.BLL
             }
         }
 
-        // !!! надо GetAsync, async перед Task, await после return?
-        public Task<Client> Get(long id, bool adPush)
+        public async Task<Client> GetAsync(long id, bool adPush)
         {
-            return rep.GetAsync(id);
-        }
-        // !!! через конструктор
-        private Client GetInstance(NameValueCollection formData)
-        {
-            Client client = new Client();
-            client.Name = formData["name"];
-            client.Phone = formData["phone"];
-            return client;
+            return await rep.GetAsync(id);
         }
 
-        public async void UpdateAsync(long id, string name, bool adPush)
+        private Client GetInstance(NameValueCollection formData)
+        {
+            return new Client(formData["name"], formData["phone"]);
+        }
+
+        public async void UpdateAsync(long id, string name, bool adPush) // adPush - позже
         {
             Client client = await rep.GetAsync(id);
             client.Name = name;
-            //client.AdPush = adPush;
             try
             {
                 rep.UpdateAsync(client);
@@ -55,7 +50,7 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось зарегистрировать клиента"));
             }
         }
-
+        // !!! тут не получалось через репозиторий
         public void Delete(long id)
         {
             Client client = _db.Clients.SingleOrDefault(x => x.Id == id);

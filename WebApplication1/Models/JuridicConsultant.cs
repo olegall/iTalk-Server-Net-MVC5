@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
 {
@@ -20,5 +21,15 @@ namespace WebApplication1.Models
         public string LogoName { get; set; }
         public string OGRNCertificate { get; set; }
         public string BankAccountDetails { get; set; }
+
+        public JuridicConsultant(string ltdtitle, string ogrn, string inn, string phone, string siteurl, DateTime freeDate)
+        {
+            LTDTitle = ltdtitle;
+            OGRN = ogrn;
+            INN = inn;
+            Phone = phone;
+            SiteUrl = siteurl;
+            FreeDate = freeDate;
+        }
     }
 }

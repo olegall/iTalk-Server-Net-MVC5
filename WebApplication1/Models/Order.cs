@@ -25,5 +25,14 @@ namespace WebApplication1.Models
         [Column(TypeName = "Money")]
         public decimal ITalkCommittee { get; set; }
         public string RequestDescription { get; set; }
+
+        public Order(long consultationTypeId, long serviceId, string comment, DateTime dateTime, int statusCode)
+        {
+            ConsultationTypeId = consultationTypeId;
+            ServiceId = serviceId;
+            Comment = comment;
+            DateTime = dateTime;
+            StatusCode = statusCode;
+        }
     }
 }

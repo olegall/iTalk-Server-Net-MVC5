@@ -207,11 +207,11 @@ namespace WebApplication1.BLL
         }
 
         public IEnumerable<PrivateConsultantVM> GetPrivateVMs(int offset, 
-                                                               int limit, 
-                                                               long subcategoryId, 
-                                                               bool free, 
-                                                               bool onlyFavorite, 
-                                                               string filter)
+                                                              int limit, 
+                                                              long subcategoryId, 
+                                                              bool free, 
+                                                              bool onlyFavorite, 
+                                                              string filter)
         {
             IList<PrivateConsultantVM> vms = new List<PrivateConsultantVM>();
             foreach (PrivateConsultant private_ in GetPrivates(offset, limit, subcategoryId, free, onlyFavorite, filter))
@@ -311,16 +311,14 @@ namespace WebApplication1.BLL
                                   string phone, 
                                   string email)
         {
-            PrivateConsultant private_ = new PrivateConsultant();
-            private_.Name = name;
-            private_.Surname = surname;
-            private_.Patronymic = patronymic;
-            private_.Phone = phone;
-            private_.Email = email;
-            private_.FreeDate = DateTime.Now;
             try
             {
-                privateRep.CreateAsync(private_);
+                privateRep.CreateAsync(new PrivateConsultant(name,
+                                                             surname,
+                                                             patronymic,
+                                                             phone,
+                                                             email,
+                                                             DateTime.Now));
             }
             catch (Exception e)
             {
@@ -360,16 +358,9 @@ namespace WebApplication1.BLL
                                   string phone,
                                   string siteurl)
         {
-            JuridicConsultant juridic = new JuridicConsultant();
-            juridic.LTDTitle = ltdtitle;
-            juridic.OGRN = ogrn;
-            juridic.INN = inn;
-            juridic.Phone = phone;
-            juridic.SiteUrl = siteurl;
-            juridic.FreeDate = DateTime.Now;
             try
             {
-                juridicRep.CreateAsync(juridic);
+                juridicRep.CreateAsync(new JuridicConsultant(ltdtitle, ogrn, inn, phone, siteurl, DateTime.Now));
             }
             catch (Exception e)
             {
@@ -398,23 +389,21 @@ namespace WebApplication1.BLL
 
         public void CreateImage(HttpPostedFile file, long fileTypeid, long consId)
         {
-            ConsultantImage image = new ConsultantImage();
-            image.ConsultantId = consId;
-            image.Bytes = ServiceUtil.GetBytesFromStream(file.InputStream);
-            image.FileName = file.FileName;
-            image.Size = file.ContentLength;
-            image.Date = DateTime.Now;
-            image.FileTypeId = fileTypeid;
             try
             {
-                imageRep.CreateAsync(image);
+                imageRep.CreateAsync(new ConsultantImage(consId, 
+                                                         ServiceUtil.GetBytesFromStream(file.InputStream), 
+                                                         file.FileName, 
+                                                         file.ContentLength, 
+                                                         DateTime.Now, 
+                                                         fileTypeid));
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createjurImagesEx));
             }
         }
-
+        // !!! везде проверки на null
         public void CreateImageWhenUpdate(HttpRequest request, long consId)
         {
             foreach (FileTypes fileType in (FileTypes[])Enum.GetValues(typeof(FileTypes)))
@@ -422,16 +411,14 @@ namespace WebApplication1.BLL
                 HttpPostedFile file = request.Files[fileType.ToString()];
                 if (file != null)
                 {
-                    ConsultantImage image = new ConsultantImage();
-                    image.ConsultantId = consId;
-                    image.Bytes = ServiceUtil.GetBytesFromStream(file.InputStream);
-                    image.FileName = file.FileName;
-                    image.Size = file.ContentLength;
-                    image.Date = DateTime.Now;
-                    image.FileTypeId = (long)fileType;
                     try
                     {
-                        imageRep.CreateAsync(image);
+                        imageRep.CreateAsync(new ConsultantImage(consId,
+                                                         ServiceUtil.GetBytesFromStream(file.InputStream),
+                                                         file.FileName,
+                                                         file.ContentLength,
+                                                         DateTime.Now,
+                                                         (long)fileType));
                     }
                     catch (Exception e)
                     {
@@ -453,17 +440,16 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createjurImagesEx));
             }
         }
-        // !!! конструктор
+
         public void UpdatePrivateFields(long id, NameValueCollection formData)
         {
-            PrivateConsultant private_ = new PrivateConsultant();
+            PrivateConsultant private_ = new PrivateConsultant(formData["name"], 
+                                                               formData["surname"], 
+                                                               formData["patronymic"],
+                                                               formData["phone"], 
+                                                               formData["email"], 
+                                                               Convert.ToDateTime(formData["freedate"]));
             private_.Id = id;
-            private_.Name = formData["name"];
-            private_.Surname = formData["surname"];
-            private_.Patronymic = formData["patronymic"];
-            private_.Phone = formData["phone"];
-            private_.Email = formData["email"];
-            private_.FreeDate = Convert.ToDateTime(formData["freedate"]);
             try
             {
                 privateRep.UpdateAsync(private_);
@@ -473,17 +459,16 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
             }
         }
-        // !!! конструктор
+
         public void UpdateJuridicFields(long id, NameValueCollection formData)
         {
-            JuridicConsultant juridic = new JuridicConsultant();
+            JuridicConsultant juridic = new JuridicConsultant(formData["ltdtitle"], 
+                                                              formData["ogrn"], 
+                                                              formData["inn"], 
+                                                              formData["phone"], 
+                                                              formData["siteurl"], 
+                                                              Convert.ToDateTime(formData["freedate"]));
             juridic.Id = id;
-            juridic.LTDTitle = formData["ltdtitle"];
-            juridic.OGRN = formData["ogrn"];
-            juridic.INN = formData["inn"];
-            juridic.Phone = formData["phone"];
-            juridic.SiteUrl = formData["siteurl"];
-            juridic.FreeDate = Convert.ToDateTime(formData["freedate"]);
             try
             {
                 juridicRep.UpdateAsync(juridic);

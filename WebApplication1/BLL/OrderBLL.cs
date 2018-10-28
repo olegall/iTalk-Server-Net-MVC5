@@ -22,18 +22,16 @@ namespace WebApplication1.BLL
 
         private readonly ConsultantBLL consBLL = new ConsultantBLL();
         private readonly ServiceBLL serviceBLL = new ServiceBLL();
-        // !!! конструктор
+
         public void Create(NameValueCollection formData)
         {
-            Order order = new Order();
-            order.ConsultationTypeId = ServiceUtil.GetLong(formData["consultationtypeid"]);
-            order.ServiceId = ServiceUtil.GetLong(formData["serviceid"]);
-            order.Comment = formData["comment"];
-            order.DateTime = Convert.ToDateTime(formData["date"]);
-            order.StatusCode = (int)OrderStatuses.Начат_клиентом;
             try
             {
-                rep.CreateAsync(order);
+                rep.CreateAsync(new Order(ServiceUtil.GetLong(formData["consultationtypeid"]), 
+                                          ServiceUtil.GetLong(formData["serviceid"]), 
+                                          formData["comment"],
+                                          Convert.ToDateTime(formData["date"]),
+                                          (int)OrderStatuses.Начат_клиентом));
             }
             catch (Exception e)
             {

@@ -27,7 +27,7 @@ namespace WebApplication1.Controllers
         [Route("api/clients/{adPush}")]
         public Object Get(bool adPush)
         {
-            return Ok(BLL.Get(UserId.Value, adPush));
+            return Ok(BLL.GetAsync(UserId.Value, adPush));
         }
 
         [UserApiAuthorize]

@@ -122,14 +122,14 @@ namespace WebApplication1.BLL
             foreach (ServiceParams param in serviceJSON.Params)
             {
                 Service service = GetInstance(serviceJSON.ConsId, 
-                                               param.Category, 
-                                               param.Subcategory,
-                                               param.Title,
-                                               param.Description,
-                                               param.Cost,
-                                               param.Duration,
-                                               param.Available,
-                                               param.AvailablePeriod);
+                                              param.Category, 
+                                              param.Subcategory,
+                                              param.Title,
+                                              param.Description,
+                                              param.Cost,
+                                              param.Duration,
+                                              param.Available,
+                                              param.AvailablePeriod);
                 rep.CreateAsync(service);
             }
         }
@@ -226,14 +226,12 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось создать изображение для услуги"));
             }
         }
-        // !!! конструктор
+
         private ServiceImage GetImage(HttpPostedFile file) {
-            ServiceImage image = new ServiceImage();
-            image.Bytes = ServiceUtil.GetBytesFromStream(file.InputStream);
-            image.FileName = file.FileName;
-            image.Size = file.ContentLength;
-            image.Date = DateTime.Now;
-            return image;
+            return new ServiceImage(ServiceUtil.GetBytesFromStream(file.InputStream), 
+                                    file.FileName, 
+                                    file.ContentLength, 
+                                    DateTime.Now);
         }
 
         public string GetCategory(Service service)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
@@ -19,5 +20,19 @@ namespace WebApplication1.Models
         public List<string> GalleryImageNames { get; set; }
         public string PhotoName { get; set; }
         public string PassportScanName { get; set; }
+
+        public PrivateConsultant(string name, 
+                                 string surname, 
+                                 string patronymic, 
+                                 string phone, 
+                                 string email, 
+                                 DateTime freeDate)
+        {
+            Name =  name;
+            Surname = surname;
+            Patronymic = patronymic;
+            Phone = phone;
+            Email = email;
+        }
     }
 }

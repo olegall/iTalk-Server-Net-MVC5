@@ -14,6 +14,12 @@ namespace WebApplication1.Models
         public string Phone { get; set; }
         public Guid SocketId { get; set; }
 
+        public Client(string name, string phone)
+        {
+            Name = name;
+            Phone = phone;
+        }
+
         [NotMapped]
         public string UserName
         {

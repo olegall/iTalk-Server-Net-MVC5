@@ -15,7 +15,7 @@ namespace WebApplication1.BLL
         private readonly static Repositories reps = new Repositories();
         private readonly GenericRepository<Category> rep = reps.Categories;
         private readonly GenericRepository<CategoryImage> imageRep = reps.CategoryImages;
-
+        // !!! убрать папку Packages
         public void Create(NameValueCollection formData)
         {
             try
@@ -27,18 +27,16 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось добавить категорию"));
             }
         }
-        // !!! конструктор
+
         public void CreateImage(HttpPostedFile file, long id)
         {
-            CategoryImage image = new CategoryImage();
-            image.CategoryId = id;
-            image.Bytes = ServiceUtil.GetBytesFromStream(file.InputStream);
-            image.FileName = file.FileName;
-            image.Size = file.ContentLength;
-            image.Date = DateTime.Now;
             try
             {
-                imageRep.CreateAsync(image);
+                imageRep.CreateAsync(new CategoryImage(id, 
+                                                       ServiceUtil.GetBytesFromStream(file.InputStream), 
+                                                       file.FileName,
+                                                       file.ContentLength,
+                                                       DateTime.Now));
             }
             catch (Exception e)
             {
