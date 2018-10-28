@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public Object Get()
         {
-            return Ok(BLL.GetVMs());
+            return Ok(BLL.GetVMsAsync());
         }
 
         /// <summary>

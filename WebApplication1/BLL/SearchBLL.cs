@@ -73,8 +73,8 @@ namespace WebApplication1.BLL
             if (categoryField != null)
             {
                 long categoryId = categoriesRep.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
-                var privatesIdsByCat = servicesRep.Get().Where(x => x.CategoryId == categoryId)
-                                                       .Select(x => x.ConsultantId);
+                IEnumerable<long> privatesIdsByCat = servicesRep.Get().Where(x => x.CategoryId == categoryId)
+                                                                      .Select(x => x.ConsultantId);
 
                 privates = privates.Where(x => hasName(x, nameField) &&
                                                privatesIdsByCat.Any(id => id == x.Id));
@@ -104,7 +104,7 @@ namespace WebApplication1.BLL
             if (categoryField != null) // 5
             {
                 long categoryId = categoriesRep.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
-                var juridicsIdsByCat = servicesRep.Get().Where(x => x.CategoryId == categoryId)
+                IEnumerable<long> juridicsIdsByCat = servicesRep.Get().Where(x => x.CategoryId == categoryId)
                                                        .Select(x => x.ConsultantId);
 
                 juridics = juridics.Where(x => hasLTD(x, LTDField) &&

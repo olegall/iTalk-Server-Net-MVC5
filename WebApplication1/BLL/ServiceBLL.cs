@@ -7,6 +7,7 @@ using WebApplication1.Models;
 using WebApplication1.Utils;
 using Newtonsoft.Json;
 using WebApplication1.Models.ServiceJSON;
+using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
@@ -33,10 +34,10 @@ namespace WebApplication1.BLL
         {
             return rep.Get().SingleOrDefault(x => x.Id == id);
         }
-        // !!! async
-        public IEnumerable<Service> GetAll()
+
+        public async Task<IEnumerable<Service>> GetAll()
         {
-            return _db.Services.ToArray();
+            return await rep.GetAsync();
         }
 
         public IEnumerable<ServiceVM> GetVM(Consultant cons)
@@ -58,10 +59,10 @@ namespace WebApplication1.BLL
             return vm;
         }
 
-        public IEnumerable<ServiceVM> GetVMs()
+        public async Task<IEnumerable<ServiceVM>> GetVMsAsync()
         {
             IList<ServiceVM> vms = new List<ServiceVM>();
-            foreach (Service service in GetAll())
+            foreach (Service service in await GetAll())
             {
                 vms.Add(new ServiceVM
                 {

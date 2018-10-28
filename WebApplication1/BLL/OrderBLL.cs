@@ -22,7 +22,7 @@ namespace WebApplication1.BLL
 
         private readonly ConsultantBLL consBLL = new ConsultantBLL();
         private readonly ServiceBLL serviceBLL = new ServiceBLL();
-
+        // !!! конструктор
         public void Create(NameValueCollection formData)
         {
             Order order = new Order();
@@ -40,7 +40,7 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось создать заказ"));
             }
         }
-        // !!! UpdateAsync
+
         public async void ConfirmAsync(long id)
         {
             Order order = await rep.GetAsync(id);
@@ -54,7 +54,7 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось подтвердить заказ клиентом"));
             }
         }
-        // !!! UpdateAsync
+
         public async void CancelByClientAsync(long id)
         {
             Order order = await rep.GetAsync(id);
@@ -68,7 +68,7 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось отменить заказ клиентом"));
             }
         }
-        // !!! UpdateAsync
+
         public async void CancelByConsAsync(long id)
         {
             Order order = await rep.GetAsync(id);
@@ -165,7 +165,7 @@ namespace WebApplication1.BLL
         {
             return await consTypesRep.GetAsync();
         }
-        // !!! UpdateAsync
+
         public async void UpdateTimeAsync(long id, long timestamp)
         {
             Order order = await rep.GetAsync(id);

@@ -18,12 +18,9 @@ namespace WebApplication1.BLL
 
         public void Create(NameValueCollection formData)
         {
-            Category category = new Category();
-            category.Title = formData["title"];
-            category.Description = formData["description"];
             try
             {
-                rep.CreateAsync(category);
+                 rep.CreateAsync(new Category(formData["title"], formData["description"]));
             }
             catch (Exception e)
             {

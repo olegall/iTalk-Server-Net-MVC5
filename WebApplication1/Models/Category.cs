@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace WebApplication1.Models
+﻿namespace WebApplication1.Models
 {
     public class Category
     {
@@ -11,5 +6,11 @@ namespace WebApplication1.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public bool Deleted { get; set; }
+
+        public Category(string title, string description)
+        {
+            Title = title;
+            Description = description;
+        }
     }
 }

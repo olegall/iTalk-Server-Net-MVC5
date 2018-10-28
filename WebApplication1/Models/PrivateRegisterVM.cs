@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace WebApplication1.Models
+﻿namespace WebApplication1.Models
 {
     public class PrivateRegisterVM
     {
@@ -13,6 +8,5 @@ namespace WebApplication1.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         public string YandexWalletNum { get; set; }
-        // картинки
     }
 }

@@ -38,10 +38,9 @@ namespace WebApplication1.BLL
             }
             return vm;
         }
-        // !!! HideAsync
-        public async void Hide(long id)
+
+        public async void HideAsync(long id)
         {
-            //Subcategory subcat = rep.Get().SingleOrDefault(x => x.Id == id);
             Subcategory subcat = await rep.GetAsync(id);
             subcat.Deleted = true;
             try

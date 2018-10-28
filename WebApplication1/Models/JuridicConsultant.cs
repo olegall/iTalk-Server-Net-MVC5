@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
 {
     public class JuridicConsultant : Consultant
     {
+        // !!! везде ограничения на длины
         [StringLength(50)]
         public string LTDTitle { get; set; }
 

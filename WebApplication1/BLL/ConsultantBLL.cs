@@ -34,14 +34,14 @@ namespace WebApplication1.BLL
         private const byte BUSY = 0x00000001;
         private const byte FREE = 0x00000010;
         #endregion
-
+        // !!! везде regions
         private readonly SearchBLL searchBLL = new SearchBLL();
         // !!! GetAsync
         public PrivateConsultant Get(string phone)
         {
             return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
         }
-        // !!!
+        // !!! join
         public string GetName(long orderId)
         {
             long consId = orderRep.Get().Where(x => x.Id == orderId)
@@ -69,7 +69,7 @@ namespace WebApplication1.BLL
         {
             return await juridicRep.GetAsync(id);
         }
-        // join
+        // !!! join
         public IEnumerable<PrivateConsultant> GetPrivatesBySubcategory(long subcatId)
         {
             IEnumerable<long> ids = serviceRep.Get().Where(x => x.SubcategoryId == subcatId)
@@ -153,7 +153,7 @@ namespace WebApplication1.BLL
         {
             return favoriteRep.Get().Any(x => x.ConsultantId == id);
         }
-        // !!! избавиться от прочерка
+
         public PrivateConsultantVM GetPrivateVM(PrivateConsultant private_)
         {
             return new PrivateConsultantVM
@@ -195,7 +195,7 @@ namespace WebApplication1.BLL
                 LegalEntity = IsJuridic(juridic.Id)
             };
         }
-        // !!! избавиться от прочерка
+
         public IEnumerable<PrivateConsultantVM> GetPrivatesVMs(long subcatId)
         {
             IList<PrivateConsultantVM> vms = new List<PrivateConsultantVM>();
@@ -205,7 +205,7 @@ namespace WebApplication1.BLL
             }
             return vms;
         }
-        // !!! избавиться от прочерка
+
         public IEnumerable<PrivateConsultantVM> GetPrivateVMs(int offset, 
                                                                int limit, 
                                                                long subcategoryId, 
@@ -304,7 +304,7 @@ namespace WebApplication1.BLL
                                     .ToList()
                                     .Count;
         }
-        // проще предпоследнюю строку
+        // !!! проще предпоследнюю строку
         public long CreatePrivate(string name, 
                                   string surname, 
                                   string patronymic, 
@@ -453,7 +453,7 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createjurImagesEx));
             }
         }
-        // избавиться от подчёркивания
+        // !!! конструктор
         public void UpdatePrivateFields(long id, NameValueCollection formData)
         {
             PrivateConsultant private_ = new PrivateConsultant();
@@ -473,7 +473,7 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
             }
         }
-
+        // !!! конструктор
         public void UpdateJuridicFields(long id, NameValueCollection formData)
         {
             JuridicConsultant juridic = new JuridicConsultant();

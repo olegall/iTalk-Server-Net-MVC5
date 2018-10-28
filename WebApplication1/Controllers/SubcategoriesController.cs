@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
         [Route("api/subcategories/{id}")]
         public Object Delete(long id)
         {
-            BLL.Hide(id);
+            BLL.HideAsync(id);
             return Ok(true);
         }
     }

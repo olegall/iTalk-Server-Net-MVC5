@@ -1,5 +1,4 @@
-﻿//using Cryotop.App_LocalResources;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
 {

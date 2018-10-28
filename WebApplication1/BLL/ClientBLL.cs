@@ -43,7 +43,6 @@ namespace WebApplication1.BLL
 
         public async void UpdateAsync(long id, string name, bool adPush)
         {
-            //Client client = rep.Get().SingleOrDefault(x => x.Id == id);
             Client client = await rep.GetAsync(id);
             client.Name = name;
             //client.AdPush = adPush;
