@@ -8,6 +8,7 @@ using WebApplication1.Models;
 using System.Web;
 using System.Collections.Specialized;
 using WebApplication1.Utils;
+using System.Threading.Tasks;
 
 namespace WebApplication1.Controllers
 {
@@ -31,7 +32,7 @@ namespace WebApplication1.Controllers
                           string filter)
         {
             IList<ConsultantVM> VMs = new List<ConsultantVM>();
-            foreach (PrivateConsultantVM privateVM in BLL.GetPrivatesVMs(offset, limit, subcategoryId, free, onlyFavorite, filter))
+            foreach (PrivateConsultantVM privateVM in BLL.GetPrivateVMs(offset, limit, subcategoryId, free, onlyFavorite, filter))
             {
                 VMs.Add(privateVM);
             }
@@ -45,16 +46,17 @@ namespace WebApplication1.Controllers
         /// <summary>
         /// Получить консультанта для карточки
         /// </summary>
-        public Object Get(int id)
+        // избавиться от прочерка, Object
+        public async Task<Object> Get(int id)
         {
             if (BLL.IsJuridic(id))
             {
-                JuridicConsultant juridic = BLL.GetJuridic(id);
+                JuridicConsultant juridic = await BLL.GetJuridicAsync(id);
                 return Ok(BLL.GetJuridicVM(juridic));
             }
             else
             {
-                PrivateConsultant private_ = BLL.GetPrivate(id);
+                PrivateConsultant private_ = await BLL.GetPrivateAsync(id);
                 return Ok(BLL.GetPrivateVM(private_));
             }
         }
@@ -181,7 +183,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/image/{id}")]
         public Object DeleteImage(long id)
         {
-            BLL.DeleteImage(id);
+            BLL.DeleteImageAsync(id);
             return Ok(true);
         }
 
@@ -202,7 +204,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/{id}/rating/{rating}")]
         public Object UpdateRating(int id, decimal rating)
         {
-            BLL.UpdateRating(id, rating);
+            BLL.UpdateRatingAsync(id, rating);
             return Ok(true);
         }
 

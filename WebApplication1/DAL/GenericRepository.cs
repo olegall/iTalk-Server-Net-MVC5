@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
@@ -15,37 +16,55 @@ namespace WebApplication1.BLL
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
-
+        // !!! убрать
         public IEnumerable<TEntity> Get()
         {
             return _dbSet.AsNoTracking().ToArray();
         }
-
-        public void Create(TEntity item)
+        // !!! AsNoTracking?
+        public async Task<IEnumerable<TEntity>> GetAsync()
         {
-            _dbSet.Add(item);
-            _context.SaveChanges();
+            return await _dbSet.AsNoTracking().ToArrayAsync();
         }
 
-        public void CreateMany(IList<TEntity> items)
+        public async Task<TEntity> GetAsync(long id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+        
+        // в чём отличие?
+        //public Task<TEntity> GetAsync(long id)
+        //{
+        //    return _dbSet.FindAsync(id);
+        //}
+
+        // GetPaging
+
+        public async void CreateAsync(TEntity item)
+        {
+            _dbSet.Add(item);
+            await _context.SaveChangesAsync();
+        }
+
+        public async void CreateManyAsync(IEnumerable<TEntity> items)
         {
             foreach (TEntity item in items)
             {
                 _dbSet.Add(item);
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(TEntity item)
+        public async void UpdateAsync(TEntity item)
         {
             _context.Entry(item).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(TEntity item)
+        public async void DeleteAsync(TEntity item)
         {
             _dbSet.Remove(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         #region Disposing

@@ -26,7 +26,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/{id}/confirm")]
         public Object Confirm(long id)
         {
-            BLL.Confirm(id);
+            BLL.ConfirmAsync(id);
             return Ok(true);
         }
 
@@ -37,7 +37,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/{id}/CancelByClient")]
         public Object CancelByClient(long id)
         {
-            BLL.CancelByClient(id);
+            BLL.CancelByClientAsync(id);
             return Ok(true);
         }
 
@@ -46,9 +46,9 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpPut]
         [Route("api/orders/{id}/CancelByCons")]
-        public Object CancelByCons(long id)
+        public Object CancelByConsAsync(long id)
         {
-            BLL.CancelByCons(id);
+            BLL.CancelByConsAsync(id);
             return Ok(true);
         }
 
@@ -59,7 +59,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/ConsultationTypes")]
         public Object GetConsultationTypes()
         {
-            return Ok(BLL.GetConsultationTypes());
+            return Ok(BLL.GetConsultationTypesAsync());
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/{id}")]
         public Object Get(long id)
         {
-            return Ok(BLL.GetVM(id));
+            return Ok(BLL.GetVMAsync(id));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace WebApplication1.Controllers
         [Route("api/order/{id}/{timestamp}")]
         public Object UpdateTime(long id, long timestamp)
         {
-            BLL.UpdateTime(id, timestamp);
+            BLL.UpdateTimeAsync(id, timestamp);
             return Ok(true);
         }
     }

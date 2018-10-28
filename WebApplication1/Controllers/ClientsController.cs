@@ -38,7 +38,7 @@ namespace WebApplication1.Controllers
         [HttpPut]
         public Object Update(string name, bool adPush)
         {
-            BLL.Update(UserId.Value, name, adPush);
+            BLL.UpdateAsync(UserId.Value, name, adPush);
             return Ok(true);
         }
 

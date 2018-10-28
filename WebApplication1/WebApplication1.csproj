@@ -309,7 +309,6 @@
     <Compile Include="DAL\GenericRepository.cs" />
     <Compile Include="DAL\Repositories.cs" />
     <Compile Include="DataContext.cs" />
-    <Compile Include="DB.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

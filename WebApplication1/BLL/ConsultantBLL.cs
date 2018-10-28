@@ -8,11 +8,13 @@ using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.DAL;
 using WebApplication1.Misc;
+using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
     public class ConsultantBLL
     {
+        #region Fields
         private readonly static Repositories rep = new Repositories();
         private readonly GenericRepository<PrivateConsultant> privateRep = rep.Privates;
         private readonly GenericRepository<JuridicConsultant> juridicRep = rep.Juridics;
@@ -24,6 +26,7 @@ namespace WebApplication1.BLL
         private readonly GenericRepository<Favorite> favoriteRep = rep.Favorites;
         private readonly GenericRepository<Order> orderRep = rep.Orders;
         private readonly GenericRepository<Feedback> feedbackRep = rep.Feedbacks;
+        #endregion
 
         #region Constants
         private const int MAX_PRIVATE_DOCS_NUM = 5;
@@ -32,13 +35,13 @@ namespace WebApplication1.BLL
         private const byte FREE = 0x00000010;
         #endregion
 
-        SearchBLL searchBLL = new SearchBLL();
-
+        private readonly SearchBLL searchBLL = new SearchBLL();
+        // !!! GetAsync
         public PrivateConsultant Get(string phone)
         {
             return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
         }
-
+        // !!!
         public string GetName(long orderId)
         {
             long consId = orderRep.Get().Where(x => x.Id == orderId)
@@ -56,17 +59,17 @@ namespace WebApplication1.BLL
                                        .SingleOrDefault().LTDTitle;
             }
         }
-
-        public PrivateConsultant GetPrivate(long id)
+        // !!! убрать async, await?
+        public async Task<PrivateConsultant> GetPrivateAsync(long id)
         {
-            return privateRep.Get().SingleOrDefault(x => x.Id == id);
+            return await privateRep.GetAsync(id);
         }
-
-        public JuridicConsultant GetJuridic(long id)
+        // !!! убрать async, await?
+        public async Task<JuridicConsultant> GetJuridicAsync(long id)
         {
-            return juridicRep.Get().SingleOrDefault(x => x.Id == id);
+            return await juridicRep.GetAsync(id);
         }
-
+        // join
         public IEnumerable<PrivateConsultant> GetPrivatesBySubcategory(long subcatId)
         {
             IEnumerable<long> ids = serviceRep.Get().Where(x => x.SubcategoryId == subcatId)
@@ -91,14 +94,10 @@ namespace WebApplication1.BLL
                                                           bool onlyFavorite, 
                                                           string filter)
         {
-            IEnumerable<long> ids = serviceRep.Get().Where(x => x.SubcategoryId == subcategoryId)
-                                                    .Select(x => x.ConsultantId)
-                                                    .Distinct()
-                                                    .ToArray();
-            IEnumerable<PrivateConsultant> privates = GetPrivatesBySubcategory(subcategoryId);
-            privates = privates.Skip(offset)
-                               .Take(limit)
-                               .ToArray();
+            IEnumerable<PrivateConsultant> privates = GetPrivatesBySubcategory(subcategoryId)
+                                                      .Skip(offset)
+                                                      .Take(limit)
+                                                      .ToArray();
             if (free == true)
             {
                 privates = privates.Where(x => x.Free);
@@ -121,12 +120,10 @@ namespace WebApplication1.BLL
                                                           bool onlyFavorite,
                                                           string filter)
         {
-            IEnumerable<long> ids = serviceRep.Get().Where(x => x.SubcategoryId == subcategoryId)
-                                                    .Select(x => x.ConsultantId)
-                                                    .Distinct()
-                                                    .ToArray();
-            IEnumerable<JuridicConsultant> juridics = GetJuridicsBySubcategory(subcategoryId);
-            juridics = juridics.Skip(offset).Take(limit).ToArray();
+            IEnumerable<JuridicConsultant> juridics = GetJuridicsBySubcategory(subcategoryId)
+                                                      .Skip(offset)
+                                                      .Take(limit)
+                                                      .ToArray();
             if (free == true)
             {
                 juridics = juridics.Where(x => x.Free);
@@ -141,22 +138,22 @@ namespace WebApplication1.BLL
             }
             return juridics;
         }
-
+        // !!! GetAsync
         public PrivateConsultant GetPrivateByPhone(string phone)
         {
             return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
         }
-
+        // !!! GetAsync
         public JuridicConsultant GetJuridicByPhone(string phone)
         {
             return juridicRep.Get().SingleOrDefault(x => x.Phone == phone);
         }
-
+        // !!! GetAsync
         private bool IsInFavorites(long id)
         {
             return favoriteRep.Get().Any(x => x.ConsultantId == id);
         }
-
+        // !!! избавиться от прочерка
         public PrivateConsultantVM GetPrivateVM(PrivateConsultant private_)
         {
             return new PrivateConsultantVM
@@ -172,7 +169,7 @@ namespace WebApplication1.BLL
                 Services =  new ServiceBLL().GetVM(private_),
                 Free = private_.Free,
                 FreeDate = ServiceUtil.DateTimeToUnixTimestamp(private_.FreeDate),
-                Favorite = isFavorite(private_.Id),
+                Favorite = IsFavorite(private_.Id),
                 LegalEntity = IsJuridic(private_.Id)
             };
         }
@@ -194,11 +191,11 @@ namespace WebApplication1.BLL
                 Services = new ServiceBLL().GetVM(juridic),
                 Free = juridic.Free,
                 FreeDate = ServiceUtil.DateTimeToUnixTimestamp(juridic.FreeDate),
-                Favorite = isFavorite(juridic.Id),
+                Favorite = IsFavorite(juridic.Id),
                 LegalEntity = IsJuridic(juridic.Id)
             };
         }
-
+        // !!! избавиться от прочерка
         public IEnumerable<PrivateConsultantVM> GetPrivatesVMs(long subcatId)
         {
             IList<PrivateConsultantVM> vms = new List<PrivateConsultantVM>();
@@ -208,8 +205,8 @@ namespace WebApplication1.BLL
             }
             return vms;
         }
-
-        public IEnumerable<PrivateConsultantVM> GetPrivatesVMs(int offset, 
+        // !!! избавиться от прочерка
+        public IEnumerable<PrivateConsultantVM> GetPrivateVMs(int offset, 
                                                                int limit, 
                                                                long subcategoryId, 
                                                                bool free, 
@@ -248,7 +245,7 @@ namespace WebApplication1.BLL
             }
             return vms;
         }
-
+        // !!! join
         public IEnumerable<JuridicConsultant> GetJuridicsBySubcategory(long subcatId)
         {
             IEnumerable<long> ids = serviceRep.Get().Where(x => x.SubcategoryId == subcatId)
@@ -273,7 +270,7 @@ namespace WebApplication1.BLL
                                     123457777};
         }
 
-        public bool isFavorite(long id)
+        public bool IsFavorite(long id)
         {
             return favoriteRep.Get().Any(x => x.ConsultantId == id);
         }
@@ -307,7 +304,7 @@ namespace WebApplication1.BLL
                                     .ToList()
                                     .Count;
         }
-
+        // проще предпоследнюю строку
         public long CreatePrivate(string name, 
                                   string surname, 
                                   string patronymic, 
@@ -323,7 +320,7 @@ namespace WebApplication1.BLL
             private_.FreeDate = DateTime.Now;
             try
             {
-                privateRep.Create(private_);
+                privateRep.CreateAsync(private_);
             }
             catch (Exception e)
             {
@@ -372,7 +369,7 @@ namespace WebApplication1.BLL
             juridic.FreeDate = DateTime.Now;
             try
             {
-                juridicRep.Create(juridic);
+                juridicRep.CreateAsync(juridic);
             }
             catch (Exception e)
             {
@@ -410,7 +407,7 @@ namespace WebApplication1.BLL
             image.FileTypeId = fileTypeid;
             try
             {
-                imageRep.Create(image);
+                imageRep.CreateAsync(image);
             }
             catch (Exception e)
             {
@@ -434,7 +431,7 @@ namespace WebApplication1.BLL
                     image.FileTypeId = (long)fileType;
                     try
                     {
-                        imageRep.Create(image);
+                        imageRep.CreateAsync(image);
                     }
                     catch (Exception e)
                     {
@@ -443,20 +440,20 @@ namespace WebApplication1.BLL
                 }
             }
         }
-
-        public void DeleteImage(long id)
+        // !!! оставить просто Delete
+        public async void DeleteImageAsync(long id)
         {
-            ConsultantImage image = imageRep.Get().SingleOrDefault(x => x.Id == id);
+            ConsultantImage image = await imageRep.GetAsync(id);
             try
             {
-                imageRep.Delete(image);
+                imageRep.DeleteAsync(image);
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createjurImagesEx));
             }
         }
-
+        // избавиться от подчёркивания
         public void UpdatePrivateFields(long id, NameValueCollection formData)
         {
             PrivateConsultant private_ = new PrivateConsultant();
@@ -469,7 +466,7 @@ namespace WebApplication1.BLL
             private_.FreeDate = Convert.ToDateTime(formData["freedate"]);
             try
             {
-                privateRep.Update(private_);
+                privateRep.UpdateAsync(private_);
             }
             catch (Exception e)
             {
@@ -489,7 +486,7 @@ namespace WebApplication1.BLL
             juridic.FreeDate = Convert.ToDateTime(formData["freedate"]);
             try
             {
-                juridicRep.Update(juridic);
+                juridicRep.UpdateAsync(juridic);
             }
             catch (Exception e)
             {
@@ -497,15 +494,15 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void UpdateRating(int id, decimal rating)
+        public async void UpdateRatingAsync(long id, decimal rating)
         {
-            PrivateConsultant private_ = privateRep.Get().SingleOrDefault(x => x.Id == id);
+            PrivateConsultant private_ = await privateRep.GetAsync(id);
             if (private_ != null)
             {
                 private_.Rating = rating;
                 try
                 {
-                    privateRep.Update(private_);
+                    privateRep.UpdateAsync(private_);
                 }
                 catch (Exception e)
                 {
@@ -513,11 +510,11 @@ namespace WebApplication1.BLL
                 }
                 return;
             }
-            JuridicConsultant juridic = juridicRep.Get().SingleOrDefault(x => x.Id == id);
+            JuridicConsultant juridic = await juridicRep.GetAsync(id);
             juridic.Rating = rating;
             try
             { 
-                juridicRep.Update(juridic);
+                juridicRep.UpdateAsync(juridic);
             }
             catch (Exception e)
             {

@@ -8,7 +8,7 @@ using WebApplication1.DAL;
 namespace WebApplication1.BLL
 {
     public class FavoritesBLL
-    {
+    {   // !!! избавиться от полотна
         private readonly DataContext _db = new DataContext();
         private readonly static Repositories reps = new Repositories();
         private readonly GenericRepository<Favorite> rep = reps.Favorites;
@@ -17,7 +17,7 @@ namespace WebApplication1.BLL
 
         private readonly ConsultantBLL consBLL = new ConsultantBLL();
         private readonly ServiceBLL serviceBLL = new ServiceBLL();
-
+        // !!! через конструктор
         public void Create(long clientId, long consultantId)
         {
             Favorite favorite = new Favorite();
@@ -25,7 +25,7 @@ namespace WebApplication1.BLL
             favorite.ConsultantId = consultantId;
             try
             {
-                rep.Create(favorite);
+                rep.CreateAsync(favorite);
             }
             catch (Exception e)
             {
@@ -74,6 +74,32 @@ namespace WebApplication1.BLL
             }
             return vms;
         }
+
+        // !!!
+        /*
+         using (EmployeeContext context = new EmployeeContext())
+         {
+         }
+        */
+        /*
+        private bool SaveCustomer(Customer customer)
+        {
+            try
+            {
+                using (MyContext context = new MyContext())
+                {
+                    context.Customers.Add(customer);
+                    context.SaveChanges();
+                }
+                return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                return false;
+            }
+        } 
+        */
+
 
         public void Delete(long clientId, long consultantId)
         {

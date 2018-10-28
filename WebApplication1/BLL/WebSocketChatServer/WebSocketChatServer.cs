@@ -160,7 +160,7 @@ namespace WebApplication1.BLL.WebSocketChatServer
                 newChattee.ConnecteeId = obj["connecteeId"];
                 newChattee.OrderId = obj["orderId"];
                 newChattee.SocketId = socketId;
-                chatActivityRep.Create(newChattee);
+                chatActivityRep.CreateAsync(newChattee);
             }
             // Timestamp containing the current time with the pattern: 2012-07-06 19:04:23
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -198,7 +198,7 @@ namespace WebApplication1.BLL.WebSocketChatServer
 
                     foreach (var socketId_ in GetReceiversSocketIds(socketId))
                     {
-                        KeyValuePair<Fleck.IWebSocketConnection, string> client = connectedSockets.SingleOrDefault(x => x.Key.ConnectionInfo.Id == socketId_);
+                        KeyValuePair<IWebSocketConnection, string> client = connectedSockets.SingleOrDefault(x => x.Key.ConnectionInfo.Id == socketId_);
                         client.Key.Send(JsonConvert.SerializeObject(chatMessage));
                     }
                 }
@@ -280,7 +280,7 @@ namespace WebApplication1.BLL.WebSocketChatServer
             msg.Text = text;
             msg.DateTime = GetDate();
             msg.Image = "xxx.jpg";
-            chatMsgRep.Create(msg);
+            chatMsgRep.CreateAsync(msg);
         }
 
         private void RemoveConnectee(Guid socketId)

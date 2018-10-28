@@ -23,14 +23,14 @@ namespace WebApplication1.BLL
             category.Description = formData["description"];
             try
             {
-                rep.Create(category);
+                rep.CreateAsync(category);
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось добавить категорию"));
             }
         }
-
+        // !!! конструктор
         public void CreateImage(HttpPostedFile file, long id)
         {
             CategoryImage image = new CategoryImage();
@@ -41,7 +41,7 @@ namespace WebApplication1.BLL
             image.Date = DateTime.Now;
             try
             {
-                imageRep.Create(image);
+                imageRep.CreateAsync(image);
             }
             catch (Exception e)
             {
@@ -60,7 +60,7 @@ namespace WebApplication1.BLL
             category.Deleted = true;
             try
             {
-                rep.Update(category);
+                rep.UpdateAsync(category);
             }
             catch (Exception e)
             {

@@ -6,6 +6,7 @@ using System.Linq;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.DAL;
+using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
@@ -32,67 +33,74 @@ namespace WebApplication1.BLL
             order.StatusCode = (int)OrderStatuses.Начат_клиентом;
             try
             {
-                rep.Create(order);
+                rep.CreateAsync(order);
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось создать заказ"));
             }
         }
-
-        public void Confirm(long id)
+        // !!! UpdateAsync
+        public async void ConfirmAsync(long id)
         {
-            Order order = rep.Get().SingleOrDefault(x => x.Id == id);
+            Order order = await rep.GetAsync(id);
             order.StatusCode = (int)OrderStatuses.Принят_консультантом;
-            rep.Update(order);
+            try
+            {
+                rep.UpdateAsync(order);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось подтвердить заказ клиентом"));
+            }
         }
-
-        public void CancelByClient(long id)
+        // !!! UpdateAsync
+        public async void CancelByClientAsync(long id)
         {
-            Order order = rep.Get().SingleOrDefault(x => x.Id == id);
+            Order order = await rep.GetAsync(id);
             order.StatusCode = (int)OrderStatuses.Отменён_клиентом;
             try
             {
-                rep.Update(order);
+                rep.UpdateAsync(order);
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось отменить заказ клиентом"));
             }
         }
-
-        public void CancelByCons(long id)
+        // !!! UpdateAsync
+        public async void CancelByConsAsync(long id)
         {
-            Order order = rep.Get().SingleOrDefault(x => x.Id == id);
+            Order order = await rep.GetAsync(id);
             order.StatusCode = (int)OrderStatuses.Отменён_консультантом;
             try
             {
-                rep.Update(order);
+                rep.UpdateAsync(order);
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось отменить заказ консультантом"));
             }
         }
-
+        // !!! GetAsync
         private IEnumerable<Order> GetByClientId(long id)
         {
             return rep.Get().Where(x => x.ClientId == id);
         }
-
+        // !!! GetAsync
         private IEnumerable<Order> GetByConsId(long id)
         {
             return rep.Get().Where(x => x.ConsultantId == id);
         }
-
+        // !!! GetPagingAsync
         private IEnumerable<Order> GetRangeWithOffset(int offset, int limit)
         {
             return rep.Get().Skip(offset).Take(limit);
         }
 
-        public OrderForClientVM GetVM(long id)
+        public async Task<OrderForClientVM> GetVMAsync(long id)
         {
-            Order order = rep.Get().SingleOrDefault(x => x.Id == id);
+            Order order = await rep.GetAsync(id);
             return new OrderForClientVM
             {
                 Id = order.Id,
@@ -130,7 +138,7 @@ namespace WebApplication1.BLL
                     Status = GetStatus(order.StatusCode),
                     StatusCode = order.StatusCode,
                     ServiceId = order.ServiceId,
-                    Image = ""
+                    Image = String.Empty
                 });
             }
             return vms;
@@ -153,30 +161,30 @@ namespace WebApplication1.BLL
             return vms;
         }
 
-        public IEnumerable<ConsultationType> GetConsultationTypes()
+        public async Task<IEnumerable<ConsultationType>> GetConsultationTypesAsync()
         {
-            return consTypesRep.Get();
+            return await consTypesRep.GetAsync();
         }
-
-        public void UpdateTime(long id, long timestamp)
+        // !!! UpdateAsync
+        public async void UpdateTimeAsync(long id, long timestamp)
         {
-            Order order = rep.Get().SingleOrDefault(x => x.Id == id);
+            Order order = await rep.GetAsync(id);
             order.DateTime = ServiceUtil.UnixTimestampToDateTime(timestamp);
             try
             {
-                rep.Update(order);
+                rep.UpdateAsync(order);
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось изменить время заказа"));
             }
         }
-
+        // !!! GetAsync
         private string GetStatus(long code)
         {
             return statusRep.Get().SingleOrDefault(x => x.Code == code).Text;
         }
-
+        // !!! GetAsync
         private string GetPaymentStatus(long id)
         {
             return paymentStatusRep.Get().SingleOrDefault(x => x.Id == id).Text;

@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WebApplication1
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
-        void Create(TEntity item);
         IEnumerable<TEntity> Get();
-        void Update(TEntity item);
-        void Delete(TEntity item);
+        Task<TEntity> GetAsync(long id);
+        void CreateAsync(TEntity item);
+        void UpdateAsync(TEntity item);
+        void DeleteAsync(TEntity item);
     }
 }

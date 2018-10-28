@@ -4,6 +4,8 @@ using System.Linq;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.DAL;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WebApplication1.BLL
 {
@@ -17,7 +19,7 @@ namespace WebApplication1.BLL
         {
             try
             {
-                rep.Create(GetInstance(formData));
+                rep.CreateAsync(GetInstance(formData));
             }
             catch (Exception e)
             {
@@ -25,11 +27,12 @@ namespace WebApplication1.BLL
             }
         }
 
-        public Client Get(long id, bool adPush)
+        // !!! надо GetAsync, async перед Task, await после return?
+        public Task<Client> Get(long id, bool adPush)
         {
-            return rep.Get().SingleOrDefault(x => x.Id == id);
+            return rep.GetAsync(id);
         }
-
+        // !!! через конструктор
         private Client GetInstance(NameValueCollection formData)
         {
             Client client = new Client();
@@ -38,14 +41,15 @@ namespace WebApplication1.BLL
             return client;
         }
 
-        public void Update(long id, string name, bool adPush)
+        public async void UpdateAsync(long id, string name, bool adPush)
         {
-            Client client = rep.Get().SingleOrDefault(x => x.Id == id);
+            //Client client = rep.Get().SingleOrDefault(x => x.Id == id);
+            Client client = await rep.GetAsync(id);
             client.Name = name;
             //client.AdPush = adPush;
             try
             {
-                rep.Update(client);
+                rep.UpdateAsync(client);
             }
             catch (Exception e)
             {

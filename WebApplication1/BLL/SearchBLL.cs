@@ -220,7 +220,7 @@ namespace WebApplication1.BLL
             }
             return vms;
         }
-
+        // !!! везде GetAsync
         private bool IsName(string word)
         {
             IEnumerable<string> names = privatesRep.Get().Select(x => x.Name.ToLower());

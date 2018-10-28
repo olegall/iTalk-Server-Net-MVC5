@@ -31,5 +31,6 @@ namespace WebApplication1.BLL
             return rep.Get().Where(x => x.ConsultantId == consId && 
                                         x.StatusCode == (long)OrderStatuses.Начат_клиентом);
         }
+        // !!! везде где можно IQueryable
     }
 }
