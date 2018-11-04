@@ -1,6 +1,7 @@
-﻿namespace WebApplication1.Models
+﻿using WebApplication1.BLL;
+namespace WebApplication1.Models
 {
-    public class Feedback
+    public class Feedback //: Base
     {
         public long Id { get; set; }
         public long ConsultantId { get; set; }

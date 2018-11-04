@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApplication1.Models;
 using WebApplication1.Utils;
+using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
@@ -39,13 +40,13 @@ namespace WebApplication1.BLL
             return vm;
         }
 
-        public async void HideAsync(long id)
+        public async Task HideAsync(long id)
         {
-            Subcategory subcat = await rep.GetAsync(id);
+            Subcategory subcat = rep.GetAsync(id);
             subcat.Deleted = true;
             try
             {
-                rep.UpdateAsync(subcat);
+                await rep.UpdateAsync(subcat);
             }
             catch (Exception e)
             {

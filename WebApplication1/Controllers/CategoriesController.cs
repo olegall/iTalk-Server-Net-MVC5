@@ -41,7 +41,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public Object Post()
         {
-            BLL.Create(ServiceUtil.Request.Form); 
+            BLL.CreateAsync(ServiceUtil.Request.Form); 
             return Ok(true);
         }
 
@@ -52,7 +52,7 @@ namespace WebApplication1.Controllers
         [Route("api/categories/{id}")]
         public Object CreateImage(long id)
         {
-            BLL.CreateImage(ServiceUtil.Request.Files["image"], id);
+            BLL.CreateImageAsync(ServiceUtil.Request.Files["image"], id);
             return Ok(true);
         }
 
@@ -61,9 +61,9 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpDelete]
         [Route("api/categories/{id}")]
-        public Object Delete(long id)
+        public Object Delete(long id) // !!! Object - типизировать
         {
-            BLL.Hide(id);
+            BLL.HideAsync(id);
             return Ok(true);
         }
     }

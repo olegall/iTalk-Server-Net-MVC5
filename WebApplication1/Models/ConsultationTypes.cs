@@ -1,6 +1,8 @@
-﻿namespace WebApplication1.Models
+﻿using WebApplication1.BLL;
+
+namespace WebApplication1.Models
 {
-    public class ConsultationType
+    public class ConsultationType //: Base
     {
         public int Id { get; set; }
         public string Type { get; set; }

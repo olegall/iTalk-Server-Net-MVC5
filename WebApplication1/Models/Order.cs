@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using WebApplication1.BLL;
 namespace WebApplication1.Models
 {
-    public class Order
+    public class Order //: Base
     {
         public long Id { get; set; }
         public long Number { get; set; }

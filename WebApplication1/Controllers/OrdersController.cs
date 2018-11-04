@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public Object Post()
         {
-            BLL.Create(ServiceUtil.Request.Form);
+            BLL.CreateAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -59,7 +59,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/ConsultationTypes")]
         public Object GetConsultationTypes()
         {
-            return Ok(BLL.GetConsultationTypesAsync());
+            return Ok(BLL.GetConsultationTypes());
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.DAL;
+using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
@@ -16,23 +17,23 @@ namespace WebApplication1.BLL
         private readonly GenericRepository<Category> rep = reps.Categories;
         private readonly GenericRepository<CategoryImage> imageRep = reps.CategoryImages;
         // !!! убрать папку Packages
-        public void Create(NameValueCollection formData)
+        public async Task CreateAsync(NameValueCollection formData)
         {
             try
             {
-                 rep.CreateAsync(new Category(formData["title"], formData["description"]));
+                 await rep.CreateAsync(new Category(formData["title"], formData["description"]));
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось добавить категорию"));
             }
         }
-
-        public void CreateImage(HttpPostedFile file, long id)
+                                                                    // !!! что за Id?
+        public async Task CreateImageAsync(HttpPostedFile file, long id)
         {
             try
             {
-                imageRep.CreateAsync(new CategoryImage(id, 
+                await imageRep.CreateAsync(new CategoryImage(id, 
                                                        ServiceUtil.GetBytesFromStream(file.InputStream), 
                                                        file.FileName,
                                                        file.ContentLength,
@@ -49,13 +50,13 @@ namespace WebApplication1.BLL
             return rep.Get().Skip(offset).Take(limit);
         }
 
-        public void Hide(long id)
+        public async Task HideAsync(long id)
         {
-            Category category = rep.Get().SingleOrDefault(x => x.Id == id);
+            Category category = rep.GetAsync(id);
             category.Deleted = true;
             try
             {
-                rep.UpdateAsync(category);
+                await rep.UpdateAsync(category);
             }
             catch (Exception e)
             {

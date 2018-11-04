@@ -1,6 +1,7 @@
-﻿namespace WebApplication1.Models
+﻿using WebApplication1.BLL;
+namespace WebApplication1.Models
 {
-    public class Favorite
+    public class Favorite //: Base
     {
         public long Id { get; set; }
         public long ClientId { get; set; }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using WebApplication1.BLL;
 namespace WebApplication1.Models
 {
-    public class Service
+    public class Service //: Base
     {
         public long Id { get; set; }
         public long ConsultantId { get; set; }

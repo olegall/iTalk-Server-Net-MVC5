@@ -24,7 +24,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/{offset}/{limit}/{subcategoryId}/{free}/{onlyFavorite}/{filter}")]
         // физлица: api/consultants/0/6/1/false/true/null
         // юрлица: api/consultants/0/2/2/false/false/null
-        public Object Get(int offset, 
+        public Object Get(int offset, // !!! модель
                           int limit, 
                           long subcategoryId, 
                           bool free, 
@@ -103,13 +103,13 @@ namespace WebApplication1.Controllers
             }
             HttpRequest httpRequest = HttpContext.Current.Request;
             NameValueCollection form = httpRequest.Form;
-            long lastCreatedId = BLL.CreatePrivate(form["name"], 
+            var createdId = BLL.CreatePrivateAsync(form["name"], 
                                                    form["surname"], 
                                                    form["patronymic"], 
                                                    form["phone"], 
                                                    form["email"]);
-            BLL.CreatePrivateImages(httpRequest.Files, lastCreatedId);
-            return Ok(lastCreatedId);
+            BLL.CreatePrivateImages(httpRequest.Files, createdId);
+            return Ok(createdId);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace WebApplication1.Controllers
                                                    form["inn"], 
                                                    form["phone"], 
                                                    form["siteurl"]);
-            BLL.CreateJuridicImages(httpRequest.Files, lastCreatedId);
+            BLL.CreateJuridicImagesAsync(httpRequest.Files, lastCreatedId);
             return Ok(lastCreatedId);
         }
 
@@ -146,7 +146,7 @@ namespace WebApplication1.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
             NameValueCollection form = ServiceUtil.Request.Form;
-            BLL.UpdatePrivateFields(id, ServiceUtil.Request.Form);
+            BLL.UpdatePrivateFieldsAsync(id, ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -161,7 +161,7 @@ namespace WebApplication1.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
-            BLL.UpdateJuridicFields(id, ServiceUtil.Request.Form);
+            BLL.UpdateJuridicFieldsAsync(id, ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -172,7 +172,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/{id}/image")]
         public Object CreateImage(long id)
         {
-            BLL.CreateImageWhenUpdate(ServiceUtil.Request, id);
+            BLL.CreateImageWhenUpdateAsync(ServiceUtil.Request, id);
             return Ok(true);
         }
 

@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
+using WebApplication1.BLL;
 namespace WebApplication1.Models
 {
-    public class Consultant : IUser<long>
+    public class Consultant : /*Base,*/ IUser<long>
     {
         [Key]
         public long Id { get; set; }

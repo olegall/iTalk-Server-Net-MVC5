@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Linq;
+using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.DAL;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+
 
 namespace WebApplication1.BLL
 {
@@ -15,11 +15,11 @@ namespace WebApplication1.BLL
         private readonly DataContext _db = new DataContext();
         private readonly GenericRepository<Client> rep = reps.Clients;
 
-        public void Create(NameValueCollection formData)
+        public async Task CreateAsync(NameValueCollection formData)
         {
             try
             {
-                rep.CreateAsync(GetInstance(formData));
+                await rep.CreateAsync(GetInstance(formData));
             }
             catch (Exception e)
             {
@@ -27,9 +27,20 @@ namespace WebApplication1.BLL
             }
         }
 
-        public async Task<Client> GetAsync(long id, bool adPush)
+        public Client GetAsync(long id, bool adPush)
         {
-            return await rep.GetAsync(id);
+            try
+            {
+                return rep.GetAsync(id);
+            }
+            catch (Exception e)
+            {
+                throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу. "+"InnerEcxeption: "+e.InnerException.Message);
+            }
+            finally
+            {
+                rep.Dispose();
+            }
         }
 
         private Client GetInstance(NameValueCollection formData)
@@ -37,28 +48,27 @@ namespace WebApplication1.BLL
             return new Client(formData["name"], formData["phone"]);
         }
 
-        public async void UpdateAsync(long id, string name, bool adPush) // adPush - позже
+        public async Task UpdateAsync(long id, string name, bool adPush) // adPush - позже
         {
-            Client client = await rep.GetAsync(id);
+            Client client = rep.GetAsync(id);
             client.Name = name;
             try
             {
-                rep.UpdateAsync(client);
+                await rep.UpdateAsync(client);
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось зарегистрировать клиента"));
             }
         }
-        // !!! тут не получалось через репозиторий
-        public void Delete(long id)
+
+        public async Task DeleteAsync(long id)
         {
-            Client client = _db.Clients.SingleOrDefault(x => x.Id == id);
+            Client client = rep.GetAsync(id);
             try
             {
-                _db.Clients.Remove(client);
-                _db.SaveChanges();
-            }
+                await rep.DeleteAsync(client);
+            } /// !!! 2 catch - под
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось удалить клиента"));

@@ -1,6 +1,7 @@
-﻿namespace WebApplication1.Models
+﻿using WebApplication1.BLL;
+namespace WebApplication1.Models
 {
-    public class Subcategory
+    public class Subcategory //: Base
     {
         public int Id { get; set; }
         public int CategoryId { get; set; }

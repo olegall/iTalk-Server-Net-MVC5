@@ -18,7 +18,7 @@ namespace WebApplication1.Controllers
         [UserApiAuthorize]
         public Object Post(long consultantId)
         {
-            BLL.Create(UserId.Value, consultantId);
+            BLL.CreateAsync(UserId.Value, consultantId);
             return Ok(true);
         }
 
@@ -40,7 +40,7 @@ namespace WebApplication1.Controllers
         [UserApiAuthorize]
         public Object Delete(long consultantId)
         {
-            BLL.Delete(UserId.Value, consultantId);
+            BLL.DeleteAsync(UserId.Value, consultantId);
             return Ok(true);
         }
     }

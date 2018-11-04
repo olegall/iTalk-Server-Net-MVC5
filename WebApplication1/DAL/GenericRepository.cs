@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    //public class Base
+    //{
+    //    public int Id { get; set; }
+    //}
+
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity /*: Base*/ : class
     {
         protected DbContext _context;
         protected DbSet<TEntity> _dbSet;
@@ -22,25 +27,26 @@ namespace WebApplication1.BLL
             return _dbSet.AsNoTracking().ToArray();
         }
         // !!! AsNoTracking?
-        public async Task<IEnumerable<TEntity>> GetAsync()
-        {
-            return await _dbSet.AsNoTracking().ToArrayAsync();
-        }
+        // !!! не работает
+        //public async Task<IEnumerable<TEntity>> GetAsync()
+        //{
+        //    return await _dbSet.AsNoTracking().ToArrayAsync();
+        //}
 
-        public async Task<TEntity> GetAsync(long id)
+        public async Task<TEntity> GetAsync_(long id)
         {
             return await _dbSet.FindAsync(id);
         }
-        
-        // в чём отличие?
-        //public Task<TEntity> GetAsync(long id)
-        //{
-        //    return _dbSet.FindAsync(id);
-        //}
+
+        // !!! убрать async, .Result
+        public TEntity GetAsync(long id)
+        {
+            return _dbSet.FindAsync(id).Result;
+        }
 
         // GetPaging
 
-        public async void CreateAsync(TEntity item)
+        public async Task CreateAsync(TEntity item)
         {
             _dbSet.Add(item);
             await _context.SaveChangesAsync();
@@ -55,20 +61,19 @@ namespace WebApplication1.BLL
             await _context.SaveChangesAsync();
         }
 
-        public async void UpdateAsync(TEntity item)
+        public async Task UpdateAsync(TEntity item)
         {
             _context.Entry(item).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
-        public async void DeleteAsync(TEntity item)
+        public async Task DeleteAsync(TEntity item)
         {
             _dbSet.Remove(item);
             await _context.SaveChangesAsync();
         }
 
         #region Disposing
-
         protected bool IsExtContext { get; private set; }
 
         private bool disposed = false;
@@ -90,7 +95,6 @@ namespace WebApplication1.BLL
             }
             this.disposed = true;
         }
-
         #endregion
     }
 }

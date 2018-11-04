@@ -6,39 +6,45 @@ using WebApplication1.Misc.Auth;
 using System.Web.Http;
 
 namespace WebApplication1.Controllers
-{
+{                // !!! в ед. числе ConsultantController - и далее
     public class ClientsController : BaseApiController<Misc.Auth.ConsultantManager>
     {
         private readonly ClientBLL BLL = new ClientBLL();
-        
+
         /// <summary>
         /// Зарегистрировать клиента
         /// </summary>
+        [HttpPost]
         public Object Post()
         {
-            BLL.Create(ServiceUtil.Request.Form);
+            BLL.CreateAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
 
         /// <summary>
         /// Получить инфо о клиенте для карточки
         /// </summary>
-        [UserApiAuthorize]
-        [Route("api/clients/{adPush}")]
-        public Object Get(bool adPush)
+        //[UserApiAuthorize]
+        //[Route("api/clients/{adPush}")]
+        [Route("api/clients/{id}/{adPush}")]
+        public Object Get(long id, bool adPush)
         {
-            return Ok(BLL.GetAsync(UserId.Value, adPush));
+            // !!! эксепшн если польз-ль с данным Id не существует (ошибка 500)
+            return Ok(BLL.GetAsync(/*UserId.Value*/id, adPush));
         }
 
-        [UserApiAuthorize]
+        //[UserApiAuthorize]
         /// <summary>
         /// Редактировать инфо клиента
         /// </summary>
-        [Route("api/clients/{name}/{adPush}")]
+        //[Route("api/clients/{name}/{adPush}")]
         [HttpPut]
-        public Object Update(string name, bool adPush)
+        public Object Update()
         {
-            BLL.UpdateAsync(UserId.Value, name, adPush);
+            int id = Convert.ToInt32(ServiceUtil.Request.Form["id"]);
+            string name = ServiceUtil.Request.Form["name"];
+            bool adPush = Convert.ToBoolean(ServiceUtil.Request.Form["adPush"]);
+            BLL.UpdateAsync(/*UserId.Value*/id, name, adPush);
             return Ok(true);
         }
 
@@ -48,7 +54,7 @@ namespace WebApplication1.Controllers
         [HttpDelete]
         public Object Delete()
         {
-            BLL.Delete(UserId.Value);
+            BLL.DeleteAsync(/*UserId.Value*/Convert.ToInt32(ServiceUtil.Request.Form["id"]));
             return Ok(true);
         }
     }

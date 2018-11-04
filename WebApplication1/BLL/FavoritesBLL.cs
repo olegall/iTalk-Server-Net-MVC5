@@ -4,6 +4,7 @@ using System.Linq;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.DAL;
+using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
@@ -14,18 +15,15 @@ namespace WebApplication1.BLL
         private readonly GenericRepository<Favorite> rep = reps.Favorites;
         private readonly GenericRepository<PrivateConsultant> privateRep = reps.Privates;
         private readonly GenericRepository<JuridicConsultant> juridicRep = reps.Juridics;
-
+        // !!! избавиться от папки packages
         private readonly ConsultantBLL consBLL = new ConsultantBLL();
         private readonly ServiceBLL serviceBLL = new ServiceBLL();
-        // !!! через конструктор
-        public void Create(long clientId, long consultantId)
+
+        public async Task CreateAsync(long clientId, long consultantId)
         {
-            Favorite favorite = new Favorite();
-            favorite.ClientId = clientId;
-            favorite.ConsultantId = consultantId;
             try
             {
-                rep.CreateAsync(favorite);
+                await rep.CreateAsync(new Favorite(clientId, consultantId));
             }
             catch (Exception e)
             {
@@ -99,15 +97,14 @@ namespace WebApplication1.BLL
             }
         } 
         */
-
-
-        public void Delete(long clientId, long consultantId)
+        // !!! ulong
+        public async Task DeleteAsync(long clientId, long consultantId)
         {
-            Favorite favorite = _db.Favorites.SingleOrDefault(x => x.ClientId == clientId && x.ConsultantId == consultantId);
+            Favorite favorite = rep.Get().SingleOrDefault(x => x.ClientId == clientId && 
+                                                          x.ConsultantId == consultantId);
             try
             {
-                _db.Favorites.Remove(favorite);
-                _db.SaveChanges();
+                await rep.DeleteAsync(favorite);
             }
             catch (Exception e)
             {

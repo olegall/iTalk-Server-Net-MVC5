@@ -14,7 +14,7 @@ namespace WebApplication1.BLL
     {
         private readonly static Repositories reps = new Repositories();
         private readonly GenericRepository<Order> rep = reps.Orders;
-        private readonly GenericRepository<ConsultationType> consTypesRep = reps.ConsultationTypes;
+        private readonly GenericRepository<ConsultationType> consTypesRep = reps.ConsultationTypes;  // !!! инициализация через конструктор - IoC. Завязка на интерфейсы в констуркторе
         private readonly GenericRepository<PrivateConsultant> privatesRep = reps.Privates;
         private readonly GenericRepository<JuridicConsultant> juridicsRep = reps.Juridics;
         private readonly GenericRepository<OrderStatus> statusRep = reps.OrderStatuses;
@@ -23,15 +23,15 @@ namespace WebApplication1.BLL
         private readonly ConsultantBLL consBLL = new ConsultantBLL();
         private readonly ServiceBLL serviceBLL = new ServiceBLL();
 
-        public void Create(NameValueCollection formData)
+        public async Task CreateAsync(NameValueCollection formData)
         {
             try
             {
-                rep.CreateAsync(new Order(ServiceUtil.GetLong(formData["consultationtypeid"]), 
-                                          ServiceUtil.GetLong(formData["serviceid"]), 
-                                          formData["comment"],
-                                          Convert.ToDateTime(formData["date"]),
-                                          (int)OrderStatuses.Начат_клиентом));
+                await rep.CreateAsync(new Order(ServiceUtil.GetLong(formData["consultationtypeid"]), 
+                                                ServiceUtil.GetLong(formData["serviceid"]), 
+                                                formData["comment"],
+                                                Convert.ToDateTime(formData["date"]),
+                                                (int)OrderStatuses.Начат_клиентом));
             }
             catch (Exception e)
             {
@@ -39,13 +39,13 @@ namespace WebApplication1.BLL
             }
         }
 
-        public async void ConfirmAsync(long id)
+        public async Task ConfirmAsync(long id)
         {
-            Order order = await rep.GetAsync(id);
+            Order order = rep.GetAsync(id);
             order.StatusCode = (int)OrderStatuses.Принят_консультантом;
             try
             {
-                rep.UpdateAsync(order);
+                await rep.UpdateAsync(order);
             }
             catch (Exception e)
             {
@@ -53,13 +53,13 @@ namespace WebApplication1.BLL
             }
         }
 
-        public async void CancelByClientAsync(long id)
+        public async Task CancelByClientAsync(long id)
         {
-            Order order = await rep.GetAsync(id);
+            Order order = rep.GetAsync(id);
             order.StatusCode = (int)OrderStatuses.Отменён_клиентом;
             try
             {
-                rep.UpdateAsync(order);
+                await rep.UpdateAsync(order);
             }
             catch (Exception e)
             {
@@ -67,13 +67,13 @@ namespace WebApplication1.BLL
             }
         }
 
-        public async void CancelByConsAsync(long id)
+        public async Task CancelByConsAsync(long id)
         {
-            Order order = await rep.GetAsync(id);
+            Order order = rep.GetAsync(id);
             order.StatusCode = (int)OrderStatuses.Отменён_консультантом;
             try
             {
-                rep.UpdateAsync(order);
+                await rep.UpdateAsync(order);
             }
             catch (Exception e)
             {
@@ -95,10 +95,10 @@ namespace WebApplication1.BLL
         {
             return rep.Get().Skip(offset).Take(limit);
         }
-
+        // !!! все id ulong
         public async Task<OrderForClientVM> GetVMAsync(long id)
         {
-            Order order = await rep.GetAsync(id);
+            Order order = rep.GetAsync(id);
             return new OrderForClientVM
             {
                 Id = order.Id,
@@ -151,7 +151,7 @@ namespace WebApplication1.BLL
                 {
                     Id = order.Id,
                     Status = GetStatus(order.StatusCode),
-                    PaymentStatus = GetPaymentStatus(order.PaymentStatusId),
+                    PaymentStatus = GetPaymentStatusAsync(order.PaymentStatusId),
                     Service = serviceBLL.GetById(order.ServiceId).Title,
                     Date = order.DateTime,
                 });
@@ -159,18 +159,18 @@ namespace WebApplication1.BLL
             return vms;
         }
 
-        public async Task<IEnumerable<ConsultationType>> GetConsultationTypesAsync()
+        public IEnumerable<ConsultationType> GetConsultationTypes()
         {
-            return await consTypesRep.GetAsync();
+            return consTypesRep.Get();
         }
 
-        public async void UpdateTimeAsync(long id, long timestamp)
+        public async Task UpdateTimeAsync(long id, long timestamp)
         {
-            Order order = await rep.GetAsync(id);
+            Order order = rep.GetAsync(id);
             order.DateTime = ServiceUtil.UnixTimestampToDateTime(timestamp);
             try
             {
-                rep.UpdateAsync(order);
+                await rep.UpdateAsync(order);
             }
             catch (Exception e)
             {
@@ -182,10 +182,10 @@ namespace WebApplication1.BLL
         {
             return statusRep.Get().SingleOrDefault(x => x.Code == code).Text;
         }
-        // !!! GetAsync
-        private string GetPaymentStatus(long id)
+        // !!! await, async Task
+        private string GetPaymentStatusAsync(long id)
         {
-            return paymentStatusRep.Get().SingleOrDefault(x => x.Id == id).Text;
+            return paymentStatusRep.GetAsync(id).Text;
         }
     }
 }

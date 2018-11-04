@@ -62,12 +62,12 @@ namespace WebApplication1.BLL
         // !!! убрать async, await?
         public async Task<PrivateConsultant> GetPrivateAsync(long id)
         {
-            return await privateRep.GetAsync(id);
+            return privateRep.GetAsync(id);
         }
         // !!! убрать async, await?
         public async Task<JuridicConsultant> GetJuridicAsync(long id)
         {
-            return await juridicRep.GetAsync(id);
+            return juridicRep.GetAsync(id);
         }
         // !!! join
         public IEnumerable<PrivateConsultant> GetPrivatesBySubcategory(long subcatId)
@@ -81,7 +81,7 @@ namespace WebApplication1.BLL
             {
                 if (privateRep.Get().Any(x => x.Id == id))
                 {
-                    privates.Add(privateRep.Get().SingleOrDefault(x => x.Id == id));
+                    privates.Add(privateRep.GetAsync(id));
                 }
             }
             return privates;
@@ -257,7 +257,7 @@ namespace WebApplication1.BLL
             {
                 if (juridicRep.Get().Any(x => x.Id == id))
                 {
-                    juridics.Add(juridicRep.Get().SingleOrDefault(x => x.Id == id));
+                    juridics.Add(juridicRep.GetAsync(id));
                 }
             }
             return juridics;
@@ -305,11 +305,12 @@ namespace WebApplication1.BLL
                                     .Count;
         }
         // !!! проще предпоследнюю строку
-        public long CreatePrivate(string name, 
-                                  string surname, 
-                                  string patronymic, 
-                                  string phone, 
-                                  string email)
+        // !!! избавиться от подчёркивания
+        public long CreatePrivateAsync(string name, 
+                                       string surname, 
+                                       string patronymic, 
+                                       string phone, 
+                                       string email)
         {
             try
             {
@@ -324,22 +325,24 @@ namespace WebApplication1.BLL
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
             }
-            long id = privateRep.Get().OrderByDescending(x => x.Id).Select(x => x.Id).First();
-            return id;
+            long createdId = privateRep.Get().OrderByDescending(x => x.Id)
+                                             .Select(x => x.Id)
+                                             .First();
+            return createdId;
         }
 
-        public void CreatePrivateImages(HttpFileCollection files, long id)
+        public async Task CreatePrivateImages(HttpFileCollection files, long id)
         {
             HttpPostedFile photo = files["photo"];
             if (photo != null)
-            {
-                CreateImage(photo, (long)FileTypes.Photo, id);
+            {   // !!! async
+                await CreateImageAsync(photo, (long)FileTypes.Photo, id);
             }
 
             HttpPostedFile passportscan = files["passportscan"];
             if (passportscan != null)
             {
-                CreateImage(passportscan, (long)FileTypes.PassportScan, id);
+                await CreateImageAsync(passportscan, (long)FileTypes.PassportScan, id);
             }
 
             for (int i = 1; i <= MAX_PRIVATE_DOCS_NUM; i++)
@@ -347,11 +350,11 @@ namespace WebApplication1.BLL
                 HttpPostedFile doc = files["doc" + i];
                 if (doc != null)
                 {
-                    CreateImage(doc, (long)FileTypes.PrivateDoc, id);
+                    await CreateImageAsync(doc, (long)FileTypes.PrivateDoc, id);
                 }
             }
         }
-
+        // !!! изб. от подчёркивания
         public long CreateJuridic(string ltdtitle,
                                   string ogrn,
                                   string inn,
@@ -367,32 +370,34 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
             }
 
-            long id = juridicRep.Get().OrderByDescending(x => x.Id).Select(x => x.Id).First();
-            return id;
+            long createdId = juridicRep.Get().OrderByDescending(x => x.Id)
+                                             .Select(x => x.Id)
+                                             .First();
+            return createdId;
         }
 
-        public void CreateJuridicImages(HttpFileCollection files, long id)
+        public async Task CreateJuridicImagesAsync(HttpFileCollection files, long id)
         {
             if (files["logo"] != null)
             {
-                CreateImage(files["logo"], (long)FileTypes.Logo, id);
+                await CreateImageAsync(files["logo"], (long)FileTypes.Logo, id);
             }
             for (int i = 1; i <= MAX_PRIVATE_DOCS_NUM; i++)
             {
                 HttpPostedFile file = files["doc" + i];
                 if (file != null)
                 {
-                    CreateImage(file, (long)FileTypes.JuridicDoc, id);
+                    await CreateImageAsync(file, (long)FileTypes.JuridicDoc, id);
                 }
             }
         }
 
-        public void CreateImage(HttpPostedFile file, long fileTypeid, long consId)
+        public async Task CreateImageAsync(HttpPostedFile file, long fileTypeid, long consId)
         {
             try
             {
-                imageRep.CreateAsync(new ConsultantImage(consId, 
-                                                         ServiceUtil.GetBytesFromStream(file.InputStream), 
+                await imageRep.CreateAsync(new ConsultantImage(consId, 
+                                           ServiceUtil.GetBytesFromStream(file.InputStream), 
                                                          file.FileName, 
                                                          file.ContentLength, 
                                                          DateTime.Now, 
@@ -404,7 +409,7 @@ namespace WebApplication1.BLL
             }
         }
         // !!! везде проверки на null
-        public void CreateImageWhenUpdate(HttpRequest request, long consId)
+        public async Task CreateImageWhenUpdateAsync(HttpRequest request, long consId)
         {
             foreach (FileTypes fileType in (FileTypes[])Enum.GetValues(typeof(FileTypes)))
             {
@@ -413,12 +418,12 @@ namespace WebApplication1.BLL
                 {
                     try
                     {
-                        imageRep.CreateAsync(new ConsultantImage(consId,
-                                                         ServiceUtil.GetBytesFromStream(file.InputStream),
-                                                         file.FileName,
-                                                         file.ContentLength,
-                                                         DateTime.Now,
-                                                         (long)fileType));
+                        await imageRep.CreateAsync(new ConsultantImage(consId,
+                                                                 ServiceUtil.GetBytesFromStream(file.InputStream),
+                                                                 file.FileName,
+                                                                 file.ContentLength,
+                                                                 DateTime.Now,
+                                                                 (long)fileType));
                     }
                     catch (Exception e)
                     {
@@ -427,13 +432,13 @@ namespace WebApplication1.BLL
                 }
             }
         }
-        // !!! оставить просто Delete
-        public async void DeleteImageAsync(long id)
+
+        public async Task DeleteImageAsync(long id)
         {
-            ConsultantImage image = await imageRep.GetAsync(id);
+            ConsultantImage image = imageRep.GetAsync(id);
             try
             {
-                imageRep.DeleteAsync(image);
+                await imageRep.DeleteAsync(image);
             }
             catch (Exception e)
             {
@@ -441,7 +446,7 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void UpdatePrivateFields(long id, NameValueCollection formData)
+        public async Task UpdatePrivateFieldsAsync(long id, NameValueCollection formData)
         {
             PrivateConsultant private_ = new PrivateConsultant(formData["name"], 
                                                                formData["surname"], 
@@ -452,7 +457,7 @@ namespace WebApplication1.BLL
             private_.Id = id;
             try
             {
-                privateRep.UpdateAsync(private_);
+                await privateRep.UpdateAsync(private_);
             }
             catch (Exception e)
             {
@@ -460,7 +465,7 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void UpdateJuridicFields(long id, NameValueCollection formData)
+        public async Task UpdateJuridicFieldsAsync(long id, NameValueCollection formData)
         {
             JuridicConsultant juridic = new JuridicConsultant(formData["ltdtitle"], 
                                                               formData["ogrn"], 
@@ -471,7 +476,7 @@ namespace WebApplication1.BLL
             juridic.Id = id;
             try
             {
-                juridicRep.UpdateAsync(juridic);
+                await juridicRep.UpdateAsync(juridic);
             }
             catch (Exception e)
             {
@@ -479,15 +484,15 @@ namespace WebApplication1.BLL
             }
         }
 
-        public async void UpdateRatingAsync(long id, decimal rating)
+        public async Task UpdateRatingAsync(long id, decimal rating)
         {
-            PrivateConsultant private_ = await privateRep.GetAsync(id);
+            PrivateConsultant private_ = privateRep.GetAsync(id);
             if (private_ != null)
             {
                 private_.Rating = rating;
                 try
                 {
-                    privateRep.UpdateAsync(private_);
+                    await privateRep.UpdateAsync(private_);
                 }
                 catch (Exception e)
                 {
@@ -495,11 +500,11 @@ namespace WebApplication1.BLL
                 }
                 return;
             }
-            JuridicConsultant juridic = await juridicRep.GetAsync(id);
+            JuridicConsultant juridic = juridicRep.GetAsync(id);
             juridic.Rating = rating;
             try
             { 
-                juridicRep.UpdateAsync(juridic);
+                await juridicRep.UpdateAsync(juridic);
             }
             catch (Exception e)
             {

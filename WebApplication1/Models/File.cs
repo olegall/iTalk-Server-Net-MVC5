@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-
+using WebApplication1.BLL;
 namespace WebApplication1.Models
 {
-    public class File
+    public class File //: Base
     {
         #region Fields
         public long Id { get; set; }

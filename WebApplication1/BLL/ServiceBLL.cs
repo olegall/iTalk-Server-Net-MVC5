@@ -18,11 +18,15 @@ namespace WebApplication1.BLL
         private readonly ConsultantBLL consMng = new ConsultantBLL();
         private readonly GenericRepository<Service> rep;
         private readonly GenericRepository<ServiceImage> imageRep;
+        private readonly GenericRepository<Category> categoryRep;
+        private readonly GenericRepository<Subcategory> subcategoryRep;
         // !!! инициализировать прямо или в конструкторе?
         public ServiceBLL()
         {
             rep = new GenericRepository<Service>(_db);
             imageRep = new GenericRepository<ServiceImage>(_db);
+            categoryRep = new GenericRepository<Category>(_db);
+            subcategoryRep = new GenericRepository<Subcategory>(_db);
         }
         // !!! async
         public IEnumerable<Service> Get(long consId)
@@ -35,9 +39,9 @@ namespace WebApplication1.BLL
             return rep.Get().SingleOrDefault(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<Service>> GetAll()
+        public IEnumerable<Service> GetAll()
         {
-            return await rep.GetAsync();
+            return rep.Get();
         }
 
         public IEnumerable<ServiceVM> GetVM(Consultant cons)
@@ -59,10 +63,10 @@ namespace WebApplication1.BLL
             return vm;
         }
 
-        public async Task<IEnumerable<ServiceVM>> GetVMsAsync()
+        public IEnumerable<ServiceVM> GetVMs()
         {
             IList<ServiceVM> vms = new List<ServiceVM>();
-            foreach (Service service in await GetAll())
+            foreach (Service service in GetAll())
             {
                 vms.Add(new ServiceVM
                 {
@@ -96,19 +100,19 @@ namespace WebApplication1.BLL
             return vm;
         }
 
-        public void Create(NameValueCollection formData)
+        public async Task CreateAsync(NameValueCollection formData)
         {
             try
             {
-                rep.CreateAsync(GetInstance(ServiceUtil.GetLong(formData["consid"]),
-                                            formData["category"],
-                                            formData["subcategory"],
-                                            formData["title"],
-                                            formData["description"],
-                                            Convert.ToDecimal(formData["cost"]),
-                                            Convert.ToInt16(formData["duration"]),
-                                            Convert.ToBoolean(formData["available"]),
-                                            Convert.ToInt16(formData["availablePeriod"])));
+                await rep.CreateAsync(GetInstance(ServiceUtil.GetLong(formData["consid"]),
+                                                  formData["category"],
+                                                  formData["subcategory"],
+                                                  formData["title"],
+                                                  formData["description"],
+                                                  Convert.ToDecimal(formData["cost"]),
+                                                  Convert.ToInt16(formData["duration"]),
+                                                  Convert.ToBoolean(formData["available"]),
+                                                  Convert.ToInt16(formData["availablePeriod"])));
             }
             catch (Exception e)
             {
@@ -116,7 +120,7 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void CreateMany(NameValueCollection formData)
+        public async Task CreateManyAsync(NameValueCollection formData)
         {
             ServiceJSON serviceJSON = JsonConvert.DeserializeObject<ServiceJSON>(formData["services"]);
             foreach (ServiceParams param in serviceJSON.Params)
@@ -130,11 +134,11 @@ namespace WebApplication1.BLL
                                               param.Duration,
                                               param.Available,
                                               param.AvailablePeriod);
-                rep.CreateAsync(service);
+                await rep.CreateAsync(service);
             }
         }
 
-        public void Update(NameValueCollection formData)
+        public async Task UpdateAsync(NameValueCollection formData)
         {
             Service service = GetInstance(ServiceUtil.GetLong(formData["consid"]), 
                                           formData["category"],
@@ -148,7 +152,7 @@ namespace WebApplication1.BLL
             service.Id = ServiceUtil.GetLong(formData["id"]);
             try
             {
-                rep.UpdateAsync(service);
+                await rep.UpdateAsync(service);
             }
             catch (Exception e)
             {
@@ -199,13 +203,13 @@ namespace WebApplication1.BLL
             return service;
         }
 
-        public void Hide(long id)
+        public async void HideAsync(long id)
         {
-            Service service = rep.Get().SingleOrDefault(x => x.Id == id);
+            Service service = rep.GetAsync(id);
             service.Deleted = true;
             try
             {
-                rep.UpdateAsync(service);
+                await rep.UpdateAsync(service);
             }
             catch (Exception e)
             {
@@ -213,13 +217,13 @@ namespace WebApplication1.BLL
             }
         }
 
-        public void CreateImage(HttpRequest request)
+        public async Task CreateImageAsync(HttpRequest request)
         {
             try
             {
                 ServiceImage img = GetImage(request.Files["image"]);
                 img.ServiceId =  ServiceUtil.GetLong(request.Form["id"]);
-                imageRep.CreateAsync(img);
+                await imageRep.CreateAsync(img);
             }
             catch (Exception e)
             {
@@ -233,20 +237,21 @@ namespace WebApplication1.BLL
                                     file.ContentLength, 
                                     DateTime.Now);
         }
-
+        // !!! передавать ServiceId
         public string GetCategory(Service service)
         {
-            return _db.Categories.Where(x => x.Id == service.CategoryId)
-                                 .Select(x => x.Title)
-                                 .SingleOrDefault();
+            return categoryRep.Get().Where(x => x.Id == service.CategoryId)
+                                    .Select(x => x.Title)
+                                    .SingleOrDefault();
         }
         // !!! SingleOrDefault или FirstOrDefault
         // !!! дублирование кода
+        // !!! передавать ServiceId
         public string GetSubcategory(Service service)
         {
-            return _db.Subcategories.Where(x => x.Id == service.SubcategoryId)
-                                    .Select(x => x.Title)
-                                    .SingleOrDefault();
+            return subcategoryRep.Get().Where(x => x.Id == service.SubcategoryId)
+                                       .Select(x => x.Title)
+                                       .SingleOrDefault();
         }
     }
 }

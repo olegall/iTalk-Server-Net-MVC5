@@ -4,10 +4,10 @@ using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WebApplication1.Misc.Auth;
-
+using WebApplication1.BLL;
 namespace WebApplication1.Models
 {
-    public class Client : IUser<long>
+    public class Client : /*Base,*/ IUser<long>
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -18,6 +18,10 @@ namespace WebApplication1.Models
         {
             Name = name;
             Phone = phone;
+        }
+
+        public Client()
+        {
         }
 
         [NotMapped]

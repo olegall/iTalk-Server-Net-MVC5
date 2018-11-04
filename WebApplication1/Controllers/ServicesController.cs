@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public Object Get()
         {
-            return Ok(BLL.GetVMsAsync());
+            return Ok(BLL.GetVMs());
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public Object Post()
         {
-            BLL.Create(ServiceUtil.Request.Form);
+            BLL.CreateAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -36,7 +36,7 @@ namespace WebApplication1.Controllers
         [Route("api/services/many")]
         public Object CreateMany()
         {
-            BLL.CreateMany(ServiceUtil.Request.Form);
+            BLL.CreateManyAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
         /// <summary>
@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
         [HttpPut]
         public Object Update()
         {
-            BLL.Update(ServiceUtil.Request.Form);
+            BLL.UpdateAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -55,7 +55,7 @@ namespace WebApplication1.Controllers
         [HttpDelete]
         public Object Delete(long id)
         {
-            BLL.Hide(id);
+            BLL.HideAsync(id);
             return Ok(true);
         }
 
@@ -66,7 +66,7 @@ namespace WebApplication1.Controllers
         [Route("api/services/CreateImage")]
         public Object CreateImage()
         {
-            BLL.CreateImage(ServiceUtil.Request);
+            BLL.CreateImageAsync(ServiceUtil.Request);
             return Ok(true);
         }
 
