@@ -20,7 +20,6 @@ namespace WebApplication1.BLL
                             .ToArray();
         }
 
-        // !!! join
         public IEnumerable<SubcategoryVM> GetVMs(int categoryId)
         {
             IList<SubcategoryVM> vm = new List<SubcategoryVM>();

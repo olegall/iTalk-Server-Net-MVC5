@@ -14,6 +14,8 @@ namespace WebApplication1.Utils
             }
         }
 
+        public static DataContext Context { get { return new DataContext(); } }
+
         public static byte[] GetBytesFromStream(Stream input)
         {
             byte[] buffer = new byte[16 * 1024];

@@ -17,7 +17,6 @@ namespace WebApplication1.BLL
         #region Fields
         private readonly GenericRepository<PrivateConsultant> privateRep = Reps.Privates;
         private readonly GenericRepository<JuridicConsultant> juridicRep = Reps.Juridics;
-        private readonly GenericRepository<ConsultantImage> imageRep = Reps.ConsultantImages;
         #endregion
 
         #region Constants
@@ -33,22 +32,30 @@ namespace WebApplication1.BLL
         {
             return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
         }
-        // !!! join
+
         public string GetName(long orderId)
         {
-            long consId = Reps.Orders.Get().Where(x => x.Id == orderId)
-                                           .Select(x => x.ConsultantId)
-                                           .SingleOrDefault();
-            PrivateConsultant private_ = privateRep.Get().Where(x => x.Id == consId)
-                                                         .SingleOrDefault();
+            PrivateConsultant private_ = ServiceUtil.Context.PrivateConsultants // убрать дублирование - ввести реп-й Consultant
+                                                             .Join(ServiceUtil.Context.Orders,
+                                                                   priv => priv.Id,
+                                                                   order => order.ConsultantId,
+                                                                   (priv, order) => new { Private = priv, Order = order }) // !!! убрать
+                                                             .Select(x => x.Private)
+                                                             .SingleOrDefault();
             if (private_ != null)
             {
                 return private_.Name;
             }
             else
             {
-                return juridicRep.Get().Where(x => x.Id == consId)
-                                       .SingleOrDefault().LTDTitle;
+                JuridicConsultant juridic = ServiceUtil.Context.JuridicConsultants  
+                                                               .Join(ServiceUtil.Context.Orders,
+                                                                     jur => jur.Id,
+                                                                     order => order.ConsultantId,
+                                                                     (jur, order) => new { Juridic = jur, Order = order })
+                                                               .Select(x => x.Juridic)
+                                                               .SingleOrDefault();
+                return juridic.LTDTitle;
             }
         }
         // !!! убрать async, await?
@@ -83,22 +90,15 @@ namespace WebApplication1.BLL
                 juridicRep.Dispose();
             }
         }
-        // !!! join
+
         public IEnumerable<PrivateConsultant> GetPrivatesBySubcategory(long subcatId)
         {
-            IEnumerable<long> ids = Reps.Services.Get().Where(x => x.SubcategoryId == subcatId)
-                                                       .Select(x => x.ConsultantId)
-                                                       .Distinct()
-                                                       .ToArray();
-            IList<PrivateConsultant> privates = new List<PrivateConsultant>();
-            foreach (long id in ids)
-            {
-                if (privateRep.Get().Any(x => x.Id == id))
-                {
-                    privates.Add(privateRep.GetAsync(id));
-                }
-            }
-            return privates;
+            return ServiceUtil.Context.PrivateConsultants
+                                      .Join(ServiceUtil.Context.Services.Where(x => x.SubcategoryId == subcatId),
+                                            priv => priv.Id,
+                                            serv => serv.ConsultantId,
+                                            (priv, serv) => new { Private = priv, Serv = serv })
+                                      .Select(x => x.Private);
         }
 
         public IEnumerable<PrivateConsultant> GetPrivates(int offset, 
@@ -281,22 +281,15 @@ namespace WebApplication1.BLL
             }
             return vms;
         }
-        // !!! join
+
         public IEnumerable<JuridicConsultant> GetJuridicsBySubcategory(long subcatId)
         {
-            IEnumerable<long> ids = Reps.Services.Get().Where(x => x.SubcategoryId == subcatId)
-                                                       .Select(x => x.ConsultantId)
-                                                       .Distinct()
-                                                       .ToArray();
-            IList<JuridicConsultant> juridics = new List<JuridicConsultant>();
-            foreach (long id in ids)
-            {
-                if (juridicRep.Get().Any(x => x.Id == id))
-                {
-                    juridics.Add(juridicRep.GetAsync(id));
-                }
-            }
-            return juridics;
+            return ServiceUtil.Context.JuridicConsultants
+                              .Join(ServiceUtil.Context.Services.Where(x => x.SubcategoryId == subcatId),
+                                   jur => jur.Id,
+                                   serv => serv.ConsultantId,
+                                   (jur, serv) => new { Juridic = jur, Serv = serv })
+                              .Select(x => x.Juridic);
         }
 
         public IList<long> GetAvailableTimes(long time)
@@ -432,12 +425,12 @@ namespace WebApplication1.BLL
         {
             try
             {
-                await imageRep.CreateAsync(new ConsultantImage(consId, 
-                                           ServiceUtil.GetBytesFromStream(file.InputStream), 
-                                                         file.FileName, 
-                                                         file.ContentLength, 
-                                                         DateTime.Now, 
-                                                         fileTypeid));
+                await Reps.ConsultantImages.CreateAsync(new ConsultantImage(consId, 
+                                                                            ServiceUtil.GetBytesFromStream(file.InputStream), 
+                                                                            file.FileName, 
+                                                                            file.ContentLength, 
+                                                                            DateTime.Now, 
+                                                                            fileTypeid));
             }
             catch (Exception e)
             {
@@ -454,12 +447,12 @@ namespace WebApplication1.BLL
                 {
                     try
                     {
-                        await imageRep.CreateAsync(new ConsultantImage(consId,
-                                                                 ServiceUtil.GetBytesFromStream(file.InputStream),
-                                                                 file.FileName,
-                                                                 file.ContentLength,
-                                                                 DateTime.Now,
-                                                                 (long)fileType));
+                        await Reps.ConsultantImages.CreateAsync(new ConsultantImage(consId,
+                                                                                    ServiceUtil.GetBytesFromStream(file.InputStream),
+                                                                                    file.FileName,
+                                                                                    file.ContentLength,
+                                                                                    DateTime.Now,
+                                                                                    (long)fileType));
                     }
                     catch (Exception e)
                     {
@@ -471,10 +464,10 @@ namespace WebApplication1.BLL
 
         public async Task DeleteImageAsync(long id)
         {
-            ConsultantImage image = imageRep.GetAsync(id);
+            ConsultantImage image = Reps.ConsultantImages.GetAsync(id);
             try
             {
-                await imageRep.DeleteAsync(image);
+                await Reps.ConsultantImages.DeleteAsync(image);
             }
             catch (Exception e)
             {
