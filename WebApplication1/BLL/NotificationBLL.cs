@@ -7,9 +7,6 @@ namespace WebApplication1.BLL
 {
     public class NotificationBLL
     {
-        private readonly static Repositories reps = new Repositories();
-        private readonly DataContext _db = new DataContext();
-        private readonly GenericRepository<Order> rep = reps.Orders;
         private const string DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm";
 
         public IEnumerable<NotificationVM> GetVMs(long consId)
@@ -28,7 +25,7 @@ namespace WebApplication1.BLL
 
         private IEnumerable<Order> GetStartedOrdersByConsId(long consId)
         {
-            return rep.Get().Where(x => x.ConsultantId == consId && 
+            return Reps.Orders.Get().Where(x => x.ConsultantId == consId && 
                                         x.StatusCode == (long)OrderStatuses.Начат_клиентом);
         }
         // !!! везде где можно IQueryable

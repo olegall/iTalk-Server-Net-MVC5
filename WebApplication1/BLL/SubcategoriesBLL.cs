@@ -4,18 +4,14 @@ using System.Linq;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using System.Threading.Tasks;
+using WebApplication1.DAL;
 
 namespace WebApplication1.BLL
 {
     public class SubcategoryBLL
     {
-        private readonly DataContext _db = new DataContext();
         private readonly IList<CategoryVM> categoryVMs = new List<CategoryVM>();
-        private readonly GenericRepository<Subcategory> rep;
-        public SubcategoryBLL()
-        {
-            rep = new GenericRepository<Subcategory>(_db);
-        }
+        private readonly GenericRepository<Subcategory> rep = Reps.Subcategories;
 
         // !!! улучшить
         public IEnumerable<Subcategory> GetByCategoryId(int categoryId)

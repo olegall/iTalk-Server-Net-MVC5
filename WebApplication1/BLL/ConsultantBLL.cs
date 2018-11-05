@@ -15,17 +15,9 @@ namespace WebApplication1.BLL
     public class ConsultantBLL
     {
         #region Fields
-        private readonly static Repositories rep = new Repositories();
-        private readonly GenericRepository<PrivateConsultant> privateRep = rep.Privates;
-        private readonly GenericRepository<JuridicConsultant> juridicRep = rep.Juridics;
-        private readonly GenericRepository<ConsultantImage> imageRep = rep.ConsultantImages;
-        private readonly GenericRepository<GalleryImage> galleryImageRep = rep.GalleryImages;
-        private readonly GenericRepository<Category> categoryRep = rep.Categories;
-        private readonly GenericRepository<Subcategory> subcatRep = rep.Subcategories;
-        private readonly GenericRepository<Service> serviceRep = rep.Services;
-        private readonly GenericRepository<Favorite> favoriteRep = rep.Favorites;
-        private readonly GenericRepository<Order> orderRep = rep.Orders;
-        private readonly GenericRepository<Feedback> feedbackRep = rep.Feedbacks;
+        private readonly GenericRepository<PrivateConsultant> privateRep = Reps.Privates;
+        private readonly GenericRepository<JuridicConsultant> juridicRep = Reps.Juridics;
+        private readonly GenericRepository<ConsultantImage> imageRep = Reps.ConsultantImages;
         #endregion
 
         #region Constants
@@ -44,9 +36,9 @@ namespace WebApplication1.BLL
         // !!! join
         public string GetName(long orderId)
         {
-            long consId = orderRep.Get().Where(x => x.Id == orderId)
-                                        .Select(x => x.ConsultantId)
-                                        .SingleOrDefault();
+            long consId = Reps.Orders.Get().Where(x => x.Id == orderId)
+                                           .Select(x => x.ConsultantId)
+                                           .SingleOrDefault();
             PrivateConsultant private_ = privateRep.Get().Where(x => x.Id == consId)
                                                          .SingleOrDefault();
             if (private_ != null)
@@ -62,20 +54,42 @@ namespace WebApplication1.BLL
         // !!! убрать async, await?
         public async Task<PrivateConsultant> GetPrivateAsync(long id)
         {
-            return privateRep.GetAsync(id);
+            try
+            {
+                return privateRep.GetAsync(id);
+            }
+            catch // !!! отфильтровать исключение
+            {// !!! код ошибки
+                throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу");
+            }
+            finally
+            {
+                privateRep.Dispose();
+            }
         }
-        // !!! убрать async, await?
+
         public async Task<JuridicConsultant> GetJuridicAsync(long id)
         {
-            return juridicRep.GetAsync(id);
+            try
+            {
+                return juridicRep.GetAsync(id);
+            }
+            catch // !!! отфильтровать исключение
+            {// !!! код ошибки
+                throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу");
+            }
+            finally
+            {
+                juridicRep.Dispose();
+            }
         }
         // !!! join
         public IEnumerable<PrivateConsultant> GetPrivatesBySubcategory(long subcatId)
         {
-            IEnumerable<long> ids = serviceRep.Get().Where(x => x.SubcategoryId == subcatId)
-                                                    .Select(x => x.ConsultantId)
-                                                    .Distinct()
-                                                    .ToArray();
+            IEnumerable<long> ids = Reps.Services.Get().Where(x => x.SubcategoryId == subcatId)
+                                                       .Select(x => x.ConsultantId)
+                                                       .Distinct()
+                                                       .ToArray();
             IList<PrivateConsultant> privates = new List<PrivateConsultant>();
             foreach (long id in ids)
             {
@@ -141,17 +155,39 @@ namespace WebApplication1.BLL
         // !!! GetAsync
         public PrivateConsultant GetPrivateByPhone(string phone)
         {
-            return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
+            try
+            {
+                return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
+            }
+            catch // !!! отфильтровать исключение
+            {// !!! код ошибки
+                throw new HttpException("Нет физлица с таким телефоном или проблемы с доступом к серверу");
+            }
+            finally
+            {
+                privateRep.Dispose();
+            }
         }
         // !!! GetAsync
         public JuridicConsultant GetJuridicByPhone(string phone)
         {
-            return juridicRep.Get().SingleOrDefault(x => x.Phone == phone);
+            try
+            {
+                return juridicRep.Get().SingleOrDefault(x => x.Phone == phone);
+            }
+            catch // !!! отфильтровать исключение
+            {// !!! код ошибки
+                throw new HttpException("Нет юрлица с таким телефоном или проблемы с доступом к серверу");
+            }
+            finally
+            {
+                juridicRep.Dispose();  // !!! везде для Get
+            }
         }
         // !!! GetAsync
         private bool IsInFavorites(long id)
         {
-            return favoriteRep.Get().Any(x => x.ConsultantId == id);
+            return Reps.Favorites.Get().Any(x => x.ConsultantId == id);
         }
 
         public PrivateConsultantVM GetPrivateVM(PrivateConsultant private_)
@@ -248,10 +284,10 @@ namespace WebApplication1.BLL
         // !!! join
         public IEnumerable<JuridicConsultant> GetJuridicsBySubcategory(long subcatId)
         {
-            IEnumerable<long> ids = serviceRep.Get().Where(x => x.SubcategoryId == subcatId)
-                                                    .Select(x => x.ConsultantId)
-                                                    .Distinct()
-                                                    .ToArray();
+            IEnumerable<long> ids = Reps.Services.Get().Where(x => x.SubcategoryId == subcatId)
+                                                       .Select(x => x.ConsultantId)
+                                                       .Distinct()
+                                                       .ToArray();
             IList<JuridicConsultant> juridics = new List<JuridicConsultant>();
             foreach (long id in ids)
             {
@@ -272,7 +308,7 @@ namespace WebApplication1.BLL
 
         public bool IsFavorite(long id)
         {
-            return favoriteRep.Get().Any(x => x.ConsultantId == id);
+            return Reps.Favorites.Get().Any(x => x.ConsultantId == id);
         }
 
         public bool IsJuridic(long id)
@@ -288,8 +324,8 @@ namespace WebApplication1.BLL
 
         public IEnumerable<string> GetGalleryImagesNames(long id)
         {
-            IEnumerable<long> imageIds = galleryImageRep.Get().Where(x => x.ConsultantId == id)
-                                                              .Select(x => x.Id);
+            IEnumerable<long> imageIds = Reps.GalleryImages.Get().Where(x => x.ConsultantId == id)
+                                                           .Select(x => x.Id);
             IList<string> images = new List<string>();
             foreach (long imageId in imageIds)
             {
@@ -300,9 +336,9 @@ namespace WebApplication1.BLL
 
         public int GetFeedbacksCount(long consultantId)
         {
-            return feedbackRep.Get().Where(x => x.ConsultantId == consultantId)
-                                    .ToList()
-                                    .Count;
+            return Reps.Feedbacks.Get().Where(x => x.ConsultantId == consultantId)
+                                       .ToList()
+                                       .Count;
         }
         // !!! проще предпоследнюю строку
         // !!! избавиться от подчёркивания

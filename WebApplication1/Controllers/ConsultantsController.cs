@@ -215,8 +215,8 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/test")]
         public void Test()
         {
-            var rep = new DAL.Repositories();
-            GenericRepository<PrivateConsultant> privateRep = rep.Privates;
+            //var rep = new DAL.Repositories();
+            GenericRepository<PrivateConsultant> privateRep = DAL.Reps.Privates;
             var privates = privateRep.Get();
             var searched1 = searchBLL.SearchPrivateConsultants(privates, "Александр Лавров");
             var searched2 = searchBLL.SearchPrivateConsultants(privates, "Александр Петрович");
@@ -226,7 +226,7 @@ namespace WebApplication1.Controllers
             var searched6 = searchBLL.SearchPrivateConsultants(privates, "Александр Юристы");
             var searched7 = searchBLL.SearchPrivateConsultants(privates, "Александр Врачи");
 
-            GenericRepository<JuridicConsultant> juridicRep = rep.Juridics;
+            GenericRepository<JuridicConsultant> juridicRep = DAL.Reps.Juridics;
             var juridics = juridicRep.Get();
             var searched8 = searchBLL.SearchJuridicConsultants(juridics, "Окна Профи");   // не работает
             var searched9 = searchBLL.SearchJuridicConsultants(juridics, "Окна Профи Установщики окон");   // сделать комбинации

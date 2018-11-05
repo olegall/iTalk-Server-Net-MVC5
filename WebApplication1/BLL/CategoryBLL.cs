@@ -13,9 +13,7 @@ namespace WebApplication1.BLL
 {
     public class CategoryBLL
     {
-        private readonly static Repositories reps = new Repositories();
-        private readonly GenericRepository<Category> rep = reps.Categories;
-        private readonly GenericRepository<CategoryImage> imageRep = reps.CategoryImages;
+        private readonly GenericRepository<Category> rep = Reps.Categories;
         // !!! убрать папку Packages
         public async Task CreateAsync(NameValueCollection formData)
         {
@@ -33,11 +31,11 @@ namespace WebApplication1.BLL
         {
             try
             {
-                await imageRep.CreateAsync(new CategoryImage(id, 
-                                                       ServiceUtil.GetBytesFromStream(file.InputStream), 
-                                                       file.FileName,
-                                                       file.ContentLength,
-                                                       DateTime.Now));
+                await Reps.CategoryImages.CreateAsync(new CategoryImage(id, 
+                                                      ServiceUtil.GetBytesFromStream(file.InputStream), 
+                                                      file.FileName,
+                                                      file.ContentLength,
+                                                      DateTime.Now));
             }
             catch (Exception e)
             {

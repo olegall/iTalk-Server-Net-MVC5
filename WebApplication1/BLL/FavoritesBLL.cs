@@ -9,12 +9,8 @@ using System.Threading.Tasks;
 namespace WebApplication1.BLL
 {
     public class FavoritesBLL
-    {   // !!! избавиться от полотна
-        private readonly DataContext _db = new DataContext();
-        private readonly static Repositories reps = new Repositories();
-        private readonly GenericRepository<Favorite> rep = reps.Favorites;
-        private readonly GenericRepository<PrivateConsultant> privateRep = reps.Privates;
-        private readonly GenericRepository<JuridicConsultant> juridicRep = reps.Juridics;
+    {
+        private readonly GenericRepository<Favorite> rep = Reps.Favorites;
         // !!! избавиться от папки packages
         private readonly ConsultantBLL consBLL = new ConsultantBLL();
         private readonly ServiceBLL serviceBLL = new ServiceBLL();
@@ -42,8 +38,8 @@ namespace WebApplication1.BLL
             IList<FavoriteConsultantVM> vms = new List<FavoriteConsultantVM>();
             foreach (long consId in GetFavoriteConsIds(clientId))
             {
-                PrivateConsultant private_ = privateRep.Get().Where(x => x.Id == consId)
-                                                             .SingleOrDefault();
+                PrivateConsultant private_ = Reps.Privates.Get().Where(x => x.Id == consId)
+                                                                .SingleOrDefault();
                 if (private_ != null)
                 {
                     vms.Add(new FavoriteConsultantVM
@@ -55,9 +51,9 @@ namespace WebApplication1.BLL
                         Services = serviceBLL.GetVM(private_)
                     });
                 }
-                JuridicConsultant juridic = juridicRep.Get()
-                                                      .Where(x => x.Id == consId)
-                                                      .SingleOrDefault();
+                JuridicConsultant juridic = Reps.Juridics.Get()
+                                                         .Where(x => x.Id == consId)
+                                                         .SingleOrDefault();
                 if (juridic != null)
                 {
                     vms.Add(new FavoriteConsultantVM

@@ -11,14 +11,8 @@ using System.Threading.Tasks;
 namespace WebApplication1.BLL
 {
     public class OrderBLL
-    {
-        private readonly static Repositories reps = new Repositories();
-        private readonly GenericRepository<Order> rep = reps.Orders;
-        private readonly GenericRepository<ConsultationType> consTypesRep = reps.ConsultationTypes;  // !!! инициализация через конструктор - IoC. Завязка на интерфейсы в констуркторе
-        private readonly GenericRepository<PrivateConsultant> privatesRep = reps.Privates;
-        private readonly GenericRepository<JuridicConsultant> juridicsRep = reps.Juridics;
-        private readonly GenericRepository<OrderStatus> statusRep = reps.OrderStatuses;
-        private readonly GenericRepository<PaymentStatus> paymentStatusRep = reps.PaymentStatuses;
+    {// !!! инициализация через конструктор - IoC. Завязка на интерфейсы в констуркторе
+        private readonly GenericRepository<Order> rep = Reps.Orders;
 
         private readonly ConsultantBLL consBLL = new ConsultantBLL();
         private readonly ServiceBLL serviceBLL = new ServiceBLL();
@@ -161,7 +155,7 @@ namespace WebApplication1.BLL
 
         public IEnumerable<ConsultationType> GetConsultationTypes()
         {
-            return consTypesRep.Get();
+            return Reps.ConsultationTypes.Get();
         }
 
         public async Task UpdateTimeAsync(long id, long timestamp)
@@ -180,12 +174,12 @@ namespace WebApplication1.BLL
         // !!! GetAsync
         private string GetStatus(long code)
         {
-            return statusRep.Get().SingleOrDefault(x => x.Code == code).Text;
+            return Reps.OrderStatuses.Get().SingleOrDefault(x => x.Code == code).Text;
         }
         // !!! await, async Task
         private string GetPaymentStatusAsync(long id)
         {
-            return paymentStatusRep.GetAsync(id).Text;
+            return Reps.PaymentStatuses.GetAsync(id).Text;
         }
     }
 }

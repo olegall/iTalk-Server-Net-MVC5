@@ -8,26 +8,16 @@ using WebApplication1.Utils;
 using Newtonsoft.Json;
 using WebApplication1.Models.ServiceJSON;
 using System.Threading.Tasks;
+using WebApplication1.DAL;
 
 namespace WebApplication1.BLL
 {
     public class ServiceBLL
     {
         // !!! везде regions
-        private readonly DataContext _db = new DataContext();
         private readonly ConsultantBLL consMng = new ConsultantBLL();
-        private readonly GenericRepository<Service> rep;
-        private readonly GenericRepository<ServiceImage> imageRep;
-        private readonly GenericRepository<Category> categoryRep;
-        private readonly GenericRepository<Subcategory> subcategoryRep;
-        // !!! инициализировать прямо или в конструкторе?
-        public ServiceBLL()
-        {
-            rep = new GenericRepository<Service>(_db);
-            imageRep = new GenericRepository<ServiceImage>(_db);
-            categoryRep = new GenericRepository<Category>(_db);
-            subcategoryRep = new GenericRepository<Subcategory>(_db);
-        }
+        private readonly GenericRepository<Service> rep = Reps.Services;
+
         // !!! async
         public IEnumerable<Service> Get(long consId)
         {
@@ -36,7 +26,7 @@ namespace WebApplication1.BLL
 
         public Service GetById(long id)
         {
-            return rep.Get().SingleOrDefault(x => x.Id == id);
+            return rep.GetAsync(id);
         }
 
         public IEnumerable<Service> GetAll()
@@ -223,7 +213,7 @@ namespace WebApplication1.BLL
             {
                 ServiceImage img = GetImage(request.Files["image"]);
                 img.ServiceId =  ServiceUtil.GetLong(request.Form["id"]);
-                await imageRep.CreateAsync(img);
+                await Reps.ServiceImages.CreateAsync(img);
             }
             catch (Exception e)
             {
@@ -240,18 +230,18 @@ namespace WebApplication1.BLL
         // !!! передавать ServiceId
         public string GetCategory(Service service)
         {
-            return categoryRep.Get().Where(x => x.Id == service.CategoryId)
-                                    .Select(x => x.Title)
-                                    .SingleOrDefault();
+            return Reps.Categories.Get().Where(x => x.Id == service.CategoryId)
+                                        .Select(x => x.Title)
+                                        .SingleOrDefault();
         }
         // !!! SingleOrDefault или FirstOrDefault
         // !!! дублирование кода
         // !!! передавать ServiceId
         public string GetSubcategory(Service service)
         {
-            return subcategoryRep.Get().Where(x => x.Id == service.SubcategoryId)
-                                       .Select(x => x.Title)
-                                       .SingleOrDefault();
+            return Reps.Subcategories.Get().Where(x => x.Id == service.SubcategoryId)
+                                     .Select(x => x.Title)
+                                     .SingleOrDefault();
         }
     }
 }

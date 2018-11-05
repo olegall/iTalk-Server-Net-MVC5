@@ -14,7 +14,7 @@ namespace WebApplication1.Controllers
         [ImageOutputCache(VaryByParam = "categoryId", Duration = CACHE_DURATION)]
         public ActionResult Index(long categoryId)
         {
-            IGenericRepository<CategoryImage> rep = new Repositories().CategoryImages;
+            IGenericRepository<CategoryImage> rep = Reps.CategoryImages;
             CategoryImage image = rep.Get().SingleOrDefault(x => x.CategoryId == categoryId);
             Check(image);
             string ext = GetExtension(image.FileName);

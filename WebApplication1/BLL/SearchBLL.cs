@@ -8,13 +8,6 @@ namespace WebApplication1.BLL
 {
     public class SearchBLL
     {
-        private readonly static Repositories rep = new Repositories();
-        private readonly GenericRepository<PrivateConsultant> privatesRep = rep.Privates;
-        private readonly GenericRepository<JuridicConsultant> juridicsRep = rep.Juridics;
-        private readonly GenericRepository<Category> categoriesRep = rep.Categories;
-        private readonly GenericRepository<Subcategory> subcatsRep = rep.Subcategories;
-        private readonly GenericRepository<Service> servicesRep = rep.Services;
-
         private int NameType        { get { return (int)SearchField.Types.Name; } }
         private int SurnameType     { get { return (int)SearchField.Types.Surname; } }
         private int PatronymicType  { get { return (int)SearchField.Types.Patronymic; } }
@@ -72,9 +65,9 @@ namespace WebApplication1.BLL
             }
             if (categoryField != null)
             {
-                long categoryId = categoriesRep.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
-                IEnumerable<long> privatesIdsByCat = servicesRep.Get().Where(x => x.CategoryId == categoryId)
-                                                                      .Select(x => x.ConsultantId);
+                long categoryId = Reps.Categories.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
+                IEnumerable<long> privatesIdsByCat = Reps.Services.Get().Where(x => x.CategoryId == categoryId)
+                                                                        .Select(x => x.ConsultantId);
 
                 privates = privates.Where(x => hasName(x, nameField) &&
                                                privatesIdsByCat.Any(id => id == x.Id));
@@ -103,9 +96,9 @@ namespace WebApplication1.BLL
 
             if (categoryField != null) // 5
             {
-                long categoryId = categoriesRep.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
-                IEnumerable<long> juridicsIdsByCat = servicesRep.Get().Where(x => x.CategoryId == categoryId)
-                                                       .Select(x => x.ConsultantId);
+                long categoryId = Reps.Categories.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
+                IEnumerable<long> juridicsIdsByCat = Reps.Services.Get().Where(x => x.CategoryId == categoryId)
+                                                                        .Select(x => x.ConsultantId);
 
                 juridics = juridics.Where(x => hasLTD(x, LTDField) &&
                            juridicsIdsByCat.Any(id => id == x.Id));
@@ -190,7 +183,7 @@ namespace WebApplication1.BLL
             foreach (Consultant cons in consultants)
             {
                 ConsultantVM vm = null;
-                PrivateConsultant private_ = privatesRep.Get().SingleOrDefault(x => x.Id == cons.Id);
+                PrivateConsultant private_ = Reps.Privates.Get().SingleOrDefault(x => x.Id == cons.Id);
                 if (private_ != null)
                 {
                     vm = new PrivateConsultantVM
@@ -204,7 +197,7 @@ namespace WebApplication1.BLL
                         Services = new ServiceBLL().GetVM(private_)
                     };
                 }
-                JuridicConsultant juridic = juridicsRep.Get().SingleOrDefault(x => x.Id == cons.Id);
+                JuridicConsultant juridic = Reps.Juridics.Get().SingleOrDefault(x => x.Id == cons.Id);// !!! GetAsync
                 if (juridic != null)
                 {
                     vm = new JuridicConsultantVM
@@ -223,7 +216,7 @@ namespace WebApplication1.BLL
         // !!! везде GetAsync
         private bool IsName(string word)
         {
-            IEnumerable<string> names = privatesRep.Get().Select(x => x.Name.ToLower());
+            IEnumerable<string> names = Reps.Privates.Get().Select(x => x.Name.ToLower());
             if (names.Any(x => x.Contains(word.ToLower())))
             {
                 return true;
@@ -233,7 +226,7 @@ namespace WebApplication1.BLL
 
         private bool IsPatronymic(string word)
         {
-            IEnumerable<string> patronymics = privatesRep.Get().Select(x => x.Patronymic.ToLower());
+            IEnumerable<string> patronymics = Reps.Privates.Get().Select(x => x.Patronymic.ToLower());
             if (patronymics.Any(x => x.Contains(word.ToLower())))
             {
                 return true;
@@ -243,7 +236,7 @@ namespace WebApplication1.BLL
 
         private bool IsSurname(string word)
         {
-            IEnumerable<string> surnames = privatesRep.Get().Select(x => x.Surname.ToLower());
+            IEnumerable<string> surnames = Reps.Privates.Get().Select(x => x.Surname.ToLower());
             if (surnames.Any(x => x.Contains(word.ToLower())))
             {
                 return true;
@@ -253,7 +246,7 @@ namespace WebApplication1.BLL
 
         private bool IsCategory(string word)
         {
-            IEnumerable<string> categories = categoriesRep.Get().Select(x => x.Title.ToLower());
+            IEnumerable<string> categories = Reps.Categories.Get().Select(x => x.Title.ToLower());
             if (categories.Contains(word.ToLower()))
             {
                 return true;
@@ -263,7 +256,7 @@ namespace WebApplication1.BLL
 
         private bool IsSubcategory(string word)
         {
-            IEnumerable<string> subcats = subcatsRep.Get().Select(x => x.Title.ToLower());
+            IEnumerable<string> subcats = Reps.Subcategories.Get().Select(x => x.Title.ToLower());
             if (subcats.Contains(word.ToLower()))
             {
                 return true;
@@ -273,7 +266,7 @@ namespace WebApplication1.BLL
 
         private bool IsLTD(string word)
         {
-            IEnumerable<string> LTDs = juridicsRep.Get().Select(x => x.LTDTitle.ToLower());
+            IEnumerable<string> LTDs = Reps.Juridics.Get().Select(x => x.LTDTitle.ToLower());
             if (LTDs.Contains(word.ToLower()))
             {
                 return true;

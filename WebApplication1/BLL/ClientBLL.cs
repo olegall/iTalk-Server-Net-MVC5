@@ -6,20 +6,17 @@ using WebApplication1.Utils;
 using WebApplication1.DAL;
 using System.Threading.Tasks;
 
-
 namespace WebApplication1.BLL
 {
     public class ClientBLL
     {
-        private readonly static Repositories reps = new Repositories();
-        private readonly DataContext _db = new DataContext();
-        private readonly GenericRepository<Client> rep = reps.Clients;
+        private readonly GenericRepository<Client> rep = Reps.Clients;
 
         public async Task CreateAsync(NameValueCollection formData)
         {
             try
             {
-                await rep.CreateAsync(GetInstance(formData));
+                await Reps.Clients.CreateAsync(GetInstance(formData));
             }
             catch (Exception e)
             {
@@ -28,19 +25,21 @@ namespace WebApplication1.BLL
         }
 
         public Client GetAsync(long id, bool adPush)
-        {
+        {   // !!! разделить ситуации - исключения по обрыву связи и не найденному польз-лю
             try
             {
-                return rep.GetAsync(id);
+
+                return Reps.Clients.GetAsync(id);
             }
-            catch (Exception e)
-            {
-                throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу. "+"InnerEcxeption: "+e.InnerException.Message);
+            catch // !!! отфильтровать исключение
+            {// !!! код ошибки
+                throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу");
             }
-            finally
-            {
-                rep.Dispose();
-            }
+            // !!! с finally после Update не работает Get
+            //finally
+            //{
+            //    Reps.Clients.Dispose();
+            //}
         }
 
         private Client GetInstance(NameValueCollection formData)
@@ -50,11 +49,11 @@ namespace WebApplication1.BLL
 
         public async Task UpdateAsync(long id, string name, bool adPush) // adPush - позже
         {
-            Client client = rep.GetAsync(id);
+            Client client = Reps.Clients.GetAsync(id);
             client.Name = name;
             try
             {
-                await rep.UpdateAsync(client);
+                await Reps.Clients.UpdateAsync(client);
             }
             catch (Exception e)
             {
@@ -64,10 +63,10 @@ namespace WebApplication1.BLL
 
         public async Task DeleteAsync(long id)
         {
-            Client client = rep.GetAsync(id);
+            Client client = Reps.Clients.GetAsync(id);
             try
             {
-                await rep.DeleteAsync(client);
+                await Reps.Clients.DeleteAsync(client);
             } /// !!! 2 catch - под
             catch (Exception e)
             {
