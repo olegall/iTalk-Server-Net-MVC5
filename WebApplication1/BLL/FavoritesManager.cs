@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
-    public class FavoritesBLL
+    public class FavoritesManager
     {
         private readonly GenericRepository<Favorite> rep = Reps.Favorites;
         // !!! избавиться от папки packages
-        private readonly ConsultantBLL consBLL = new ConsultantBLL();
-        private readonly ServiceBLL serviceBLL = new ServiceBLL();
+        private readonly ConsultantManager consMng = new ConsultantManager();
+        private readonly ServiceManager serviceMng = new ServiceManager();
 
         public async Task CreateAsync(long clientId, long consultantId)
         {
@@ -47,8 +47,8 @@ namespace WebApplication1.BLL
                         Id = private_.Id,
                         Name = private_.Name,
                         Rating = private_.Rating,
-                        FeedbacksCount = consBLL.GetFeedbacksCount(private_.Id),
-                        Services = serviceBLL.GetVM(private_)
+                        FeedbacksCount = consMng.GetFeedbacksCount(private_.Id),
+                        Services = serviceMng.GetVM(private_)
                     });
                 }
                 JuridicConsultant juridic = Reps.Juridics.Get()
@@ -61,8 +61,8 @@ namespace WebApplication1.BLL
                         Id = juridic.Id,
                         Name = juridic.LTDTitle,
                         Rating = juridic.Rating,
-                        FeedbacksCount = consBLL.GetFeedbacksCount(juridic.Id),
-                        Services = serviceBLL.GetVM(juridic)
+                        FeedbacksCount = consMng.GetFeedbacksCount(juridic.Id),
+                        Services = serviceMng.GetVM(juridic)
                     });
                 }
             }

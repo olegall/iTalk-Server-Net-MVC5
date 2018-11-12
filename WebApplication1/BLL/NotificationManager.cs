@@ -5,7 +5,7 @@ using WebApplication1.DAL;
 
 namespace WebApplication1.BLL
 {
-    public class NotificationBLL
+    public class NotificationManager
     {
         private const string DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm";
 

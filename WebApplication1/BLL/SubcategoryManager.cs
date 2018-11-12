@@ -8,7 +8,7 @@ using WebApplication1.DAL;
 
 namespace WebApplication1.BLL
 {
-    public class SubcategoryBLL
+    public class SubcategoryManager
     {
         private readonly IList<CategoryVM> categoryVMs = new List<CategoryVM>();
         private readonly GenericRepository<Subcategory> rep = Reps.Subcategories;

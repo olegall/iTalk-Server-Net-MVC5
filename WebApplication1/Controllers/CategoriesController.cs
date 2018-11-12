@@ -10,8 +10,8 @@ namespace WebApplication1.Controllers
 {
     public class CategoriesController : ApiController
     {
-        private readonly CategoryBLL BLL = new CategoryBLL();
-        private readonly SubcategoryBLL subcategoryBLL = new SubcategoryBLL();
+        private readonly CategoryManager mng = new CategoryManager();
+        private readonly SubcategoryManager subcategoryMng = new SubcategoryManager();
 
         /// <summary>
         /// Получить категории с подкатегориями
@@ -21,15 +21,14 @@ namespace WebApplication1.Controllers
         public Object Get(int offset, int limit)
         {
             IList<CategoryVM> VMs = new List<CategoryVM>();
-            foreach (Category category in BLL.GetAll(offset, limit))
+            foreach (Category category in mng.GetAll(offset, limit))
             {
-                IList<SubcategoryVM> subcategoryVMs = new List<SubcategoryVM>();
                 VMs.Add(new CategoryVM
                 {
                     Id = category.Id,
                     Title = category.Title,
                     Image = BaseUrl.Get($"categoryimage/{category.Id}"),
-                    Subcategories = subcategoryBLL.GetVMs(category.Id)
+                    Subcategories = subcategoryMng.GetVMs(category.Id)
                 });
             }
             return Ok(VMs);
@@ -41,7 +40,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public Object Post()
         {
-            BLL.CreateAsync(ServiceUtil.Request.Form); 
+            mng.CreateAsync(ServiceUtil.Request.Form); 
             return Ok(true);
         }
 
@@ -52,7 +51,7 @@ namespace WebApplication1.Controllers
         [Route("api/categories/{id}")]
         public Object CreateImage(long id)
         {
-            BLL.CreateImageAsync(ServiceUtil.Request.Files["image"], id);
+            mng.CreateImageAsync(ServiceUtil.Request.Files["image"], id);
             return Ok(true);
         }
 
@@ -63,7 +62,7 @@ namespace WebApplication1.Controllers
         [Route("api/categories/{id}")]
         public Object Delete(long id) // !!! Object - типизировать
         {
-            BLL.HideAsync(id);
+            mng.HideAsync(id);
             return Ok(true);
         }
     }

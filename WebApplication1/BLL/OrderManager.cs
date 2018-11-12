@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
-    public class OrderBLL
+    public class OrderManager
     {// !!! инициализация через конструктор - IoC. Завязка на интерфейсы в констуркторе
         private readonly GenericRepository<Order> rep = Reps.Orders;
 
-        private readonly ConsultantBLL consBLL = new ConsultantBLL();
-        private readonly ServiceBLL serviceBLL = new ServiceBLL();
+        private readonly ConsultantManager consMng = new ConsultantManager();
+        private readonly ServiceManager serviceMng = new ServiceManager();
 
         public async Task CreateAsync(NameValueCollection formData)
         {
@@ -98,8 +98,8 @@ namespace WebApplication1.BLL
                 Id = order.Id,
                 Number = order.Number,
                 Date = order.DateTime,
-                Consultant = consBLL.GetName(order.Id),
-                Service = serviceBLL.GetById(order.ServiceId).Title
+                Consultant = consMng.GetName(order.Id),
+                Service = serviceMng.GetById(order.ServiceId).Title
             };
         }
 
@@ -113,8 +113,8 @@ namespace WebApplication1.BLL
                     Id = order.Id,
                     Number = order.Number,
                     Date = order.DateTime,
-                    Consultant = consBLL.GetName(order.Id),
-                    Service = serviceBLL.GetById(order.ServiceId).Title
+                    Consultant = consMng.GetName(order.Id),
+                    Service = serviceMng.GetById(order.ServiceId).Title
                 });
             }
             return vms;
@@ -146,7 +146,7 @@ namespace WebApplication1.BLL
                     Id = order.Id,
                     Status = GetStatus(order.StatusCode),
                     PaymentStatus = GetPaymentStatusAsync(order.PaymentStatusId),
-                    Service = serviceBLL.GetById(order.ServiceId).Title,
+                    Service = serviceMng.GetById(order.ServiceId).Title,
                     Date = order.DateTime,
                 });
             }

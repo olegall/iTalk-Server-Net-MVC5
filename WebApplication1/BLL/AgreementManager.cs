@@ -1,6 +1,6 @@
 ﻿namespace WebApplication1.BLL
 {
-    public class AgreementBLL
+    public class AgreementManager
     {
         public string Link { get { return "linkToAgreement"; } }
     }

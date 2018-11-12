@@ -12,11 +12,12 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
-    public class ConsultantBLL
+    public class ConsultantManager
     {
         #region Fields
-        private readonly GenericRepository<PrivateConsultant> privateRep = Reps.Privates;
+        private readonly GenericRepository<PrivateConsultant> privateRep = Reps.Privates; // ! подчёркивание у приватных методов
         private readonly GenericRepository<JuridicConsultant> juridicRep = Reps.Juridics;
+        private readonly SearchManager searchMng = new SearchManager();
         #endregion
 
         #region Constants
@@ -26,7 +27,7 @@ namespace WebApplication1.BLL
         private const byte FREE = 0x00000010;
         #endregion
         // !!! везде regions
-        private readonly SearchBLL searchBLL = new SearchBLL();
+
         // !!! GetAsync
         public PrivateConsultant Get(string phone)
         {
@@ -35,11 +36,11 @@ namespace WebApplication1.BLL
 
         public string GetName(long orderId)
         {
-            PrivateConsultant private_ = ServiceUtil.Context.PrivateConsultants // убрать дублирование - ввести реп-й Consultant
+            PrivateConsultant private_ = ServiceUtil.Context.PrivateConsultants // ! убрать дублирование - ввести реп-й Consultant
                                                              .Join(ServiceUtil.Context.Orders,
                                                                    priv => priv.Id,
                                                                    order => order.ConsultantId,
-                                                                   (priv, order) => new { Private = priv, Order = order }) // !!! убрать
+                                                                   (priv, order) => new { Private = priv, Order = order }) // ! убрать
                                                              .Select(x => x.Private)
                                                              .SingleOrDefault();
             if (private_ != null)
@@ -58,15 +59,15 @@ namespace WebApplication1.BLL
                 return juridic.LTDTitle;
             }
         }
-        // !!! убрать async, await?
+        // ! убрать async, await?
         public async Task<PrivateConsultant> GetPrivateAsync(long id)
         {
             try
             {
                 return privateRep.GetAsync(id);
             }
-            catch // !!! отфильтровать исключение
-            {// !!! код ошибки
+            catch // ! отфильтровать исключение
+            {// ! код ошибки
                 throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу");
             }
             finally
@@ -81,8 +82,8 @@ namespace WebApplication1.BLL
             {
                 return juridicRep.GetAsync(id);
             }
-            catch // !!! отфильтровать исключение
-            {// !!! код ошибки
+            catch // ! отфильтровать исключение
+            {// ! код ошибки
                 throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу");
             }
             finally
@@ -122,7 +123,7 @@ namespace WebApplication1.BLL
             }
             if (filter != "null")
             {
-                privates = searchBLL.SearchPrivateConsultants(privates, filter);
+                privates = searchMng.SearchPrivateConsultants(privates, filter);
             }
             return privates;
         }
@@ -148,7 +149,7 @@ namespace WebApplication1.BLL
             }
             if (filter != "null")
             {
-                juridics = searchBLL.SearchJuridicConsultants(juridics, filter);
+                juridics = searchMng.SearchJuridicConsultants(juridics, filter);
             }
             return juridics;
         }
@@ -202,7 +203,7 @@ namespace WebApplication1.BLL
                 GalleryImages = GetGalleryImagesNames(private_.Id),
                 Rating = private_.Rating,
                 FeedbacksCount = GetFeedbacksCount(private_.Id),
-                Services =  new ServiceBLL().GetVM(private_),
+                Services =  new ServiceManager().GetVM(private_),
                 Free = private_.Free,
                 FreeDate = ServiceUtil.DateTimeToUnixTimestamp(private_.FreeDate),
                 Favorite = IsFavorite(private_.Id),
@@ -224,7 +225,7 @@ namespace WebApplication1.BLL
                 AccountNumber = juridic.AccountNumber,
                 Rating = juridic.Rating,
                 FeedbacksCount = GetFeedbacksCount(juridic.Id),
-                Services = new ServiceBLL().GetVM(juridic),
+                Services = new ServiceManager().GetVM(juridic),
                 Free = juridic.Free,
                 FreeDate = ServiceUtil.DateTimeToUnixTimestamp(juridic.FreeDate),
                 Favorite = IsFavorite(juridic.Id),

@@ -8,7 +8,7 @@ namespace WebApplication1.Controllers
 {
     public class FavouritesController : BaseApiController<Misc.Auth.ConsultantManager>
     {
-        private readonly FavoritesBLL BLL = new FavoritesBLL();
+        private readonly FavoritesManager mng = new FavoritesManager();
 
         /// <summary>
         /// Добавить консультанта в избранное (действие клиента)
@@ -18,7 +18,7 @@ namespace WebApplication1.Controllers
         [UserApiAuthorize]
         public Object Post(long consultantId)
         {
-            BLL.CreateAsync(UserId.Value, consultantId);
+            mng.CreateAsync(UserId.Value, consultantId);
             return Ok(true);
         }
 
@@ -29,7 +29,7 @@ namespace WebApplication1.Controllers
         [Route("api/favorites/client/{id}")]
         public Object Get(long id)
         {
-            return Ok(BLL.GetVMs(id));
+            return Ok(mng.GetVMs(id));
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace WebApplication1.Controllers
         [UserApiAuthorize]
         public Object Delete(long consultantId)
         {
-            BLL.DeleteAsync(UserId.Value, consultantId);
+            mng.DeleteAsync(UserId.Value, consultantId);
             return Ok(true);
         }
     }

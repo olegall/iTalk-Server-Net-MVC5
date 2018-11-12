@@ -14,8 +14,8 @@ namespace WebApplication1.Controllers
 {
     public class ConsultantsController : ApiController
     {
-        private readonly ConsultantBLL BLL = new ConsultantBLL();
-        private readonly SearchBLL searchBLL = new SearchBLL();
+        private readonly ConsultantManager mng = new ConsultantManager();
+        private readonly SearchManager searchMng = new SearchManager();
 
         /// <summary>
         /// Получить консультантов
@@ -32,11 +32,11 @@ namespace WebApplication1.Controllers
                           string filter)
         {
             IList<ConsultantVM> VMs = new List<ConsultantVM>();
-            foreach (PrivateConsultantVM privateVM in BLL.GetPrivateVMs(offset, limit, subcategoryId, free, onlyFavorite, filter))
+            foreach (PrivateConsultantVM privateVM in mng.GetPrivateVMs(offset, limit, subcategoryId, free, onlyFavorite, filter))
             {
                 VMs.Add(privateVM);
             }
-            foreach (JuridicConsultantVM juridicVM in BLL.GetJuridicsVMs(offset, limit, subcategoryId, free, onlyFavorite, filter))
+            foreach (JuridicConsultantVM juridicVM in mng.GetJuridicsVMs(offset, limit, subcategoryId, free, onlyFavorite, filter))
             {
                 VMs.Add(juridicVM);
             }
@@ -49,15 +49,15 @@ namespace WebApplication1.Controllers
         // избавиться от прочерка, Object
         public async Task<Object> Get(int id)
         {
-            if (BLL.IsJuridic(id))
+            if (mng.IsJuridic(id))
             {
-                JuridicConsultant juridic = await BLL.GetJuridicAsync(id);
-                return Ok(BLL.GetJuridicVM(juridic));
+                JuridicConsultant juridic = await mng.GetJuridicAsync(id);
+                return Ok(mng.GetJuridicVM(juridic));
             }
             else
             {
-                PrivateConsultant private_ = await BLL.GetPrivateAsync(id);
-                return Ok(BLL.GetPrivateVM(private_));
+                PrivateConsultant private_ = await mng.GetPrivateAsync(id);
+                return Ok(mng.GetPrivateVM(private_));
             }
         }
 
@@ -69,11 +69,11 @@ namespace WebApplication1.Controllers
         public Object GetBySubcategory(int id)
         {
             IList<ConsultantVM> VMs = new List<ConsultantVM>();
-            foreach (PrivateConsultantVM privateVM in BLL.GetPrivatesVMs(id))
+            foreach (PrivateConsultantVM privateVM in mng.GetPrivatesVMs(id))
             {
                 VMs.Add(privateVM);
             }
-            foreach (JuridicConsultantVM juridicVM in BLL.GetJuridicsVMs(id))
+            foreach (JuridicConsultantVM juridicVM in mng.GetJuridicsVMs(id))
             {
                 VMs.Add(juridicVM);
             }
@@ -87,7 +87,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/availableTimes/{time}")]
         public Object AvailableTimes(long time)
         {
-            return Ok(BLL.GetAvailableTimes(time));
+            return Ok(mng.GetAvailableTimes(time));
         }
 
         /// <summary>
@@ -103,12 +103,12 @@ namespace WebApplication1.Controllers
             }
             HttpRequest httpRequest = HttpContext.Current.Request;
             NameValueCollection form = httpRequest.Form;
-            var createdId = BLL.CreatePrivateAsync(form["name"], 
+            var createdId = mng.CreatePrivateAsync(form["name"], 
                                                    form["surname"], 
                                                    form["patronymic"], 
                                                    form["phone"], 
                                                    form["email"]);
-            BLL.CreatePrivateImages(httpRequest.Files, createdId);
+            mng.CreatePrivateImages(httpRequest.Files, createdId);
             return Ok(createdId);
         }
 
@@ -125,12 +125,12 @@ namespace WebApplication1.Controllers
             }
             HttpRequest httpRequest = HttpContext.Current.Request;
             NameValueCollection form = httpRequest.Form;
-            long lastCreatedId = BLL.CreateJuridic(form["ltdtitle"], 
+            long lastCreatedId = mng.CreateJuridic(form["ltdtitle"], // ! async
                                                    form["ogrn"], 
                                                    form["inn"], 
                                                    form["phone"], 
                                                    form["siteurl"]);
-            BLL.CreateJuridicImagesAsync(httpRequest.Files, lastCreatedId);
+            mng.CreateJuridicImagesAsync(httpRequest.Files, lastCreatedId);
             return Ok(lastCreatedId);
         }
 
@@ -146,7 +146,7 @@ namespace WebApplication1.Controllers
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
             NameValueCollection form = ServiceUtil.Request.Form;
-            BLL.UpdatePrivateFieldsAsync(id, ServiceUtil.Request.Form);
+            mng.UpdatePrivateFieldsAsync(id, ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -161,7 +161,7 @@ namespace WebApplication1.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
-            BLL.UpdateJuridicFieldsAsync(id, ServiceUtil.Request.Form);
+            mng.UpdateJuridicFieldsAsync(id, ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -172,7 +172,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/{id}/image")]
         public Object CreateImage(long id)
         {
-            BLL.CreateImageWhenUpdateAsync(ServiceUtil.Request, id);
+            mng.CreateImageWhenUpdateAsync(ServiceUtil.Request, id);
             return Ok(true);
         }
 
@@ -183,7 +183,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/image/{id}")]
         public Object DeleteImage(long id)
         {
-            BLL.DeleteImageAsync(id);
+            mng.DeleteImageAsync(id);
             return Ok(true);
         }
 
@@ -204,7 +204,7 @@ namespace WebApplication1.Controllers
         [Route("api/consultants/{id}/rating/{rating}")]
         public Object UpdateRating(int id, decimal rating)
         {
-            BLL.UpdateRatingAsync(id, rating);
+            mng.UpdateRatingAsync(id, rating);
             return Ok(true);
         }
 
@@ -218,18 +218,18 @@ namespace WebApplication1.Controllers
             //var rep = new DAL.Repositories();
             GenericRepository<PrivateConsultant> privateRep = DAL.Reps.Privates;
             var privates = privateRep.Get();
-            var searched1 = searchBLL.SearchPrivateConsultants(privates, "Александр Лавров");
-            var searched2 = searchBLL.SearchPrivateConsultants(privates, "Александр Петрович");
-            var searched3 = searchBLL.SearchPrivateConsultants(privates, "Александр Петрович Лавров");
-            var searched4 = searchBLL.SearchPrivateConsultants(privates, "Алексан");
-            var searched5 = searchBLL.SearchPrivateConsultants(privates, "Александр Пе");
-            var searched6 = searchBLL.SearchPrivateConsultants(privates, "Александр Юристы");
-            var searched7 = searchBLL.SearchPrivateConsultants(privates, "Александр Врачи");
+            var searched1 = searchMng.SearchPrivateConsultants(privates, "Александр Лавров");
+            var searched2 = searchMng.SearchPrivateConsultants(privates, "Александр Петрович");
+            var searched3 = searchMng.SearchPrivateConsultants(privates, "Александр Петрович Лавров");
+            var searched4 = searchMng.SearchPrivateConsultants(privates, "Алексан");
+            var searched5 = searchMng.SearchPrivateConsultants(privates, "Александр Пе");
+            var searched6 = searchMng.SearchPrivateConsultants(privates, "Александр Юристы");
+            var searched7 = searchMng.SearchPrivateConsultants(privates, "Александр Врачи");
 
             GenericRepository<JuridicConsultant> juridicRep = DAL.Reps.Juridics;
             var juridics = juridicRep.Get();
-            var searched8 = searchBLL.SearchJuridicConsultants(juridics, "Окна Профи");   // не работает
-            var searched9 = searchBLL.SearchJuridicConsultants(juridics, "Окна Профи Установщики окон");   // сделать комбинации
+            var searched8 = searchMng.SearchJuridicConsultants(juridics, "Окна Профи");   // не работает
+            var searched9 = searchMng.SearchJuridicConsultants(juridics, "Окна Профи Установщики окон");   // сделать комбинации
         }
     }
 }

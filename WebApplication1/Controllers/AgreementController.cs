@@ -6,7 +6,7 @@ namespace WebApplication1.Controllers
 {
     public class AgreementController : ApiController
     {
-        private readonly AgreementBLL BLL = new AgreementBLL();
+        private readonly AgreementManager mng = new AgreementManager();
 
         /// <summary>
         /// Получить ссылку на пользовательское соглашение
@@ -14,7 +14,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public Object Get()
         {
-            return Ok(BLL.Link);
+            return Ok(mng.Link);
         }
     }
 }

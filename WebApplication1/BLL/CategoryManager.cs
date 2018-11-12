@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
-    public class CategoryBLL
+    public class CategoryManager
     {
         private readonly GenericRepository<Category> rep = Reps.Categories;
         // !!! убрать папку Packages

@@ -6,7 +6,7 @@ namespace WebApplication1.Controllers
 {
     public class SubcategoriesController : ApiController
     {
-        private readonly SubcategoryBLL BLL = new SubcategoryBLL();
+        private readonly SubcategoryManager mng = new SubcategoryManager();
 
         /// <summary>
         /// Скрыть подкатегорию
@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
         [Route("api/subcategories/{id}")]
         public Object Delete(long id)
         {
-            BLL.HideAsync(id);
+            mng.HideAsync(id);
             return Ok(true);
         }
     }

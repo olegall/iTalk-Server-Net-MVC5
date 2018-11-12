@@ -6,7 +6,7 @@ using WebApplication1.DAL;
 
 namespace WebApplication1.BLL
 {
-    public class SearchBLL
+    public class SearchManager
     {
         private int NameType        { get { return (int)SearchField.Types.Name; } }
         private int SurnameType     { get { return (int)SearchField.Types.Surname; } }
@@ -192,9 +192,9 @@ namespace WebApplication1.BLL
                         Name = private_.Name,
                         Surname = private_.Surname,
                         Rating = private_.Rating,
-                        FeedbacksCount = new ConsultantBLL().GetFeedbacksCount(private_.Id),
+                        FeedbacksCount = new ConsultantManager().GetFeedbacksCount(private_.Id),
                         Patronymic = private_.Patronymic,
-                        Services = new ServiceBLL().GetVM(private_)
+                        Services = new ServiceManager().GetVM(private_)
                     };
                 }
                 JuridicConsultant juridic = Reps.Juridics.Get().SingleOrDefault(x => x.Id == cons.Id);// !!! GetAsync
@@ -205,8 +205,8 @@ namespace WebApplication1.BLL
                         Id = juridic.Id,
                         LTDTitle = juridic.LTDTitle,
                         Rating = juridic.Rating,
-                        FeedbacksCount = new ConsultantBLL().GetFeedbacksCount(juridic.Id),
-                        Services = new ServiceBLL().GetVM(juridic)
+                        FeedbacksCount = new ConsultantManager().GetFeedbacksCount(juridic.Id),
+                        Services = new ServiceManager().GetVM(juridic)
                     };
                 }
                 vms.Add(vm);

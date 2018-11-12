@@ -9,7 +9,7 @@ namespace WebApplication1.Controllers
 {                // !!! в ед. числе ConsultantController - и далее
     public class ClientsController : BaseApiController<Misc.Auth.ConsultantManager>
     {
-        private readonly ClientBLL BLL = new ClientBLL();
+        private readonly BLL.ClientManager mng = new BLL.ClientManager();
 
         /// <summary>
         /// Зарегистрировать клиента
@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public Object Post()
         {
-            BLL.CreateAsync(ServiceUtil.Request.Form);
+            mng.CreateAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
         public Object Get(long id, bool adPush)
         {
             // !!! эксепшн если польз-ль с данным Id не существует (ошибка 500)
-            return Ok(BLL.GetAsync(/*UserId.Value*/id, adPush));
+            return Ok(mng.GetAsync(/*UserId.Value*/id, adPush));
         }
 
         //[UserApiAuthorize]
@@ -44,7 +44,7 @@ namespace WebApplication1.Controllers
             int id = Convert.ToInt32(ServiceUtil.Request.Form["id"]);
             string name = ServiceUtil.Request.Form["name"];
             bool adPush = Convert.ToBoolean(ServiceUtil.Request.Form["adPush"]);
-            BLL.UpdateAsync(/*UserId.Value*/id, name, adPush);
+            mng.UpdateAsync(/*UserId.Value*/id, name, adPush);
             return Ok(true);
         }
 
@@ -54,7 +54,7 @@ namespace WebApplication1.Controllers
         [HttpDelete]
         public Object Delete()
         {
-            BLL.DeleteAsync(/*UserId.Value*/Convert.ToInt32(ServiceUtil.Request.Form["id"]));
+            mng.DeleteAsync(/*UserId.Value*/Convert.ToInt32(ServiceUtil.Request.Form["id"]));
             return Ok(true);
         }
     }

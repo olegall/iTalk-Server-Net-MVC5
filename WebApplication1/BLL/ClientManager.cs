@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.BLL
 {
-    public class ClientBLL
+    public class ClientManager
     {
         private readonly GenericRepository<Client> rep = Reps.Clients;
 

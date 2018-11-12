@@ -7,7 +7,7 @@ namespace WebApplication1.Controllers
 {
     public class OrdersController : ApiController
     {
-        private readonly OrderBLL BLL = new OrderBLL();
+        private readonly OrderManager mng = new OrderManager();
 
         /// <summary>
         /// Оформить (создать) клиентом
@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public Object Post()
         {
-            BLL.CreateAsync(ServiceUtil.Request.Form);
+            mng.CreateAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -26,7 +26,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/{id}/confirm")]
         public Object Confirm(long id)
         {
-            BLL.ConfirmAsync(id);
+            mng.ConfirmAsync(id);
             return Ok(true);
         }
 
@@ -37,7 +37,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/{id}/CancelByClient")]
         public Object CancelByClient(long id)
         {
-            BLL.CancelByClientAsync(id);
+            mng.CancelByClientAsync(id);
             return Ok(true);
         }
 
@@ -48,7 +48,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/{id}/CancelByCons")]
         public Object CancelByConsAsync(long id)
         {
-            BLL.CancelByConsAsync(id);
+            mng.CancelByConsAsync(id);
             return Ok(true);
         }
 
@@ -59,7 +59,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/ConsultationTypes")]
         public Object GetConsultationTypes()
         {
-            return Ok(BLL.GetConsultationTypes());
+            return Ok(mng.GetConsultationTypes());
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/client/{id}")]
         public Object GetByClientId(long id)
         {
-            return Ok(BLL.GetClientVMs(id));
+            return Ok(mng.GetClientVMs(id));
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/{id}")]
         public Object Get(long id)
         {
-            return Ok(BLL.GetVMAsync(id));
+            return Ok(mng.GetVMAsync(id));
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/consultant/{id}")]
         public Object GetByConsultantId(long id)
         {
-            return Ok(BLL.GetConsVMs(id));
+            return Ok(mng.GetConsVMs(id));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace WebApplication1.Controllers
         [Route("api/orders/{offset}/{limit}")]
         public Object Get(int offset, int limit)
         {
-            return Ok(BLL.GetVMs(offset, limit));
+            return Ok(mng.GetVMs(offset, limit));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace WebApplication1.Controllers
         [Route("api/order/{id}/{timestamp}")]
         public Object UpdateTime(long id, long timestamp)
         {
-            BLL.UpdateTimeAsync(id, timestamp);
+            mng.UpdateTimeAsync(id, timestamp);
             return Ok(true);
         }
     }

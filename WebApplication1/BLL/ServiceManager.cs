@@ -12,10 +12,10 @@ using WebApplication1.DAL;
 
 namespace WebApplication1.BLL
 {
-    public class ServiceBLL
+    public class ServiceManager
     {
         // !!! везде regions
-        private readonly ConsultantBLL consMng = new ConsultantBLL();
+        private readonly ConsultantManager consMng = new ConsultantManager();
         private readonly GenericRepository<Service> rep = Reps.Services;
 
         // !!! async

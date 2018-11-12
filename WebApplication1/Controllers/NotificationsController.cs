@@ -12,7 +12,7 @@ namespace WebApplication1.Controllers
 {
     public class NotificationsController : ApiController
     {
-        private readonly NotificationBLL BLL = new NotificationBLL();
+        private readonly NotificationManager mng = new NotificationManager();
 
         /// <summary>
         /// Получить для консультанта
@@ -21,7 +21,7 @@ namespace WebApplication1.Controllers
         [Route("api/notifications/consultant/{id}")]
         public Object Get(long id)
         {
-            return Ok(BLL.GetVMs(id));
+            return Ok(mng.GetVMs(id));
         }
     }
 }

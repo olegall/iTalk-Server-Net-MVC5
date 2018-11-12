@@ -8,7 +8,7 @@ namespace WebApplication1.Controllers
 {
     public class ServicesController : ApiController
     {
-        private readonly ServiceBLL BLL = new ServiceBLL();
+        private readonly ServiceManager mng = new ServiceManager();
 
         /// <summary>
         /// Получить список всех услуг для клиента, реестра услуг, оформления заказа (стр 13, 43)
@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public Object Get()
         {
-            return Ok(BLL.GetVMs());
+            return Ok(mng.GetVMs());
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public Object Post()
         {
-            BLL.CreateAsync(ServiceUtil.Request.Form);
+            mng.CreateAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -36,7 +36,7 @@ namespace WebApplication1.Controllers
         [Route("api/services/many")]
         public Object CreateMany()
         {
-            BLL.CreateManyAsync(ServiceUtil.Request.Form);
+            mng.CreateManyAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
         /// <summary>
@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
         [HttpPut]
         public Object Update()
         {
-            BLL.UpdateAsync(ServiceUtil.Request.Form);
+            mng.UpdateAsync(ServiceUtil.Request.Form);
             return Ok(true);
         }
 
@@ -55,7 +55,7 @@ namespace WebApplication1.Controllers
         [HttpDelete]
         public Object Delete(long id)
         {
-            BLL.HideAsync(id);
+            mng.HideAsync(id);
             return Ok(true);
         }
 
@@ -66,7 +66,7 @@ namespace WebApplication1.Controllers
         [Route("api/services/CreateImage")]
         public Object CreateImage()
         {
-            BLL.CreateImageAsync(ServiceUtil.Request);
+            mng.CreateImageAsync(ServiceUtil.Request);
             return Ok(true);
         }
 

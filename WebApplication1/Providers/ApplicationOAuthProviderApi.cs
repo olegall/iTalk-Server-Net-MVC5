@@ -22,7 +22,7 @@ namespace WebApplication1.Providers
     {
         private readonly string _publicClientId;
 
-        private readonly BLL.ConsultantBLL consBLL = new BLL.ConsultantBLL();
+        private readonly BLL.ConsultantManager consBLL = new BLL.ConsultantManager();
 
         public ApplicationOAuthProviderApi(string publicClientId)
         {
