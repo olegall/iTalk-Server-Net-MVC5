@@ -27,7 +27,15 @@ namespace WebApplication1.BLL
         private const byte FREE = 0x00000010;
         #endregion
         // !!! везде regions
+        #region Private methods
+        // !!! GetAsync
+        private bool IsInFavorites(long id)
+        {
+            return Reps.Favorites.Get().Any(x => x.ConsultantId == id);
+        }
+        #endregion
 
+        #region Public methods
         // !!! GetAsync
         public PrivateConsultant Get(string phone)
         {
@@ -184,11 +192,6 @@ namespace WebApplication1.BLL
             {
                 juridicRep.Dispose();  // !!! везде для Get
             }
-        }
-        // !!! GetAsync
-        private bool IsInFavorites(long id)
-        {
-            return Reps.Favorites.Get().Any(x => x.ConsultantId == id);
         }
 
         public PrivateConsultantVM GetPrivateVM(PrivateConsultant private_)
@@ -541,5 +544,6 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось обновить рейтинг юрлица"));
             }
         }
+        #endregion
     }
 }

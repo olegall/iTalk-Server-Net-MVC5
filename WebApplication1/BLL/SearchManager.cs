@@ -8,13 +8,7 @@ namespace WebApplication1.BLL
 {
     public class SearchManager
     {
-        private int NameType        { get { return (int)SearchField.Types.Name; } }
-        private int SurnameType     { get { return (int)SearchField.Types.Surname; } }
-        private int PatronymicType  { get { return (int)SearchField.Types.Patronymic; } }
-        private int LTDType         { get { return (int)SearchField.Types.LTD; } }
-        private int CategoryType    { get { return (int)SearchField.Types.Category; } }
-        private int SubcategoryType { get { return (int)SearchField.Types.Subcategory; } }
-
+        #region Combinations
         /*
             Комбинации:
             1 {Имя}
@@ -37,7 +31,165 @@ namespace WebApplication1.BLL
             14 {Категория}
             15 {Подкатегория}
         */
+        #endregion
 
+        #region Fields
+        private int NameType        { get { return (int)SearchField.Types.Name; } }
+        private int SurnameType     { get { return (int)SearchField.Types.Surname; } }
+        private int PatronymicType  { get { return (int)SearchField.Types.Patronymic; } }
+        private int LTDType         { get { return (int)SearchField.Types.LTD; } }
+        private int CategoryType    { get { return (int)SearchField.Types.Category; } }
+        private int SubcategoryType { get { return (int)SearchField.Types.Subcategory; } }
+        #endregion
+
+        #region Private methods
+        private string[] GetWords(string letters)
+        {
+            return letters.Split(' ');
+        }
+
+        private IList<SearchField> GetFields(string[] words)
+        {
+            IList<SearchField> searchFields = new List<SearchField>();
+            foreach (string word in words)
+            {
+                // физлица
+                if (IsName(word))
+                {
+                    searchFields.Add(new SearchField((int)SearchField.Types.Name, word));
+                }
+                if (IsSurname(word))
+                {
+                    searchFields.Add(new SearchField((int)SearchField.Types.Surname, word));
+                }
+                if (IsPatronymic(word))
+                {
+                    searchFields.Add(new SearchField((int)SearchField.Types.Patronymic, word));
+                }
+
+                // юрлица
+                if (IsLTD(word))
+                {
+                    searchFields.Add(new SearchField((int)SearchField.Types.LTD, word));
+                }
+
+                if (IsCategory(word))
+                {
+                    searchFields.Add(new SearchField((int)SearchField.Types.Category, word));
+                }
+            }
+            return searchFields;
+        }
+
+        // !!! везде GetAsync
+        private bool IsName(string word)
+        {
+            IEnumerable<string> names = Reps.Privates.Get().Select(x => x.Name.ToLower());
+            if (names.Any(x => x.Contains(word.ToLower())))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsPatronymic(string word)
+        {
+            IEnumerable<string> patronymics = Reps.Privates.Get().Select(x => x.Patronymic.ToLower());
+            if (patronymics.Any(x => x.Contains(word.ToLower())))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsSurname(string word)
+        {
+            IEnumerable<string> surnames = Reps.Privates.Get().Select(x => x.Surname.ToLower());
+            if (surnames.Any(x => x.Contains(word.ToLower())))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsCategory(string word)
+        {
+            IEnumerable<string> categories = Reps.Categories.Get().Select(x => x.Title.ToLower());
+            if (categories.Contains(word.ToLower()))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsSubcategory(string word)
+        {
+            IEnumerable<string> subcats = Reps.Subcategories.Get().Select(x => x.Title.ToLower());
+            if (subcats.Contains(word.ToLower()))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool IsLTD(string word)
+        {
+            IEnumerable<string> LTDs = Reps.Juridics.Get().Select(x => x.LTDTitle.ToLower());
+            if (LTDs.Contains(word.ToLower()))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private SearchField GetField(IEnumerable<SearchField> searchFields, int type)
+        {
+            return searchFields.SingleOrDefault(x => x.Type == type);
+        }
+
+        private IList<ConsultantVM> GetSearchVMs(IEnumerable<Consultant> consultants)
+        {
+            if (consultants == null)
+            {
+                return null;
+            }
+            IList<ConsultantVM> vms = new List<ConsultantVM>();
+            foreach (Consultant cons in consultants)
+            {
+                ConsultantVM vm = null;
+                PrivateConsultant private_ = Reps.Privates.Get().SingleOrDefault(x => x.Id == cons.Id);
+                if (private_ != null)
+                {
+                    vm = new PrivateConsultantVM
+                    {
+                        Id = private_.Id,
+                        Name = private_.Name,
+                        Surname = private_.Surname,
+                        Rating = private_.Rating,
+                        FeedbacksCount = new ConsultantManager().GetFeedbacksCount(private_.Id),
+                        Patronymic = private_.Patronymic,
+                        Services = new ServiceManager().GetVM(private_)
+                    };
+                }
+                JuridicConsultant juridic = Reps.Juridics.Get().SingleOrDefault(x => x.Id == cons.Id);// !!! GetAsync
+                if (juridic != null)
+                {
+                    vm = new JuridicConsultantVM
+                    {
+                        Id = juridic.Id,
+                        LTDTitle = juridic.LTDTitle,
+                        Rating = juridic.Rating,
+                        FeedbacksCount = new ConsultantManager().GetFeedbacksCount(juridic.Id),
+                        Services = new ServiceManager().GetVM(juridic)
+                    };
+                }
+                vms.Add(vm);
+            }
+            return vms;
+        }
+        #endregion
+
+        #region Public methods
         public IEnumerable<T> SearchPrivateConsultants<T>(IEnumerable<T> privates, string letters) where T: PrivateConsultant
         {
             string[] words = GetWords(letters);
@@ -109,45 +261,9 @@ namespace WebApplication1.BLL
             }
             return juridics;
         }
+        #endregion
 
-        private string[] GetWords(string letters)
-        {
-            return letters.Split(' ');
-        }
-
-        private IList<SearchField> GetFields(string[] words)
-        {
-            IList<SearchField> searchFields = new List<SearchField>();
-            foreach (string word in words)
-            {
-                // физлица
-                if (IsName(word))
-                {
-                    searchFields.Add(new SearchField((int)SearchField.Types.Name, word));
-                }
-                if (IsSurname(word))
-                {
-                    searchFields.Add(new SearchField((int)SearchField.Types.Surname, word));
-                }
-                if (IsPatronymic(word))
-                {
-                    searchFields.Add(new SearchField((int)SearchField.Types.Patronymic, word));
-                }
-                
-                // юрлица
-                if (IsLTD(word))
-                {
-                    searchFields.Add(new SearchField((int)SearchField.Types.LTD, word));
-                }
-
-                if (IsCategory(word))
-                {
-                    searchFields.Add(new SearchField((int)SearchField.Types.Category, word));
-                }
-            }
-            return searchFields;
-        }
-
+        #region Delegates
         Func<PrivateConsultant, SearchField, bool> hasName = delegate (PrivateConsultant private_, SearchField nameSF)
         {
             return private_.Name.ToLower().Contains(nameSF.Value.ToLower());
@@ -167,111 +283,6 @@ namespace WebApplication1.BLL
         {
             return juridic.LTDTitle.ToLower().Contains(ltd.Value.ToLower());
         };
-
-        private SearchField GetField(IEnumerable<SearchField> searchFields, int type)
-        {
-            return searchFields.SingleOrDefault(x => x.Type == type);
-        }
-
-        private IList<ConsultantVM> GetSearchVMs(IEnumerable<Consultant> consultants)
-        {
-            if (consultants == null)
-            {
-                return null;
-            }
-            IList<ConsultantVM> vms = new List<ConsultantVM>();
-            foreach (Consultant cons in consultants)
-            {
-                ConsultantVM vm = null;
-                PrivateConsultant private_ = Reps.Privates.Get().SingleOrDefault(x => x.Id == cons.Id);
-                if (private_ != null)
-                {
-                    vm = new PrivateConsultantVM
-                    {
-                        Id = private_.Id,
-                        Name = private_.Name,
-                        Surname = private_.Surname,
-                        Rating = private_.Rating,
-                        FeedbacksCount = new ConsultantManager().GetFeedbacksCount(private_.Id),
-                        Patronymic = private_.Patronymic,
-                        Services = new ServiceManager().GetVM(private_)
-                    };
-                }
-                JuridicConsultant juridic = Reps.Juridics.Get().SingleOrDefault(x => x.Id == cons.Id);// !!! GetAsync
-                if (juridic != null)
-                {
-                    vm = new JuridicConsultantVM
-                    {
-                        Id = juridic.Id,
-                        LTDTitle = juridic.LTDTitle,
-                        Rating = juridic.Rating,
-                        FeedbacksCount = new ConsultantManager().GetFeedbacksCount(juridic.Id),
-                        Services = new ServiceManager().GetVM(juridic)
-                    };
-                }
-                vms.Add(vm);
-            }
-            return vms;
-        }
-        // !!! везде GetAsync
-        private bool IsName(string word)
-        {
-            IEnumerable<string> names = Reps.Privates.Get().Select(x => x.Name.ToLower());
-            if (names.Any(x => x.Contains(word.ToLower())))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsPatronymic(string word)
-        {
-            IEnumerable<string> patronymics = Reps.Privates.Get().Select(x => x.Patronymic.ToLower());
-            if (patronymics.Any(x => x.Contains(word.ToLower())))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsSurname(string word)
-        {
-            IEnumerable<string> surnames = Reps.Privates.Get().Select(x => x.Surname.ToLower());
-            if (surnames.Any(x => x.Contains(word.ToLower())))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsCategory(string word)
-        {
-            IEnumerable<string> categories = Reps.Categories.Get().Select(x => x.Title.ToLower());
-            if (categories.Contains(word.ToLower()))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsSubcategory(string word)
-        {
-            IEnumerable<string> subcats = Reps.Subcategories.Get().Select(x => x.Title.ToLower());
-            if (subcats.Contains(word.ToLower()))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsLTD(string word)
-        {
-            IEnumerable<string> LTDs = Reps.Juridics.Get().Select(x => x.LTDTitle.ToLower());
-            if (LTDs.Contains(word.ToLower()))
-            {
-                return true;
-            }
-            return false;
-        }
+        #endregion
     }
 }

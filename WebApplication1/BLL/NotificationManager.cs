@@ -9,6 +9,12 @@ namespace WebApplication1.BLL
     {
         private const string DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm";
 
+        private IEnumerable<Order> GetStartedOrdersByConsId(long consId)
+        {
+            return Reps.Orders.Get().Where(x => x.ConsultantId == consId &&
+                                        x.StatusCode == (long)OrderStatuses.Начат_клиентом);
+        }
+
         public IEnumerable<NotificationVM> GetVMs(long consId)
         {
             IList<NotificationVM> vms = new List<NotificationVM>();
@@ -23,11 +29,6 @@ namespace WebApplication1.BLL
             return vms;
         }
 
-        private IEnumerable<Order> GetStartedOrdersByConsId(long consId)
-        {
-            return Reps.Orders.Get().Where(x => x.ConsultantId == consId && 
-                                        x.StatusCode == (long)OrderStatuses.Начат_клиентом);
-        }
         // !!! везде где можно IQueryable
     }
 }

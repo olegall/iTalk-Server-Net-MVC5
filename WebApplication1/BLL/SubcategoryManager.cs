@@ -10,9 +10,12 @@ namespace WebApplication1.BLL
 {
     public class SubcategoryManager
     {
+        #region Fields
         private readonly IList<CategoryVM> categoryVMs = new List<CategoryVM>();
         private readonly GenericRepository<Subcategory> rep = Reps.Subcategories;
+        #endregion
 
+        #region Public methods
         // !!! улучшить
         public IEnumerable<Subcategory> GetByCategoryId(int categoryId)
         {
@@ -48,5 +51,6 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не получилось скрыть подкатегорию"));
             }
         }
+        #endregion
     }
 }

@@ -14,10 +14,65 @@ namespace WebApplication1.BLL
 {
     public class ServiceManager
     {
-        // !!! везде regions
+        #region Fields
         private readonly ConsultantManager consMng = new ConsultantManager();
         private readonly GenericRepository<Service> rep = Reps.Services;
+        #endregion
 
+        #region Private methods
+        private Service GetInstance(long consultantId,
+                                    string category,
+                                    string subcategory,
+                                    string title,
+                                    string description,
+                                    decimal cost,
+                                    int duration,
+                                    bool available,
+                                    int availablePeriod)
+        {
+            long categoryId, subcategoryId;
+            bool consChoseCat = Int64.TryParse(category, out categoryId);
+            bool consChoseSubcat = Int64.TryParse(subcategory, out subcategoryId);
+
+            Service service = new Service();
+            service.ConsultantId = consultantId;
+            if (consChoseCat && consChoseSubcat)
+            {
+                service.CategoryId = categoryId;
+                service.SubcategoryId = subcategoryId;
+            }
+            if (consChoseCat && !consChoseSubcat)
+            {
+                service.CategoryId = categoryId;
+                service.SubcategoryId = 0;
+            }
+            if (!consChoseCat && !consChoseSubcat)
+            {
+                service.CategoryId = 0;
+                service.SubcategoryId = 0;
+            }
+            service.CategoryId = categoryId;
+            service.SubcategoryId = subcategoryId;
+            service.Title = title;
+            service.Description = description;
+            service.Cost = cost;
+            service.Duration = duration;
+            service.Available = available;
+            service.AvailablePeriod = availablePeriod;
+            service.ModerationStatusId = 1;
+            return service;
+        }
+
+        private ServiceImage GetImage(HttpPostedFile file)
+        {
+            return new ServiceImage(ServiceUtil.GetBytesFromStream(file.InputStream),
+                                    file.FileName,
+                                    file.ContentLength,
+                                    DateTime.Now);
+        }
+        #endregion
+
+        #region Public methods
         // !!! async
         public IEnumerable<Service> Get(long consId)
         {
@@ -150,49 +205,6 @@ namespace WebApplication1.BLL
             }
         }
 
-        private Service GetInstance(long consultantId,
-                                    string category,
-                                    string subcategory,
-                                    string title,
-                                    string description,
-                                    decimal cost,
-                                    int duration,
-                                    bool available,
-                                    int availablePeriod)
-        {
-            long categoryId, subcategoryId;
-            bool consChoseCat = Int64.TryParse(category, out categoryId);
-            bool consChoseSubcat = Int64.TryParse(subcategory, out subcategoryId);
-
-            Service service = new Service();
-            service.ConsultantId = consultantId;
-            if (consChoseCat && consChoseSubcat)
-            {
-                service.CategoryId = categoryId;
-                service.SubcategoryId = subcategoryId;
-            }
-            if (consChoseCat && !consChoseSubcat)
-            {
-                service.CategoryId = categoryId;
-                service.SubcategoryId = 0;
-            }
-            if (!consChoseCat && !consChoseSubcat)
-            {
-                service.CategoryId = 0;
-                service.SubcategoryId = 0;
-            }
-            service.CategoryId = categoryId;
-            service.SubcategoryId = subcategoryId;
-            service.Title = title;
-            service.Description = description;
-            service.Cost = cost;
-            service.Duration = duration;
-            service.Available = available;
-            service.AvailablePeriod = availablePeriod;
-            service.ModerationStatusId = 1;
-            return service;
-        }
-
         public async void HideAsync(long id)
         {
             Service service = rep.GetAsync(id);
@@ -221,12 +233,6 @@ namespace WebApplication1.BLL
             }
         }
 
-        private ServiceImage GetImage(HttpPostedFile file) {
-            return new ServiceImage(ServiceUtil.GetBytesFromStream(file.InputStream), 
-                                    file.FileName, 
-                                    file.ContentLength, 
-                                    DateTime.Now);
-        }
         // !!! передавать ServiceId
         public string GetCategory(Service service)
         {
@@ -243,5 +249,6 @@ namespace WebApplication1.BLL
                                      .Select(x => x.Title)
                                      .SingleOrDefault();
         }
+        #endregion
     }
 }

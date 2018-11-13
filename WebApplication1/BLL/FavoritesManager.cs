@@ -10,11 +10,20 @@ namespace WebApplication1.BLL
 {
     public class FavoritesManager
     {
+        #region Fields
         private readonly GenericRepository<Favorite> rep = Reps.Favorites;
         // !!! избавиться от папки packages
         private readonly ConsultantManager consMng = new ConsultantManager();
         private readonly ServiceManager serviceMng = new ServiceManager();
+        #endregion
 
+        private IEnumerable<long> GetFavoriteConsIds(long clientId)
+        {
+            return rep.Get().Where(x => x.ClientId == clientId)
+                            .Select(x => x.ConsultantId);
+        }
+
+        #region Public methods
         public async Task CreateAsync(long clientId, long consultantId)
         {
             try
@@ -27,11 +36,7 @@ namespace WebApplication1.BLL
             }
         }
 
-        private IEnumerable<long> GetFavoriteConsIds(long clientId)
-        {
-            return rep.Get().Where(x => x.ClientId == clientId)
-                            .Select(x => x.ConsultantId);
-        }
+
 
         public IEnumerable<FavoriteConsultantVM> GetVMs(long clientId)
         {
@@ -107,5 +112,6 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось удалить консультанта из избранного"));
             }
         }
+        #endregion
     }
 }

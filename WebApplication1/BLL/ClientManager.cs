@@ -11,7 +11,7 @@ namespace WebApplication1.BLL
     public class ClientManager
     {
         private readonly GenericRepository<Client> rep = Reps.Clients;
-
+        #region Public methods
         public async Task CreateAsync(NameValueCollection formData)
         {
             try
@@ -73,5 +73,6 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось удалить клиента"));
             }
         }
+        #endregion
     }
 }

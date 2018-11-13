@@ -4,7 +4,7 @@
 
     public int Type { get; set; }
     public string Value { get; set; }
-
+    
     public SearchField(int type, string value)
     {
         Type = type;

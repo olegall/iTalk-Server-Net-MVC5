@@ -15,6 +15,7 @@ namespace WebApplication1.BLL
     {
         private readonly GenericRepository<Category> rep = Reps.Categories;
         // !!! убрать папку Packages
+        #region Public methods
         public async Task CreateAsync(NameValueCollection formData)
         {
             try
@@ -61,5 +62,6 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не получилось скрыть категорию"));
             }
         }
+        #endregion
     }
 }

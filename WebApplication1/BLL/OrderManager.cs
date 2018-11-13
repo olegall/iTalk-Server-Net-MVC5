@@ -11,12 +11,42 @@ using System.Threading.Tasks;
 namespace WebApplication1.BLL
 {
     public class OrderManager
-    {// !!! инициализация через конструктор - IoC. Завязка на интерфейсы в констуркторе
+    {   // !!! инициализация через конструктор - IoC. Завязка на интерфейсы в констуркторе
+        #region Fields
         private readonly GenericRepository<Order> rep = Reps.Orders;
-
         private readonly ConsultantManager consMng = new ConsultantManager();
         private readonly ServiceManager serviceMng = new ServiceManager();
+        #endregion
 
+        #region Private methods
+        // !!! GetAsync
+        private IEnumerable<Order> GetByClientId(long id)
+        {
+            return rep.Get().Where(x => x.ClientId == id);
+        }
+        // !!! GetAsync
+        private IEnumerable<Order> GetByConsId(long id)
+        {
+            return rep.Get().Where(x => x.ConsultantId == id);
+        }
+        // !!! GetPagingAsync
+        private IEnumerable<Order> GetRangeWithOffset(int offset, int limit)
+        {
+            return rep.Get().Skip(offset).Take(limit);
+        }
+        // !!! GetAsync
+        private string GetStatus(long code)
+        {
+            return Reps.OrderStatuses.Get().SingleOrDefault(x => x.Code == code).Text;
+        }
+        // !!! await, async Task
+        private string GetPaymentStatusAsync(long id)
+        {
+            return Reps.PaymentStatuses.GetAsync(id).Text;
+        }
+        #endregion
+
+        #region Public methods
         public async Task CreateAsync(NameValueCollection formData)
         {
             try
@@ -74,21 +104,7 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось отменить заказ консультантом"));
             }
         }
-        // !!! GetAsync
-        private IEnumerable<Order> GetByClientId(long id)
-        {
-            return rep.Get().Where(x => x.ClientId == id);
-        }
-        // !!! GetAsync
-        private IEnumerable<Order> GetByConsId(long id)
-        {
-            return rep.Get().Where(x => x.ConsultantId == id);
-        }
-        // !!! GetPagingAsync
-        private IEnumerable<Order> GetRangeWithOffset(int offset, int limit)
-        {
-            return rep.Get().Skip(offset).Take(limit);
-        }
+
         // !!! все id ulong
         public async Task<OrderForClientVM> GetVMAsync(long id)
         {
@@ -171,15 +187,6 @@ namespace WebApplication1.BLL
                 throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось изменить время заказа"));
             }
         }
-        // !!! GetAsync
-        private string GetStatus(long code)
-        {
-            return Reps.OrderStatuses.Get().SingleOrDefault(x => x.Code == code).Text;
-        }
-        // !!! await, async Task
-        private string GetPaymentStatusAsync(long id)
-        {
-            return Reps.PaymentStatuses.GetAsync(id).Text;
-        }
+        #endregion
     }
 }
