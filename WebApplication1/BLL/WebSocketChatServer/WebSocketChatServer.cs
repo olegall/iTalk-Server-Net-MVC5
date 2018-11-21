@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using WebApplication1.Utils;
 using WebApplication1.Models;
 using WebApplication1.DAL;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.BLL.WebSocketChatServer
 {

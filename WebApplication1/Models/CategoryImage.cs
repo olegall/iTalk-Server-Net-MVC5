@@ -6,7 +6,7 @@ namespace WebApplication1.Models
     {
         public long CategoryId { get; set; }
 
-        public CategoryImage(long categoryId, byte[] bytes, string fileName, long size, DateTime date)
+        public CategoryImage(long categoryId, byte[] bytes, string fileName, long size, DateTime date) // ! параметры - модели
         {
             categoryId = CategoryId;
             bytes = Bytes;

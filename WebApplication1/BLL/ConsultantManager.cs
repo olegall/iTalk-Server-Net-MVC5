@@ -9,6 +9,7 @@ using WebApplication1.Utils;
 using WebApplication1.DAL;
 using WebApplication1.Misc;
 using System.Threading.Tasks;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.BLL
 {
@@ -76,7 +77,7 @@ namespace WebApplication1.BLL
             }
             catch // ! отфильтровать исключение
             {// ! код ошибки
-                throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу");
+                throw new HttpException("Нет физлица с таким Id или проблемы с доступом к серверу");
             }
             finally
             {
@@ -92,7 +93,7 @@ namespace WebApplication1.BLL
             }
             catch // ! отфильтровать исключение
             {// ! код ошибки
-                throw new HttpException("Нет клиента с таким Id или проблемы с доступом к серверу");
+                throw new HttpException("Нет юрлица с таким Id или проблемы с доступом к серверу");
             }
             finally
             {
@@ -161,11 +162,11 @@ namespace WebApplication1.BLL
             }
             return juridics;
         }
-        // !!! GetAsync
+
         public PrivateConsultant GetPrivateByPhone(string phone)
         {
             try
-            {
+            {          // !!! GetAsync
                 return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
             }
             catch // !!! отфильтровать исключение

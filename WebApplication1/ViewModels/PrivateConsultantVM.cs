@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WebApplication1.Models
+namespace WebApplication1.ViewModels
 {
     public class PrivateConsultantVM : ConsultantVM
     {

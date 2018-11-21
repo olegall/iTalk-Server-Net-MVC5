@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using WebApplication1.Models.ServiceJSON;
 using System.Threading.Tasks;
 using WebApplication1.DAL;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.BLL
 {
