@@ -4,12 +4,14 @@ using WebApplication1.Utils;
 using WebApplication1.Misc;
 using WebApplication1.Misc.Auth;
 using System.Web.Http;
+using WebApplication1.Interfaces;
+using WebApplication1.DAL;
 
 namespace WebApplication1.Controllers
 {                // !!! в ед. числе ConsultantController - и далее
     public class ClientsController : BaseApiController<Misc.Auth.ConsultantManager>
     {
-        private readonly BLL.ClientManager mng = new BLL.ClientManager();
+        private readonly IClientManager mng = new BLL.ClientManager(Reps.Clients);
 
         /// <summary>
         /// Зарегистрировать клиента

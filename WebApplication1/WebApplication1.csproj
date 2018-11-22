@@ -303,7 +303,7 @@
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\ConsultantsController.cs" />
-    <Compile Include="Controllers\FavouritesController.cs" />
+    <Compile Include="Controllers\FavoritesController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="DAL\ClientRepo.cs" />
     <Compile Include="DAL\GenericRepository.cs" />
@@ -312,6 +312,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ISearchManager.cs" />
+    <Compile Include="Interfaces\IFavoritesManager.cs" />
+    <Compile Include="Interfaces\ISubcategoryManager.cs" />
+    <Compile Include="Interfaces\ICategoryManager.cs" />
+    <Compile Include="Interfaces\IClientManager.cs" />
     <Compile Include="Interfaces\IFile.cs" />
     <Compile Include="Interfaces\IGenericRepository.cs" />
     <Compile Include="Migrations\201810291004269_migratedb.cs" />

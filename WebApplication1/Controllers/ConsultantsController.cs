@@ -10,21 +10,29 @@ using System.Collections.Specialized;
 using WebApplication1.Utils;
 using System.Threading.Tasks;
 using WebApplication1.ViewModels;
+using WebApplication1.DAL;
 
 namespace WebApplication1.Controllers
 {
     public class ConsultantsController : ApiController
     {
-        private readonly ConsultantManager mng = new ConsultantManager();
-        private readonly SearchManager searchMng = new SearchManager();
+        private readonly ConsultantManager mng = new ConsultantManager(Reps.Privates, 
+                                                                       Reps.Juridics, 
+                                                                       Reps.Favorites, 
+                                                                       Reps.GalleryImages, 
+                                                                       Reps.Feedbacks, 
+                                                                       Reps.ConsultantImages);
+        private readonly SearchManager searchMng = new SearchManager(Reps.Privates,
+                                                                     Reps.Juridics,
+                                                                     Reps.Categories,
+                                                                     Reps.Subcategories,
+                                                                     Reps.Services);
 
         /// <summary>
         /// Получить консультантов
         /// </summary>
         [HttpGet]
         [Route("api/consultants/{offset}/{limit}/{subcategoryId}/{free}/{onlyFavorite}/{filter}")]
-        // физлица: api/consultants/0/6/1/false/true/null
-        // юрлица: api/consultants/0/2/2/false/false/null
         public Object Get(int offset, // !!! модель
                           int limit, 
                           long subcategoryId, 

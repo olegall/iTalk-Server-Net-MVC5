@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System.Web;
 using System.Linq;
+using WebApplication1.BLL;
 
 namespace WebApplication1.Providers
 {
@@ -31,7 +32,7 @@ namespace WebApplication1.Providers
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            var manager = context.OwinContext.GetUserManager<ClientManager>();
+            var manager = context.OwinContext.GetUserManager<WebApplication1.Misc.Auth.ClientManager>();
 
             var data = await context.Request.ReadFormAsync();
 

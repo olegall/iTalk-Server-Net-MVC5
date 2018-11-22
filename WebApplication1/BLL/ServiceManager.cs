@@ -8,7 +8,6 @@ using WebApplication1.Utils;
 using Newtonsoft.Json;
 using WebApplication1.Models.ServiceJSON;
 using System.Threading.Tasks;
-using WebApplication1.DAL;
 using WebApplication1.ViewModels;
 
 namespace WebApplication1.BLL
@@ -17,7 +16,27 @@ namespace WebApplication1.BLL
     {
         #region Fields
         private readonly ConsultantManager consMng = new ConsultantManager();
-        private readonly GenericRepository<Service> rep = Reps.Services;
+        private readonly IGenericRepository<Service> rep;
+        private readonly IGenericRepository<ServiceImage> serviceImagesRep;
+        private readonly IGenericRepository<Category> categoriesRep;
+        private readonly IGenericRepository<Subcategory> subcategoriesRep;
+        #endregion
+
+        #region ctor
+        public ServiceManager()
+        {
+        }
+
+        public ServiceManager(IGenericRepository<Service> rep, 
+                              IGenericRepository<ServiceImage> serviceImagesRep,
+                              IGenericRepository<Category> categoriesRep,
+                              IGenericRepository<Subcategory> subcategoriesRep)
+        {
+            this.rep = rep;
+            this.serviceImagesRep = serviceImagesRep;
+            this.categoriesRep = categoriesRep;
+            this.subcategoriesRep = subcategoriesRep;
+        }
         #endregion
 
         #region Private methods
@@ -226,7 +245,7 @@ namespace WebApplication1.BLL
             {
                 ServiceImage img = GetImage(request.Files["image"]);
                 img.ServiceId =  ServiceUtil.GetLong(request.Form["id"]);
-                await Reps.ServiceImages.CreateAsync(img);
+                await serviceImagesRep.CreateAsync(img);
             }
             catch (Exception e)
             {
@@ -237,7 +256,7 @@ namespace WebApplication1.BLL
         // !!! передавать ServiceId
         public string GetCategory(Service service)
         {
-            return Reps.Categories.Get().Where(x => x.Id == service.CategoryId)
+            return categoriesRep.Get().Where(x => x.Id == service.CategoryId)
                                         .Select(x => x.Title)
                                         .SingleOrDefault();
         }
@@ -246,7 +265,7 @@ namespace WebApplication1.BLL
         // !!! передавать ServiceId
         public string GetSubcategory(Service service)
         {
-            return Reps.Subcategories.Get().Where(x => x.Id == service.SubcategoryId)
+            return subcategoriesRep.Get().Where(x => x.Id == service.SubcategoryId)
                                      .Select(x => x.Title)
                                      .SingleOrDefault();
         }

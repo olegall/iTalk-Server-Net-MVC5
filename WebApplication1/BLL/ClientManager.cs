@@ -3,20 +3,26 @@ using System.Collections.Specialized;
 using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
-using WebApplication1.DAL;
 using System.Threading.Tasks;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class ClientManager
+    public class ClientManager : IClientManager
     {
-        private readonly GenericRepository<Client> rep = Reps.Clients;
+        private readonly IGenericRepository<Client> rep;
+
+        public ClientManager(IGenericRepository<Client> rep)
+        {
+            this.rep = rep;
+        }
+
         #region Public methods
         public async Task CreateAsync(NameValueCollection formData)
         {
             try
             {
-                await Reps.Clients.CreateAsync(GetInstance(formData));
+                await rep.CreateAsync(GetInstance(formData));
             }
             catch (Exception e)
             {
@@ -29,7 +35,7 @@ namespace WebApplication1.BLL
             try
             {
 
-                return Reps.Clients.GetAsync(id);
+                return rep.GetAsync(id);
             }
             catch // !!! отфильтровать исключение
             {// !!! код ошибки
@@ -49,11 +55,11 @@ namespace WebApplication1.BLL
 
         public async Task UpdateAsync(long id, string name, bool adPush) // adPush - позже
         {
-            Client client = Reps.Clients.GetAsync(id);
+            Client client = rep.GetAsync(id);
             client.Name = name;
             try
             {
-                await Reps.Clients.UpdateAsync(client);
+                await rep.UpdateAsync(client);
             }
             catch (Exception e)
             {
@@ -63,10 +69,10 @@ namespace WebApplication1.BLL
 
         public async Task DeleteAsync(long id)
         {
-            Client client = Reps.Clients.GetAsync(id);
+            Client client = rep.GetAsync(id);
             try
             {
-                await Reps.Clients.DeleteAsync(client);
+                await rep.DeleteAsync(client);
             } /// !!! 2 catch - под
             catch (Exception e)
             {

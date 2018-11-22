@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Web.Http;
 using WebApplication1.BLL;
+using WebApplication1.DAL;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.Controllers
 {
     public class SubcategoriesController : ApiController
     {
-        private readonly SubcategoryManager mng = new SubcategoryManager();
+        private readonly ISubcategoryManager mng = new SubcategoryManager(Reps.Subcategories);
 
         /// <summary>
         /// Скрыть подкатегорию

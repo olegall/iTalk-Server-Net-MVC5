@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Web.Http;
 using WebApplication1.BLL;
+using WebApplication1.Interfaces;
 using WebApplication1.Misc;
 using WebApplication1.Misc.Auth;
+using WebApplication1.DAL;
 
 namespace WebApplication1.Controllers
 {
-    public class FavouritesController : BaseApiController<Misc.Auth.ConsultantManager>
+    public class FavoritesController : BaseApiController<Misc.Auth.ConsultantManager>
     {
-        private readonly FavoritesManager mng = new FavoritesManager();
-
+        private readonly IFavoritesManager mng = new FavoritesManager(Reps.Favorites,
+                                                                      Reps.Privates,
+                                                                      Reps.Juridics);
+        
         /// <summary>
         /// Добавить консультанта в избранное (действие клиента)
         /// </summary>

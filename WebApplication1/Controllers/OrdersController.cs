@@ -2,12 +2,16 @@
 using System.Web.Http;
 using WebApplication1.BLL;
 using WebApplication1.Utils;
+using WebApplication1.DAL;
 
 namespace WebApplication1.Controllers
 {
     public class OrdersController : ApiController
     {
-        private readonly OrderManager mng = new OrderManager();
+        private readonly OrderManager mng = new OrderManager(Reps.Orders, 
+                                                             Reps.ConsultationTypes, 
+                                                             Reps.OrderStatuses, 
+                                                             Reps.PaymentStatuses);
 
         /// <summary>
         /// Оформить (создать) клиентом

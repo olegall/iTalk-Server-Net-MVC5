@@ -3,21 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApplication1.Models;
 using WebApplication1.Utils;
-using WebApplication1.DAL;
 using System.Threading.Tasks;
 using WebApplication1.ViewModels;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class FavoritesManager
+    public class FavoritesManager : IFavoritesManager
     {
         #region Fields
-        private readonly GenericRepository<Favorite> rep = Reps.Favorites;
-        // !!! избавиться от папки packages
+        private readonly IGenericRepository<Favorite> rep;
+        private readonly IGenericRepository<PrivateConsultant> privatesRep;
+        private readonly IGenericRepository<JuridicConsultant> juridicsRep;
         private readonly ConsultantManager consMng = new ConsultantManager();
         private readonly ServiceManager serviceMng = new ServiceManager();
         #endregion
 
+        #region ctor
+        public FavoritesManager(IGenericRepository<Favorite> rep, 
+                                IGenericRepository<PrivateConsultant> privatesRep,
+                                IGenericRepository<JuridicConsultant> juridicsRep)
+        {
+            this.rep = rep;
+            this.privatesRep = privatesRep;
+            this.juridicsRep = juridicsRep;
+        }
+        #endregion
+        // !!! избавиться от папки packages
+
+        // ! join
         private IEnumerable<long> GetFavoriteConsIds(long clientId)
         {
             return rep.Get().Where(x => x.ClientId == clientId)
@@ -37,14 +51,12 @@ namespace WebApplication1.BLL
             }
         }
 
-
-
         public IEnumerable<FavoriteConsultantVM> GetVMs(long clientId)
         {
             IList<FavoriteConsultantVM> vms = new List<FavoriteConsultantVM>();
             foreach (long consId in GetFavoriteConsIds(clientId))
             {
-                PrivateConsultant private_ = Reps.Privates.Get().Where(x => x.Id == consId)
+                PrivateConsultant private_ = privatesRep.Get().Where(x => x.Id == consId)
                                                                 .SingleOrDefault();
                 if (private_ != null)
                 {
@@ -57,7 +69,7 @@ namespace WebApplication1.BLL
                         Services = serviceMng.GetVM(private_)
                     });
                 }
-                JuridicConsultant juridic = Reps.Juridics.Get()
+                JuridicConsultant juridic = juridicsRep.Get()
                                                          .Where(x => x.Id == consId)
                                                          .SingleOrDefault();
                 if (juridic != null)

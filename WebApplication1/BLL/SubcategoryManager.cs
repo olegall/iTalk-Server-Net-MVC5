@@ -4,17 +4,19 @@ using System.Linq;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using System.Threading.Tasks;
-using WebApplication1.DAL;
 using WebApplication1.ViewModels;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class SubcategoryManager
+    public class SubcategoryManager : ISubcategoryManager 
     {
-        #region Fields
-        private readonly IList<CategoryVM> categoryVMs = new List<CategoryVM>();
-        private readonly GenericRepository<Subcategory> rep = Reps.Subcategories;
-        #endregion
+        private readonly IGenericRepository<Subcategory> rep;
+
+        public SubcategoryManager(GenericRepository<Subcategory> rep)
+        {
+            this.rep = rep;
+        }
 
         #region Public methods
         // !!! улучшить

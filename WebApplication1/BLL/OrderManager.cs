@@ -5,7 +5,6 @@ using System.Data.Entity;
 using System.Linq;
 using WebApplication1.Models;
 using WebApplication1.Utils;
-using WebApplication1.DAL;
 using System.Threading.Tasks;
 using WebApplication1.ViewModels;
 
@@ -14,9 +13,26 @@ namespace WebApplication1.BLL
     public class OrderManager
     {   // !!! инициализация через конструктор - IoC. Завязка на интерфейсы в констуркторе
         #region Fields
-        private readonly GenericRepository<Order> rep = Reps.Orders;
+        private readonly IGenericRepository<Order> rep;
+        private readonly IGenericRepository<ConsultationType> consultationTypesRep;
+        private readonly IGenericRepository<OrderStatus> orderStatusesRep;
+        private readonly IGenericRepository<PaymentStatus> paymentStatusesRep;
+
         private readonly ConsultantManager consMng = new ConsultantManager();
         private readonly ServiceManager serviceMng = new ServiceManager();
+        #endregion
+
+        #region ctor
+        public OrderManager(IGenericRepository<Order> rep, 
+                            IGenericRepository<ConsultationType> consultationTypesRep, 
+                            IGenericRepository<OrderStatus> orderStatusesRep, 
+                            IGenericRepository<PaymentStatus> paymentStatusesRep)
+        {
+            this.rep = rep;
+            this.consultationTypesRep = consultationTypesRep;
+            this.orderStatusesRep = orderStatusesRep;
+            this.paymentStatusesRep = paymentStatusesRep;
+        }
         #endregion
 
         #region Private methods
@@ -38,12 +54,12 @@ namespace WebApplication1.BLL
         // !!! GetAsync
         private string GetStatus(long code)
         {
-            return Reps.OrderStatuses.Get().SingleOrDefault(x => x.Code == code).Text;
+            return orderStatusesRep.Get().SingleOrDefault(x => x.Code == code).Text;
         }
         // !!! await, async Task
         private string GetPaymentStatusAsync(long id)
         {
-            return Reps.PaymentStatuses.GetAsync(id).Text;
+            return paymentStatusesRep.GetAsync(id).Text;
         }
         #endregion
 
@@ -172,7 +188,7 @@ namespace WebApplication1.BLL
 
         public IEnumerable<ConsultationType> GetConsultationTypes()
         {
-            return Reps.ConsultationTypes.Get();
+            return consultationTypesRep.Get();
         }
 
         public async Task UpdateTimeAsync(long id, long timestamp)

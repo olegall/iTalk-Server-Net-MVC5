@@ -3,12 +3,16 @@ using System.Net;
 using System.Web.Http;
 using WebApplication1.BLL;
 using WebApplication1.Utils;
+using WebApplication1.DAL;
 
 namespace WebApplication1.Controllers
 {
     public class ServicesController : ApiController
     {
-        private readonly ServiceManager mng = new ServiceManager();
+        private readonly ServiceManager mng = new ServiceManager(Reps.Services,
+                                                                 Reps.ServiceImages, 
+                                                                 Reps.Categories, 
+                                                                 Reps.Subcategories);
 
         /// <summary>
         /// Получить список всех услуг для клиента, реестра услуг, оформления заказа (стр 13, 43)

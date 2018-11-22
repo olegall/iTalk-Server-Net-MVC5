@@ -6,13 +6,15 @@ using WebApplication1.BLL;
 using WebApplication1.Utils;
 using WebApplication1.Misc;
 using WebApplication1.ViewModels;
+using WebApplication1.Interfaces;
+using WebApplication1.DAL;
 
 namespace WebApplication1.Controllers
 {
     public class CategoriesController : ApiController
     {
-        private readonly CategoryManager mng = new CategoryManager();
-        private readonly SubcategoryManager subcategoryMng = new SubcategoryManager();
+        private readonly ICategoryManager mng = new CategoryManager(Reps.Categories, Reps.CategoryImages); // ! DI здесь
+        private readonly ISubcategoryManager subcategoryMng = new SubcategoryManager(Reps.Subcategories);
 
         /// <summary>
         /// Получить категории с подкатегориями

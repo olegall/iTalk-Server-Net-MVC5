@@ -6,14 +6,23 @@ using System.Linq;
 using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
-using WebApplication1.DAL;
 using System.Threading.Tasks;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class CategoryManager
+    public class CategoryManager : ICategoryManager
     {
-        private readonly GenericRepository<Category> rep = Reps.Categories;
+        private readonly IGenericRepository<Category> rep;
+        private readonly IGenericRepository<CategoryImage> categoryImagesRep;
+
+        public CategoryManager(IGenericRepository<Category> rep,
+                               IGenericRepository<CategoryImage> categoryImagesRep)
+        {
+            this.rep = rep;
+            this.categoryImagesRep = categoryImagesRep;
+        }
+
         // !!! убрать папку Packages
         #region Public methods
         public async Task CreateAsync(NameValueCollection formData)
@@ -32,7 +41,7 @@ namespace WebApplication1.BLL
         {
             try
             {
-                await Reps.CategoryImages.CreateAsync(new CategoryImage(id, 
+                await categoryImagesRep.CreateAsync(new CategoryImage(id, 
                                                       ServiceUtil.GetBytesFromStream(file.InputStream), 
                                                       file.FileName,
                                                       file.ContentLength,

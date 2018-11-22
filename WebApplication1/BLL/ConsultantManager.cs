@@ -6,33 +6,58 @@ using System.Linq;
 using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
-using WebApplication1.DAL;
 using WebApplication1.Misc;
 using System.Threading.Tasks;
 using WebApplication1.ViewModels;
+using WebApplication1.DAL;
 
 namespace WebApplication1.BLL
 {
     public class ConsultantManager
     {
         #region Fields
-        private readonly GenericRepository<PrivateConsultant> privateRep = Reps.Privates; // ! подчёркивание у приватных методов
-        private readonly GenericRepository<JuridicConsultant> juridicRep = Reps.Juridics;
-        private readonly SearchManager searchMng = new SearchManager();
+        private readonly IGenericRepository<PrivateConsultant> privatesRep;
+        private readonly IGenericRepository<JuridicConsultant> juridicsRep;
+        private readonly IGenericRepository<Favorite> favoritesRep;
+        private readonly IGenericRepository<GalleryImage> galleryImagesRep;
+        private readonly IGenericRepository<Feedback> feedbacksRep;
+        private readonly IGenericRepository<ConsultantImage> consultantImagesRep;
+
+        private readonly SearchManager searchMng = new SearchManager(Reps.Privates, 
+                                                                     Reps.Juridics, 
+                                                                     Reps.Categories, 
+                                                                     Reps.Subcategories, 
+                                                                     Reps.Services);
+        //private readonly ISearchManager searchMng; // !
+        private readonly int MAX_PRIVATE_DOCS_NUM = 5;
+        private readonly int MAX_JURIDIC_DOCS_NUM = 5;
         #endregion
 
-        #region Constants
-        private const int MAX_PRIVATE_DOCS_NUM = 5;
-        private const int MAX_JURIDIC_DOCS_NUM = 5;
-        private const byte BUSY = 0x00000001;
-        private const byte FREE = 0x00000010;
+        #region ctor
+        public ConsultantManager()
+        {
+        }
+        public ConsultantManager(IGenericRepository<PrivateConsultant> privatesRep, 
+                                 IGenericRepository<JuridicConsultant> juridicsRep,
+                                 IGenericRepository<Favorite> favoritesRep,
+                                 IGenericRepository<GalleryImage> galleryImagesRep,
+                                 IGenericRepository<Feedback> feedbacksRep, 
+                                 IGenericRepository<ConsultantImage> consultantImagesRep)
+        {
+            this.privatesRep = privatesRep;
+            this.juridicsRep = juridicsRep;
+            this.favoritesRep = favoritesRep;
+            this.galleryImagesRep = galleryImagesRep;
+            this.feedbacksRep = feedbacksRep;
+            this.consultantImagesRep = consultantImagesRep;
+        }
         #endregion
-        // !!! везде regions
+
         #region Private methods
         // !!! GetAsync
         private bool IsInFavorites(long id)
         {
-            return Reps.Favorites.Get().Any(x => x.ConsultantId == id);
+            return favoritesRep.Get().Any(x => x.ConsultantId == id);
         }
         #endregion
 
@@ -40,7 +65,7 @@ namespace WebApplication1.BLL
         // !!! GetAsync
         public PrivateConsultant Get(string phone)
         {
-            return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
+            return privatesRep.Get().SingleOrDefault(x => x.Phone == phone);
         }
 
         public string GetName(long orderId)
@@ -73,32 +98,32 @@ namespace WebApplication1.BLL
         {
             try
             {
-                return privateRep.GetAsync(id);
+                return privatesRep.GetAsync(id);
             }
             catch // ! отфильтровать исключение
             {// ! код ошибки
                 throw new HttpException("Нет физлица с таким Id или проблемы с доступом к серверу");
             }
-            finally
-            {
-                privateRep.Dispose();
-            }
+            //finally
+            //{
+            //    privateRep.Dispose();
+            //}
         }
 
         public async Task<JuridicConsultant> GetJuridicAsync(long id)
         {
             try
             {
-                return juridicRep.GetAsync(id);
+                return juridicsRep.GetAsync(id);
             }
             catch // ! отфильтровать исключение
             {// ! код ошибки
                 throw new HttpException("Нет юрлица с таким Id или проблемы с доступом к серверу");
             }
-            finally
-            {
-                juridicRep.Dispose();
-            }
+            //finally
+            //{
+            //    juridicRep.Dispose();
+            //}
         }
 
         public IEnumerable<PrivateConsultant> GetPrivatesBySubcategory(long subcatId)
@@ -167,32 +192,32 @@ namespace WebApplication1.BLL
         {
             try
             {          // !!! GetAsync
-                return privateRep.Get().SingleOrDefault(x => x.Phone == phone);
+                return privatesRep.Get().SingleOrDefault(x => x.Phone == phone);
             }
             catch // !!! отфильтровать исключение
             {// !!! код ошибки
                 throw new HttpException("Нет физлица с таким телефоном или проблемы с доступом к серверу");
             }
-            finally
-            {
-                privateRep.Dispose();
-            }
+            //finally
+            //{
+            //    privateRep.Dispose();
+            //}
         }
         // !!! GetAsync
         public JuridicConsultant GetJuridicByPhone(string phone)
         {
             try
             {
-                return juridicRep.Get().SingleOrDefault(x => x.Phone == phone);
+                return juridicsRep.Get().SingleOrDefault(x => x.Phone == phone);
             }
             catch // !!! отфильтровать исключение
             {// !!! код ошибки
                 throw new HttpException("Нет юрлица с таким телефоном или проблемы с доступом к серверу");
             }
-            finally
-            {
-                juridicRep.Dispose();  // !!! везде для Get
-            }
+            //finally
+            //{
+            //    juridicRep.Dispose();  // !!! везде для Get
+            //}
         }
 
         public PrivateConsultantVM GetPrivateVM(PrivateConsultant private_)
@@ -306,15 +331,15 @@ namespace WebApplication1.BLL
 
         public bool IsFavorite(long id)
         {
-            return Reps.Favorites.Get().Any(x => x.ConsultantId == id);
+            return favoritesRep.Get().Any(x => x.ConsultantId == id);
         }
 
         public bool IsJuridic(long id)
         {
-            if (juridicRep.Get().Any(x => x.Id == id))
+            if (juridicsRep.Get().Any(x => x.Id == id))
                 return true;
 
-            if (privateRep.Get().Any(x => x.Id == id))
+            if (privatesRep.Get().Any(x => x.Id == id))
                 return false;
 
             throw new Exception(Settings.noConsWithId);
@@ -322,7 +347,7 @@ namespace WebApplication1.BLL
 
         public IEnumerable<string> GetGalleryImagesNames(long id)
         {
-            IEnumerable<long> imageIds = Reps.GalleryImages.Get().Where(x => x.ConsultantId == id)
+            IEnumerable<long> imageIds = galleryImagesRep.Get().Where(x => x.ConsultantId == id)
                                                            .Select(x => x.Id);
             IList<string> images = new List<string>();
             foreach (long imageId in imageIds)
@@ -334,7 +359,7 @@ namespace WebApplication1.BLL
 
         public int GetFeedbacksCount(long consultantId)
         {
-            return Reps.Feedbacks.Get().Where(x => x.ConsultantId == consultantId)
+            return feedbacksRep.Get().Where(x => x.ConsultantId == consultantId)
                                        .ToList()
                                        .Count;
         }
@@ -348,7 +373,7 @@ namespace WebApplication1.BLL
         {
             try
             {
-                privateRep.CreateAsync(new PrivateConsultant(name,
+                privatesRep.CreateAsync(new PrivateConsultant(name,
                                                              surname,
                                                              patronymic,
                                                              phone,
@@ -359,7 +384,7 @@ namespace WebApplication1.BLL
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
             }
-            long createdId = privateRep.Get().OrderByDescending(x => x.Id)
+            long createdId = privatesRep.Get().OrderByDescending(x => x.Id)
                                              .Select(x => x.Id)
                                              .First();
             return createdId;
@@ -397,14 +422,14 @@ namespace WebApplication1.BLL
         {
             try
             {
-                juridicRep.CreateAsync(new JuridicConsultant(ltdtitle, ogrn, inn, phone, siteurl, DateTime.Now));
+                juridicsRep.CreateAsync(new JuridicConsultant(ltdtitle, ogrn, inn, phone, siteurl, DateTime.Now));
             }
             catch (Exception e)
             {
                 throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
             }
 
-            long createdId = juridicRep.Get().OrderByDescending(x => x.Id)
+            long createdId = juridicsRep.Get().OrderByDescending(x => x.Id)
                                              .Select(x => x.Id)
                                              .First();
             return createdId;
@@ -416,7 +441,7 @@ namespace WebApplication1.BLL
             {
                 await CreateImageAsync(files["logo"], (long)FileTypes.Logo, id);
             }
-            for (int i = 1; i <= MAX_PRIVATE_DOCS_NUM; i++)
+            for (int i = 1; i <= MAX_JURIDIC_DOCS_NUM; i++)
             {
                 HttpPostedFile file = files["doc" + i];
                 if (file != null)
@@ -430,7 +455,7 @@ namespace WebApplication1.BLL
         {
             try
             {
-                await Reps.ConsultantImages.CreateAsync(new ConsultantImage(consId, 
+                await consultantImagesRep.CreateAsync(new ConsultantImage(consId, 
                                                                             ServiceUtil.GetBytesFromStream(file.InputStream), 
                                                                             file.FileName, 
                                                                             file.ContentLength, 
@@ -452,7 +477,7 @@ namespace WebApplication1.BLL
                 {
                     try
                     {
-                        await Reps.ConsultantImages.CreateAsync(new ConsultantImage(consId,
+                        await consultantImagesRep.CreateAsync(new ConsultantImage(consId,
                                                                                     ServiceUtil.GetBytesFromStream(file.InputStream),
                                                                                     file.FileName,
                                                                                     file.ContentLength,
@@ -469,10 +494,10 @@ namespace WebApplication1.BLL
 
         public async Task DeleteImageAsync(long id)
         {
-            ConsultantImage image = Reps.ConsultantImages.GetAsync(id);
+            ConsultantImage image = consultantImagesRep.GetAsync(id);
             try
             {
-                await Reps.ConsultantImages.DeleteAsync(image);
+                await consultantImagesRep.DeleteAsync(image);
             }
             catch (Exception e)
             {
@@ -491,7 +516,7 @@ namespace WebApplication1.BLL
             private_.Id = id;
             try
             {
-                await privateRep.UpdateAsync(private_);
+                await privatesRep.UpdateAsync(private_);
             }
             catch (Exception e)
             {
@@ -510,7 +535,7 @@ namespace WebApplication1.BLL
             juridic.Id = id;
             try
             {
-                await juridicRep.UpdateAsync(juridic);
+                await juridicsRep.UpdateAsync(juridic);
             }
             catch (Exception e)
             {
@@ -520,13 +545,13 @@ namespace WebApplication1.BLL
 
         public async Task UpdateRatingAsync(long id, decimal rating)
         {
-            PrivateConsultant private_ = privateRep.GetAsync(id);
+            PrivateConsultant private_ = privatesRep.GetAsync(id);
             if (private_ != null)
             {
                 private_.Rating = rating;
                 try
                 {
-                    await privateRep.UpdateAsync(private_);
+                    await privatesRep.UpdateAsync(private_);
                 }
                 catch (Exception e)
                 {
@@ -534,11 +559,11 @@ namespace WebApplication1.BLL
                 }
                 return;
             }
-            JuridicConsultant juridic = juridicRep.GetAsync(id);
+            JuridicConsultant juridic = juridicsRep.GetAsync(id);
             juridic.Rating = rating;
             try
             { 
-                await juridicRep.UpdateAsync(juridic);
+                await juridicsRep.UpdateAsync(juridic);
             }
             catch (Exception e)
             {

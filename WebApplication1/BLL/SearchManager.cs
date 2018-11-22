@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using WebApplication1.Models;
-using WebApplication1.DAL;
 using WebApplication1.ViewModels;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class SearchManager
+    public class SearchManager : ISearchManager
     {
         #region Combinations
         /*
@@ -41,6 +41,27 @@ namespace WebApplication1.BLL
         private int LTDType         { get { return (int)SearchField.Types.LTD; } }
         private int CategoryType    { get { return (int)SearchField.Types.Category; } }
         private int SubcategoryType { get { return (int)SearchField.Types.Subcategory; } }
+
+        private readonly IGenericRepository<PrivateConsultant> privatesRep;
+        private readonly IGenericRepository<JuridicConsultant> juridicsRep;
+        private readonly IGenericRepository<Category> categoriesRep;
+        private readonly IGenericRepository<Subcategory> subcategoriesRep;
+        private readonly IGenericRepository<Service> servicesRep;
+        #endregion
+
+        #region ctor
+        public SearchManager(IGenericRepository<PrivateConsultant> privatesRep,
+                             IGenericRepository<JuridicConsultant> juridicsRep,
+                             IGenericRepository<Category> categoriesRep,
+                             IGenericRepository<Subcategory> subcategoriesRep,
+                             IGenericRepository<Service> servicesRep)
+        {
+            this.privatesRep = privatesRep;
+            this.juridicsRep = juridicsRep;
+            this.categoriesRep = categoriesRep;
+            this.subcategoriesRep = subcategoriesRep;
+            this.servicesRep = servicesRep;
+        }
         #endregion
 
         #region Private methods
@@ -85,7 +106,7 @@ namespace WebApplication1.BLL
         // !!! везде GetAsync
         private bool IsName(string word)
         {
-            IEnumerable<string> names = Reps.Privates.Get().Select(x => x.Name.ToLower());
+            IEnumerable<string> names = privatesRep.Get().Select(x => x.Name.ToLower());
             if (names.Any(x => x.Contains(word.ToLower())))
             {
                 return true;
@@ -95,7 +116,7 @@ namespace WebApplication1.BLL
 
         private bool IsPatronymic(string word)
         {
-            IEnumerable<string> patronymics = Reps.Privates.Get().Select(x => x.Patronymic.ToLower());
+            IEnumerable<string> patronymics = privatesRep.Get().Select(x => x.Patronymic.ToLower());
             if (patronymics.Any(x => x.Contains(word.ToLower())))
             {
                 return true;
@@ -105,7 +126,7 @@ namespace WebApplication1.BLL
 
         private bool IsSurname(string word)
         {
-            IEnumerable<string> surnames = Reps.Privates.Get().Select(x => x.Surname.ToLower());
+            IEnumerable<string> surnames = privatesRep.Get().Select(x => x.Surname.ToLower());
             if (surnames.Any(x => x.Contains(word.ToLower())))
             {
                 return true;
@@ -115,7 +136,7 @@ namespace WebApplication1.BLL
 
         private bool IsCategory(string word)
         {
-            IEnumerable<string> categories = Reps.Categories.Get().Select(x => x.Title.ToLower());
+            IEnumerable<string> categories = categoriesRep.Get().Select(x => x.Title.ToLower());
             if (categories.Contains(word.ToLower()))
             {
                 return true;
@@ -125,7 +146,7 @@ namespace WebApplication1.BLL
 
         private bool IsSubcategory(string word)
         {
-            IEnumerable<string> subcats = Reps.Subcategories.Get().Select(x => x.Title.ToLower());
+            IEnumerable<string> subcats = subcategoriesRep.Get().Select(x => x.Title.ToLower());
             if (subcats.Contains(word.ToLower()))
             {
                 return true;
@@ -135,7 +156,7 @@ namespace WebApplication1.BLL
 
         private bool IsLTD(string word)
         {
-            IEnumerable<string> LTDs = Reps.Juridics.Get().Select(x => x.LTDTitle.ToLower());
+            IEnumerable<string> LTDs = juridicsRep.Get().Select(x => x.LTDTitle.ToLower());
             if (LTDs.Contains(word.ToLower()))
             {
                 return true;
@@ -158,7 +179,7 @@ namespace WebApplication1.BLL
             foreach (Consultant cons in consultants)
             {
                 ConsultantVM vm = null;
-                PrivateConsultant private_ = Reps.Privates.Get().SingleOrDefault(x => x.Id == cons.Id);
+                PrivateConsultant private_ = privatesRep.Get().SingleOrDefault(x => x.Id == cons.Id);
                 if (private_ != null)
                 {
                     vm = new PrivateConsultantVM
@@ -172,7 +193,7 @@ namespace WebApplication1.BLL
                         Services = new ServiceManager().GetVM(private_)
                     };
                 }
-                JuridicConsultant juridic = Reps.Juridics.Get().SingleOrDefault(x => x.Id == cons.Id);// !!! GetAsync
+                JuridicConsultant juridic = juridicsRep.Get().SingleOrDefault(x => x.Id == cons.Id);// !!! GetAsync
                 if (juridic != null)
                 {
                     vm = new JuridicConsultantVM
@@ -218,8 +239,8 @@ namespace WebApplication1.BLL
             }
             if (categoryField != null)
             {
-                long categoryId = Reps.Categories.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
-                IEnumerable<long> privatesIdsByCat = Reps.Services.Get().Where(x => x.CategoryId == categoryId)
+                long categoryId = categoriesRep.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
+                IEnumerable<long> privatesIdsByCat = servicesRep.Get().Where(x => x.CategoryId == categoryId)
                                                                         .Select(x => x.ConsultantId);
 
                 privates = privates.Where(x => hasName(x, nameField) &&
@@ -249,9 +270,9 @@ namespace WebApplication1.BLL
 
             if (categoryField != null) // 5
             {
-                long categoryId = Reps.Categories.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
-                IEnumerable<long> juridicsIdsByCat = Reps.Services.Get().Where(x => x.CategoryId == categoryId)
-                                                                        .Select(x => x.ConsultantId);
+                long categoryId = categoriesRep.Get().SingleOrDefault(x => x.Title == categoryField.Value).Id;
+                IEnumerable<long> juridicsIdsByCat = servicesRep.Get().Where(x => x.CategoryId == categoryId)
+                                                                      .Select(x => x.ConsultantId);
 
                 juridics = juridics.Where(x => hasLTD(x, LTDField) &&
                            juridicsIdsByCat.Any(id => id == x.Id));

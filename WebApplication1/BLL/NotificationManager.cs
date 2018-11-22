@@ -1,19 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebApplication1.Models;
-using WebApplication1.DAL;
-using WebApplication1.ViewModels;
 
 namespace WebApplication1.BLL
 {
     public class NotificationManager
     {
-        private const string DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm";
+        private readonly string DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm";
+        private readonly IGenericRepository<Order> ordersRep;
+
+        public NotificationManager(IGenericRepository<Order> ordersRep)
+        {
+            this.ordersRep = ordersRep;
+        }
 
         private IEnumerable<Order> GetStartedOrdersByConsId(long consId)
         {
-            return Reps.Orders.Get().Where(x => x.ConsultantId == consId &&
-                                        x.StatusCode == (long)OrderStatuses.Начат_клиентом);
+            return ordersRep.Get().Where(x => x.ConsultantId == consId &&
+                                              x.StatusCode == (long)OrderStatuses.Начат_клиентом);
         }
 
         public IEnumerable<NotificationVM> GetVMs(long consId)
