@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Web;
+using System.Linq;
+using System.Data.Entity;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
-using System.Threading.Tasks;
 using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
@@ -33,7 +33,7 @@ namespace WebApplication1.BLL
             }
             catch (Exception e)
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось добавить категорию"));
+                throw new HttpException(500, "Не удалось добавить категорию");
             }
         }
                                                                     // !!! что за Id?
@@ -42,14 +42,14 @@ namespace WebApplication1.BLL
             try
             {
                 await categoryImagesRep.CreateAsync(new CategoryImage(id, 
-                                                      ServiceUtil.GetBytesFromStream(file.InputStream), 
-                                                      file.FileName,
-                                                      file.ContentLength,
-                                                      DateTime.Now));
+                                                                      ServiceUtil.GetBytesFromStream(file.InputStream), 
+                                                                      file.FileName,
+                                                                      file.ContentLength,
+                                                                      DateTime.Now));
             }
             catch (Exception e)
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось добавить изображение в категорию"));
+                throw new HttpException(500, "Не удалось добавить изображение в категорию");
             }
         }
 
@@ -68,7 +68,7 @@ namespace WebApplication1.BLL
             }
             catch (Exception e)
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не получилось скрыть категорию"));
+                throw new HttpException(500, "Не получилось скрыть категорию");
             }
         }
         #endregion

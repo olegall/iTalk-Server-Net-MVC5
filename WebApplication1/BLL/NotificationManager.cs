@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebApplication1.Models;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class NotificationManager
+    public class NotificationManager : INotificationManager
     {
         private readonly string DATE_TIME_FORMAT = "dd.MM.yyyy HH:mm";
         private readonly IGenericRepository<Order> ordersRep;

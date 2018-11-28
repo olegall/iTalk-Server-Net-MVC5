@@ -21,7 +21,7 @@ namespace WebApplication1.Controllers
             try
             {
                 WebSocketChatServer webSocketChatServer;
-                string[] args = { Settings.localIP, Settings.localPort };
+                string[] args = { Settings.LocalIP, Settings.LocalPort.ToString() };
                 try
                 {
                     // Create object. Constructor starts the server

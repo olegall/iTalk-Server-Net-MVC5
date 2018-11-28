@@ -13,8 +13,14 @@ namespace WebApplication1.Controllers
 {
     public class CategoriesController : ApiController
     {
-        private readonly ICategoryManager mng = new CategoryManager(Reps.Categories, Reps.CategoryImages); // ! DI здесь
-        private readonly ISubcategoryManager subcategoryMng = new SubcategoryManager(Reps.Subcategories);
+        private readonly ICategoryManager mng;
+        private readonly ISubcategoryManager subcategoryMng;
+
+        CategoriesController(ICategoryManager mng, ISubcategoryManager subcategoryMng)
+        {
+            this.mng = new CategoryManager(Reps.Categories, Reps.CategoryImages);
+            this.subcategoryMng = subcategoryMng;
+        }
 
         /// <summary>
         /// Получить категории с подкатегориями

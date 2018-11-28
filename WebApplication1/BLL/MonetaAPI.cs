@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using RestSharp;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using RestSharp;
 
 namespace DiscountSystem.Utils.MonetaApi
 {

@@ -49,7 +49,7 @@ namespace WebApplication1.BLL
         private readonly IGenericRepository<Service> servicesRep;
         #endregion
 
-        #region ctor
+        #region Ctor
         public SearchManager(IGenericRepository<PrivateConsultant> privatesRep,
                              IGenericRepository<JuridicConsultant> juridicsRep,
                              IGenericRepository<Category> categoriesRep,

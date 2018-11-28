@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using WebApplication1.Models;
 using WebApplication1.Utils;
-using Newtonsoft.Json;
 using WebApplication1.Models.ServiceJSON;
-using System.Threading.Tasks;
 using WebApplication1.ViewModels;
 
 namespace WebApplication1.BLL
@@ -181,7 +181,7 @@ namespace WebApplication1.BLL
             }
             catch (Exception e)
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не получилось добавить услугу"));
+                throw new HttpException(500, "Не получилось добавить услугу");
             }
         }
 
@@ -221,7 +221,7 @@ namespace WebApplication1.BLL
             }
             catch (Exception e)
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не получилось редактировать услугу"));
+                throw new HttpException(500, "Не получилось редактировать услугу");
             }
         }
 
@@ -233,9 +233,9 @@ namespace WebApplication1.BLL
             {
                 await rep.UpdateAsync(service);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не получилось скрыть услугу"));
+                throw new HttpException(500, "Не получилось скрыть услугу");
             }
         }
 
@@ -249,7 +249,7 @@ namespace WebApplication1.BLL
             }
             catch (Exception e)
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось создать изображение для услуги"));
+                throw new HttpException(500, "Не удалось создать изображение для услуги");
             }
         }
 

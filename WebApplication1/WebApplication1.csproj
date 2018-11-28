@@ -89,6 +89,18 @@
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.MVC3.3.0.0.6\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.WebApi.DependencyResolver, Version=0.1.4758.24814, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.WebApi.DependencyResolver.0.1.4758.24814\lib\net45\Ninject.WebApi.DependencyResolver.dll</HintPath>
+    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
@@ -207,6 +219,9 @@
     <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivator, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivator.1.5\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -242,6 +257,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -281,7 +297,7 @@
     <Compile Include="BLL\ClientManager.cs" />
     <Compile Include="BLL\NotificationManager.cs" />
     <Compile Include="BLL\OrderManager.cs" />
-    <Compile Include="BLL\SearchField.cs" />
+    <Compile Include="Models\SearchField.cs" />
     <Compile Include="BLL\SubcategoryManager.cs" />
     <Compile Include="BLL\CategoryManager.cs" />
     <Compile Include="BLL\MonetaAPI.cs" />
@@ -309,9 +325,12 @@
     <Compile Include="DAL\GenericRepository.cs" />
     <Compile Include="DAL\Repositories.cs" />
     <Compile Include="DataContext.cs" />
+    <Compile Include="DB.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\INotificationManager.cs" />
+    <Compile Include="Interfaces\IConsultantManager.cs" />
     <Compile Include="Interfaces\ISearchManager.cs" />
     <Compile Include="Interfaces\IFavoritesManager.cs" />
     <Compile Include="Interfaces\ISubcategoryManager.cs" />
@@ -323,6 +342,10 @@
     <Compile Include="Migrations\201810291004269_migratedb.Designer.cs">
       <DependentUpon>201810291004269_migratedb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811261246069_Migration.cs" />
+    <Compile Include="Migrations\201811261246069_Migration.Designer.cs">
+      <DependentUpon>201811261246069_Migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Misc\Auth\AuthType.cs" />
     <Compile Include="Misc\Auth\ClaimType.cs" />
@@ -332,6 +355,7 @@
     <Compile Include="Misc\BaseApiController.cs" />
     <Compile Include="Misc\BaseController.cs" />
     <Compile Include="Misc\BaseUrl.cs" />
+    <Compile Include="Utils\Settings.cs" />
     <Compile Include="ViewModels\CategoryVM.cs" />
     <Compile Include="Models\CategoryImage.cs" />
     <Compile Include="Models\ChatActivity.cs" />
@@ -387,9 +411,9 @@
     <Compile Include="Utils\ImageOutputCache.cs" />
     <Compile Include="Utils\RouetCollectionExtensions.cs" />
     <Compile Include="Utils\ServiceUtil.cs" />
-    <Compile Include="Utils\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Readme\readme.txt" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -466,6 +490,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201810291004269_migratedb.resx">
       <DependentUpon>201810291004269_migratedb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811261246069_Migration.resx">
+      <DependentUpon>201811261246069_Migration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

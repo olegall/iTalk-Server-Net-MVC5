@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Web.Http;
-using WebApplication1.BLL;
-using WebApplication1.DAL;
+using WebApplication1.Interfaces;
+
 namespace WebApplication1.Controllers
 {
     public class NotificationsController : ApiController
     {
-        private readonly NotificationManager mng = new NotificationManager(Reps.Orders);
+        private readonly INotificationManager mng;
+        public NotificationsController(INotificationManager mng)
+        {
+            this.mng = mng;
+        }
 
         /// <summary>
         /// Получить для консультанта

@@ -9,6 +9,7 @@ namespace WebApplication1
         //Task<TEntity> GetAsync(long id);
         TEntity GetAsync(long id);
         //Task GetAsync(long id);
+        void Create(TEntity item);
         Task CreateAsync(TEntity item);
         Task UpdateAsync(TEntity item);
         Task DeleteAsync(TEntity item);

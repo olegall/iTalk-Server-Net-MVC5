@@ -11,22 +11,20 @@ using WebApplication1.Utils;
 using System.Threading.Tasks;
 using WebApplication1.ViewModels;
 using WebApplication1.DAL;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.Controllers
 {
     public class ConsultantsController : ApiController
     {
-        private readonly ConsultantManager mng = new ConsultantManager(Reps.Privates, 
-                                                                       Reps.Juridics, 
-                                                                       Reps.Favorites, 
-                                                                       Reps.GalleryImages, 
-                                                                       Reps.Feedbacks, 
-                                                                       Reps.ConsultantImages);
-        private readonly SearchManager searchMng = new SearchManager(Reps.Privates,
-                                                                     Reps.Juridics,
-                                                                     Reps.Categories,
-                                                                     Reps.Subcategories,
-                                                                     Reps.Services);
+        private readonly ConsultantManager mng;
+        private readonly ISearchManager searchMng;
+
+        ConsultantsController()
+        {
+            mng = new ConsultantManager(Reps.Privates, Reps.Juridics, Reps.Favorites, Reps.GalleryImages, Reps.Feedbacks, Reps.ConsultantImages);
+            searchMng = new SearchManager(Reps.Privates, Reps.Juridics, Reps.Categories, Reps.Subcategories, Reps.Services);
+        }
 
         /// <summary>
         /// Получить консультантов
@@ -117,7 +115,7 @@ namespace WebApplication1.Controllers
                                                    form["patronymic"], 
                                                    form["phone"], 
                                                    form["email"]);
-            mng.CreatePrivateImages(httpRequest.Files, createdId);
+            mng.CreatePrivateImagesAsync(httpRequest.Files, createdId);
             return Ok(createdId);
         }
 
@@ -225,7 +223,7 @@ namespace WebApplication1.Controllers
         public void Test()
         {
             //var rep = new DAL.Repositories();
-            GenericRepository<PrivateConsultant> privateRep = DAL.Reps.Privates;
+            IGenericRepository<PrivateConsultant> privateRep = Reps.Privates;
             var privates = privateRep.Get();
             var searched1 = searchMng.SearchPrivateConsultants(privates, "Александр Лавров");
             var searched2 = searchMng.SearchPrivateConsultants(privates, "Александр Петрович");
@@ -235,7 +233,7 @@ namespace WebApplication1.Controllers
             var searched6 = searchMng.SearchPrivateConsultants(privates, "Александр Юристы");
             var searched7 = searchMng.SearchPrivateConsultants(privates, "Александр Врачи");
 
-            GenericRepository<JuridicConsultant> juridicRep = DAL.Reps.Juridics;
+            IGenericRepository<JuridicConsultant> juridicRep = Reps.Juridics;
             var juridics = juridicRep.Get();
             var searched8 = searchMng.SearchJuridicConsultants(juridics, "Окна Профи");   // не работает
             var searched9 = searchMng.SearchJuridicConsultants(juridics, "Окна Профи Установщики окон");   // сделать комбинации

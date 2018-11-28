@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebApplication1.Models;
-using WebApplication1.Utils;
+using System.Web;
 using System.Threading.Tasks;
+using WebApplication1.Models;
 using WebApplication1.ViewModels;
 using WebApplication1.Interfaces;
 
@@ -13,7 +13,7 @@ namespace WebApplication1.BLL
     {
         private readonly IGenericRepository<Subcategory> rep;
 
-        public SubcategoryManager(GenericRepository<Subcategory> rep)
+        public SubcategoryManager(IGenericRepository<Subcategory> rep)
         {
             this.rep = rep;
         }
@@ -51,7 +51,7 @@ namespace WebApplication1.BLL
             }
             catch (Exception e)
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не получилось скрыть подкатегорию"));
+                throw new HttpException(500, "Не получилось скрыть подкатегорию");
             }
         }
         #endregion

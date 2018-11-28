@@ -10,10 +10,12 @@ namespace WebApplication1.Controllers
 {
     public class FavoritesController : BaseApiController<Misc.Auth.ConsultantManager>
     {
-        private readonly IFavoritesManager mng = new FavoritesManager(Reps.Favorites,
-                                                                      Reps.Privates,
-                                                                      Reps.Juridics);
-        
+        private readonly IFavoritesManager mng;
+
+        FavoritesController()
+        {
+            mng = new FavoritesManager(Reps.Favorites, Reps.Privates, Reps.Juridics);
+        }
         /// <summary>
         /// Добавить консультанта в избранное (действие клиента)
         /// </summary>

@@ -42,9 +42,16 @@ namespace WebApplication1.BLL
         public TEntity GetAsync(long id)
         {
             return _dbSet.FindAsync(id).Result;
+            //return _dbSet.Find(id);
         }
 
         // GetPaging
+
+        public void Create(TEntity item) // ! для теста. убрать
+        {
+            _dbSet.Add(item);
+            _context.SaveChanges();
+        }
 
         public async Task CreateAsync(TEntity item)
         {

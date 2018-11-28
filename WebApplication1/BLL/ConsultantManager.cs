@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.Misc;
-using System.Threading.Tasks;
 using WebApplication1.ViewModels;
 using WebApplication1.DAL;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class ConsultantManager
+    public class ConsultantManager : IConsultantManager
     {
         #region Fields
         private readonly IGenericRepository<PrivateConsultant> privatesRep;
@@ -342,7 +343,7 @@ namespace WebApplication1.BLL
             if (privatesRep.Get().Any(x => x.Id == id))
                 return false;
 
-            throw new Exception(Settings.noConsWithId);
+            throw new HttpException(500, "Нет консультанта с таким Id");
         }
 
         public IEnumerable<string> GetGalleryImagesNames(long id)
@@ -380,9 +381,9 @@ namespace WebApplication1.BLL
                                                              email,
                                                              DateTime.Now));
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
+                throw new HttpException(500, "Не удалось добавить физ.лицо при регистрации");
             }
             long createdId = privatesRep.Get().OrderByDescending(x => x.Id)
                                              .Select(x => x.Id)
@@ -390,7 +391,7 @@ namespace WebApplication1.BLL
             return createdId;
         }
 
-        public async Task CreatePrivateImages(HttpFileCollection files, long id)
+        public async Task CreatePrivateImagesAsync(HttpFileCollection files, long id)
         {
             HttpPostedFile photo = files["photo"];
             if (photo != null)
@@ -413,7 +414,7 @@ namespace WebApplication1.BLL
                 }
             }
         }
-        // !!! изб. от подчёркивания
+
         public long CreateJuridic(string ltdtitle,
                                   string ogrn,
                                   string inn,
@@ -424,14 +425,14 @@ namespace WebApplication1.BLL
             {
                 juridicsRep.CreateAsync(new JuridicConsultant(ltdtitle, ogrn, inn, phone, siteurl, DateTime.Now));
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
+                throw new HttpException(500, "Не удалось добавить юр. консультанта при регистрации");
             }
 
             long createdId = juridicsRep.Get().OrderByDescending(x => x.Id)
-                                             .Select(x => x.Id)
-                                             .First();
+                                              .Select(x => x.Id)
+                                              .First();
             return createdId;
         }
 
@@ -462,9 +463,9 @@ namespace WebApplication1.BLL
                                                                             DateTime.Now, 
                                                                             fileTypeid));
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, Settings.createjurImagesEx));
+                throw new HttpException(500, "Не удалось добавить изображение");
             }
         }
         // !!! везде проверки на null
@@ -484,9 +485,9 @@ namespace WebApplication1.BLL
                                                                                     DateTime.Now,
                                                                                     (long)fileType));
                     }
-                    catch (Exception e)
-                    {
-                        throw new Exception(ServiceUtil.GetExMsg(e, Settings.createjurImagesEx));
+                    catch
+                    {                                                                // ! (я)
+                        throw new HttpException(500, "Не удалось добавить изображение(я)");
                     }
                 }
             }
@@ -499,9 +500,9 @@ namespace WebApplication1.BLL
             {
                 await consultantImagesRep.DeleteAsync(image);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, Settings.createjurImagesEx));
+                throw new HttpException(500, "Не удалось удалить изображение юр. консультанта");
             }
         }
 
@@ -518,9 +519,9 @@ namespace WebApplication1.BLL
             {
                 await privatesRep.UpdateAsync(private_);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
+                throw new HttpException(500, "Не удалось обновить поле(я) физ. лица");
             }
         }
 
@@ -539,7 +540,7 @@ namespace WebApplication1.BLL
             }
             catch (Exception e)
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, Settings.createJurEx));
+                throw new HttpException(500, "Не удалось обновить поле(я) юр. лица");
             }
         }
 
@@ -553,9 +554,9 @@ namespace WebApplication1.BLL
                 {
                     await privatesRep.UpdateAsync(private_);
                 }
-                catch (Exception e)
+                catch
                 {
-                    throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось обновить рейтинг физлица"));
+                    throw new HttpException(500, "Не удалось обновить рейтинг физлица");
                 }
                 return;
             }
@@ -565,9 +566,9 @@ namespace WebApplication1.BLL
             { 
                 await juridicsRep.UpdateAsync(juridic);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось обновить рейтинг юрлица"));
+                throw new HttpException(500, "Не удалось обновить рейтинг юрлица");
             }
         }
         #endregion

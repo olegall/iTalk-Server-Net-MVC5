@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 using WebApplication1.Misc.Auth;
-using WebApplication1.BLL;
+
 namespace WebApplication1.Models
 {
     public class Client : /*Base,*/ IUser<long>

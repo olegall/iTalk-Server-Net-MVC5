@@ -1,5 +1,5 @@
 ﻿using System;
-using WebApplication1.BLL;
+
 namespace WebApplication1.Models
 {
     public class ChatMsg //: Base

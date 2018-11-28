@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using WebApplication1.Models;
-using WebApplication1.Utils;
+using System.Web;
 using System.Threading.Tasks;
+using WebApplication1.Models;
 using WebApplication1.ViewModels;
 using WebApplication1.Interfaces;
 
@@ -19,7 +18,7 @@ namespace WebApplication1.BLL
         private readonly ServiceManager serviceMng = new ServiceManager();
         #endregion
 
-        #region ctor
+        #region Ctor
         public FavoritesManager(IGenericRepository<Favorite> rep, 
                                 IGenericRepository<PrivateConsultant> privatesRep,
                                 IGenericRepository<JuridicConsultant> juridicsRep)
@@ -45,9 +44,9 @@ namespace WebApplication1.BLL
             {
                 await rep.CreateAsync(new Favorite(clientId, consultantId));
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось добавить консультанта в избранное"));
+                throw new HttpException(500, "Не удалось добавить консультанта в избранное");
             }
         }
 
@@ -70,8 +69,8 @@ namespace WebApplication1.BLL
                     });
                 }
                 JuridicConsultant juridic = juridicsRep.Get()
-                                                         .Where(x => x.Id == consId)
-                                                         .SingleOrDefault();
+                                                       .Where(x => x.Id == consId)
+                                                       .SingleOrDefault();
                 if (juridic != null)
                 {
                     vms.Add(new FavoriteConsultantVM
@@ -87,31 +86,6 @@ namespace WebApplication1.BLL
             return vms;
         }
 
-        // !!!
-        /*
-         using (EmployeeContext context = new EmployeeContext())
-         {
-         }
-        */
-        /*
-        private bool SaveCustomer(Customer customer)
-        {
-            try
-            {
-                using (MyContext context = new MyContext())
-                {
-                    context.Customers.Add(customer);
-                    context.SaveChanges();
-                }
-                return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                return false;
-            }
-        } 
-        */
-        // !!! ulong
         public async Task DeleteAsync(long clientId, long consultantId)
         {
             Favorite favorite = rep.Get().SingleOrDefault(x => x.ClientId == clientId && 
@@ -120,9 +94,9 @@ namespace WebApplication1.BLL
             {
                 await rep.DeleteAsync(favorite);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось удалить консультанта из избранного"));
+                throw new HttpException(500, "Не удалось удалить консультанта из избранного");
             }
         }
         #endregion

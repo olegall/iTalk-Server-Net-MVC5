@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
-using System.Threading.Tasks;
 using WebApplication1.ViewModels;
 
 namespace WebApplication1.BLL
@@ -74,9 +75,9 @@ namespace WebApplication1.BLL
                                                 Convert.ToDateTime(formData["date"]),
                                                 (int)OrderStatuses.Начат_клиентом));
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось создать заказ"));
+                throw new HttpException(500, "Не удалось создать заказ");
             }
         }
 
@@ -88,9 +89,9 @@ namespace WebApplication1.BLL
             {
                 await rep.UpdateAsync(order);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось подтвердить заказ клиентом"));
+                throw new HttpException(500, "Не удалось подтвердить заказ клиентом");
             }
         }
 
@@ -102,9 +103,9 @@ namespace WebApplication1.BLL
             {
                 await rep.UpdateAsync(order);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось отменить заказ клиентом"));
+                throw new HttpException(500, "Не удалось отменить заказ клиентом");
             }
         }
 
@@ -116,13 +117,13 @@ namespace WebApplication1.BLL
             {
                 await rep.UpdateAsync(order);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось отменить заказ консультантом"));
+                throw new HttpException(500, "Не удалось отменить заказ консультантом");
             }
         }
 
-        // !!! все id ulong
+        // !!! все id ulong или проверка на отриц id
         public async Task<OrderForClientVM> GetVMAsync(long id)
         {
             Order order = rep.GetAsync(id);
@@ -199,9 +200,9 @@ namespace WebApplication1.BLL
             {
                 await rep.UpdateAsync(order);
             }
-            catch (Exception e)
+            catch
             {
-                throw new Exception(ServiceUtil.GetExMsg(e, "Не удалось изменить время заказа"));
+                throw new HttpException(500, "Не удалось изменить время заказа");
             }
         }
         #endregion

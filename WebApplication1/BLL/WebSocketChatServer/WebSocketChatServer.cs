@@ -63,12 +63,12 @@ namespace WebApplication1.BLL.WebSocketChatServer
         private string consoleInput = string.Empty;
 
         private readonly DataContext _db = new DataContext();
-        private readonly GenericRepository<Client> clientRep = Reps.Clients;
-        private readonly GenericRepository<PrivateConsultant> privateRep = Reps.Privates;
-        private readonly GenericRepository<JuridicConsultant> juridicRep = Reps.Juridics;
-        private readonly GenericRepository<Order> orderRep = Reps.Orders;
-        private readonly GenericRepository<ChatActivity> chatActivityRep = Reps.ChatActivities;
-        private readonly GenericRepository<ChatMsg> chatMsgRep = Reps.ChatMsgs;
+        private readonly IGenericRepository<Client> clientRep = Reps.Clients;
+        private readonly IGenericRepository<PrivateConsultant> privateRep = Reps.Privates;
+        private readonly IGenericRepository<JuridicConsultant> juridicRep = Reps.Juridics;
+        private readonly IGenericRepository<Order> orderRep = Reps.Orders;
+        private readonly IGenericRepository<ChatActivity> chatActivityRep = Reps.ChatActivities;
+        private readonly IGenericRepository<ChatMsg> chatMsgRep = Reps.ChatMsgs;
 
         private long LastMessageId { get { return chatMsgRep.Get()
                                                             .OrderByDescending(x => x.DateTime)

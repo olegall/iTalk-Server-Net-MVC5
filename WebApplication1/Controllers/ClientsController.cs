@@ -1,10 +1,10 @@
 ﻿using System;
-using WebApplication1.BLL;
 using WebApplication1.Utils;
 using WebApplication1.Misc;
 using WebApplication1.Misc.Auth;
 using System.Web.Http;
 using WebApplication1.Interfaces;
+using System.Linq;
 using WebApplication1.DAL;
 
 namespace WebApplication1.Controllers
@@ -12,6 +12,18 @@ namespace WebApplication1.Controllers
     public class ClientsController : BaseApiController<Misc.Auth.ConsultantManager>
     {
         private readonly IClientManager mng = new BLL.ClientManager(Reps.Clients);
+        private readonly DataContext _db = new DataContext();
+
+        //private readonly IClientManager mng;
+        //public ClientsController(IClientManager mng)
+        //{
+        //    this.mng = mng;
+        //}
+
+        public ClientsController()
+        {
+        }
+
 
         /// <summary>
         /// Зарегистрировать клиента
@@ -19,7 +31,9 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public Object Post()
         {
-            mng.CreateAsync(ServiceUtil.Request.Form);
+            //var form = ServiceUtil.Request.Form;
+            mng.CreateAsync("name", "phone");
+            //mng.CreateAsync(form["name"], form["phone"]);
             return Ok(true);
         }
 
@@ -29,9 +43,10 @@ namespace WebApplication1.Controllers
         //[UserApiAuthorize]
         //[Route("api/clients/{adPush}")]
         [Route("api/clients/{id}/{adPush}")]
-        public Object Get(long id, bool adPush)
+        public object Get(long id, bool adPush)
         {
             // !!! эксепшн если польз-ль с данным Id не существует (ошибка 500)
+            var a2 = mng.GetAllTest();
             return Ok(mng.GetAsync(/*UserId.Value*/id, adPush));
         }
 

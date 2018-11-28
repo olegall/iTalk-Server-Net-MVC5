@@ -30,10 +30,10 @@ namespace WebApplication1.Utils
             }
         }
 
-        public static string GetExMsg(Exception e, string text)
-        {
-            return text + e.Message + e.InnerException.InnerException;
-        }
+        //public static string GetExMsg(Exception e, string text) // !
+        //{
+        //    return text + e.Message + e.InnerException.InnerException;
+        //}
 
         public static long GetLong(string value)
         {

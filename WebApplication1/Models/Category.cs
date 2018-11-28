@@ -1,5 +1,4 @@
-﻿using WebApplication1.BLL;
-namespace WebApplication1.Models
+﻿namespace WebApplication1.Models
 {
     public class Category //: Base
     {
