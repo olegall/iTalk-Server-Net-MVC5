@@ -67,7 +67,7 @@ namespace WebApplication1.App_Start
         {
             //System.Web.Mvc.DependencyResolver.SetResolver(new WebApplication1.Utils.NinjectDependencyResolver(kernel));
 
-            //kernel.Bind<IClientManager>().To<ClientManager>().WithConstructorArgument("rep", Reps.Clients);
+            kernel.Bind<IClientManager>().To<ClientManager>().WithConstructorArgument("rep", Reps.Clients);
             kernel.Bind<ICategoryManager>().To<CategoryManager>().WithConstructorArgument("rep", Reps.Categories)
                                                                  .WithConstructorArgument("categoryImagesRep", Reps.CategoryImages);
             kernel.Bind<ISubcategoryManager>().To<SubcategoryManager>().WithConstructorArgument("rep", Reps.Subcategories);

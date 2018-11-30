@@ -355,6 +355,8 @@
     <Compile Include="Misc\BaseApiController.cs" />
     <Compile Include="Misc\BaseController.cs" />
     <Compile Include="Misc\BaseUrl.cs" />
+    <Compile Include="Utils\CRUD.cs" />
+    <Compile Include="Utils\Message.cs" />
     <Compile Include="Utils\Settings.cs" />
     <Compile Include="ViewModels\CategoryVM.cs" />
     <Compile Include="Models\CategoryImage.cs" />

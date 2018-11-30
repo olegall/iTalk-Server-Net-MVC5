@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using WebApplication1.Utils;
 
 namespace WebApplication1.Misc
 {
@@ -24,6 +25,14 @@ namespace WebApplication1.Misc
             var successParse = int.TryParse(tz.Value?.FirstOrDefault(), out int result);
 
             return successParse ? result : 0;
+        }
+
+        protected IHttpActionResult SendResult(CRUD.Result result)
+        {
+            if (result == CRUD.Result.OK)
+                return Ok(result);
+
+            return BadRequest(result.ToString());
         }
     }
 }

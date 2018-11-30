@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Web;
 using System.IO;
+using System.Collections.Specialized;
 
 namespace WebApplication1.Utils
 {
     public class ServiceUtil
     {
-        public static HttpRequest Request
+        public static HttpRequest Request // ! Удалить
         {
             get
             {
                 return HttpContext.Current.Request;
+            }
+        }
+
+        public static NameValueCollection Form // ! предпочтение композиции наследованию. ПОместить в какой-то класс, ссылку на него написать в ClientController  и других
+        {
+            get
+            {
+                return HttpContext.Current.Request.Form;
             }
         }
 
@@ -29,11 +38,6 @@ namespace WebApplication1.Utils
                 return ms.ToArray();
             }
         }
-
-        //public static string GetExMsg(Exception e, string text) // !
-        //{
-        //    return text + e.Message + e.InnerException.InnerException;
-        //}
 
         public static long GetLong(string value)
         {

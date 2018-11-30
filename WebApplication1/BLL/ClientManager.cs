@@ -1,81 +1,82 @@
 ﻿using System;
-using System.Web;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using WebApplication1.Models;
 using WebApplication1.Interfaces;
+using WebApplication1.Utils;
 
 namespace WebApplication1.BLL
 {
     public class ClientManager : IClientManager
     {
         private readonly IGenericRepository<Client> rep;
+        private static readonly DataContext _db = new DataContext();
+
         public ClientManager(IGenericRepository<Client> rep)
         {
             this.rep = rep;
         }
-        private static readonly DataContext _db = new DataContext();
-        #region Public methods
-        public async Task CreateAsync(string name, string phone)
+
+        public async Task<CRUD.Result> CreateAsync(string name, string phone)
         {
             try
             {
-                await rep.CreateAsync(GetInstance(name, phone));
+                await rep.CreateAsync(new Client(name, phone));
             }
-            catch (Exception e)
+            catch
             {
-                throw new HttpException(500, "Не удалось зарегистрировать клиента");
+                return CRUD.Result.ServerOrConnectionFailed;
             }
+            return CRUD.Result.OK;
         }
-        // ! проверки на null
-        public Client GetAsync(long id, bool adPush)
-        {   // !!! разделить ситуации - исключения по обрыву связи и не найденному польз-лю
-            try
-            {
-                return rep.GetAsync(id);
-            }
-            catch // !!! отфильтровать исключение
-            {// !!! код ошибки
-                throw new HttpException(500, "Нет клиента с таким Id или проблемы с доступом к серверу");
-            }
-            // !!! с finally после Update не работает Get
-            //finally
-            //{
-            //    Reps.Clients.Dispose();
-            //}
+               // !
+        public object GetAsync(long id, bool adPush)
+        {
+            object result = TryGetClient(id);
+            if (result.GetType() == typeof(Client))
+                return (Client)result;
+
+            return (CRUD.Result)result;
         }
 
-        private Client GetInstance(string name, string phone)
+        public async Task<CRUD.Result> UpdateAsync(long id, string name, bool adPush) // adPush - позже
         {
-            return new Client(name, phone);
+            object result = TryGetClient(id);
+            if (result.GetType() == typeof(Client))
+            {
+                Client client = (Client)result;
+                client.Name = name;
+                try
+                {
+                    await rep.UpdateAsync(client);
+                }
+                catch
+                {
+                    return CRUD.Result.ServerOrConnectionFailed;
+                }
+                return CRUD.Result.OK;
+            }
+            return (CRUD.Result)result;
         }
 
-        public async Task UpdateAsync(long id, string name, bool adPush) // adPush - позже
+        public async Task<CRUD.Result> DeleteAsync(long id)
         {
-            Client client = rep.GetAsync(id);
-            client.Name = name;
-            try
+            object result = TryGetClient(id);
+            if (result.GetType() == typeof(Client))
             {
-                await rep.UpdateAsync(client);
+                Client client = (Client)result;
+                try
+                {
+                    await rep.DeleteAsync(client);
+                }
+                catch
+                {
+                    return CRUD.Result.ServerOrConnectionFailed;
+                }
+                return CRUD.Result.OK;
             }
-            catch (Exception e)
-            {
-                throw new HttpException(500, "Не удалось зарегистрировать клиента");
-            }
-        }
-
-        public async Task DeleteAsync(long id)
-        {
-            Client client = rep.GetAsync(id);
-            try
-            {
-                await rep.DeleteAsync(client);
-            } 
-            catch (Exception e)
-            {
-                throw new HttpException(500, "Не удалось удалить клиента");
-            }
+            return (CRUD.Result)result;
         }
 
         public IEnumerable<Client> GetAllTest() // !
@@ -95,6 +96,22 @@ namespace WebApplication1.BLL
             _db.SaveChanges();
             return rep.Get();
         }
-        #endregion
+
+        private object TryGetClient(long id)
+        {
+            Client client;
+            try
+            {
+                client = rep.GetAsync(id);
+                if (client == null)
+                    return CRUD.Result.EntityNotFound;
+
+                return client;
+            }
+            catch
+            {
+                return CRUD.Result.ServerOrConnectionFailed;
+            }
+        }
     }
 }
