@@ -13,18 +13,13 @@ namespace WebApplication1.Controllers
     {
         //private readonly IClientManager mng = new BLL.ClientManager(Reps.Clients);
         private readonly DataContext _db = new DataContext();
-
         private readonly NameValueCollection form = ServiceUtil.Form;
-
         private readonly IClientManager mng;
+
         public ClientsController(IClientManager mng)
         {
             this.mng = mng;
         }
-
-        //public ClientsController()
-        //{
-        //}
 
         /// <summary>
         /// Зарегистрировать клиента
@@ -32,7 +27,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> Post()
         {
-            CRUD.Result result =  await mng.CreateAsync(form["name"], form["phone"]);
+            CRUDResult<Client> result = await mng.CreateAsync(form["name"], form["phone"]);
             return SendResult(result);
         }
 
@@ -40,15 +35,15 @@ namespace WebApplication1.Controllers
         /// Получить инфо о клиенте для карточки
         /// </summary>
         //[UserApiAuthorize]
+        [HttpGet]
         [Route("api/clients/{id}/{adPush}")]
-        public object Get(long id, bool adPush)
+        public IHttpActionResult Get(long id, bool adPush)
         {
-            object result = mng.GetAsync(/*UserId.Value*/id, adPush);
-            if (result.GetType() == typeof(Client))
-                return Ok(result);
+            CRUDResult<Client> result = mng.GetAsync(/*UserId.Value*/id, adPush);
+            if (result.Entity != null)
+                return Ok(result.Entity);
 
-            return BadRequest(result.ToString());
-            //return mng.GetAsync(/*UserId.Value*/id, adPush);
+            return BadRequest(result.Mistake.ToString());
         }
 
         //[UserApiAuthorize]
@@ -63,7 +58,7 @@ namespace WebApplication1.Controllers
             string name = form["name"];
             bool adPush = Convert.ToBoolean(form["adPush"]);
 
-            CRUD.Result result = await mng.UpdateAsync(/*UserId.Value*/id, name, adPush);
+            CRUDResult<Client> result = await mng.UpdateAsync(/*UserId.Value*/id, name, adPush);
             return SendResult(result);
         }
 
@@ -73,7 +68,7 @@ namespace WebApplication1.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> Delete()
         {
-            CRUD.Result result = await mng.DeleteAsync(/*UserId.Value*/Convert.ToInt32(ServiceUtil.Request.Form["id"]));
+            CRUDResult<Client> result = await mng.DeleteAsync(/*UserId.Value*/Convert.ToInt32(ServiceUtil.Request.Form["id"]));
             return SendResult(result);
         }
     }

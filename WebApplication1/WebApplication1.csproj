@@ -292,6 +292,7 @@
     <Compile Include="BLL\AgreementManager.cs" />
     <Compile Include="BLL\ChatServer\ClientObject.cs" />
     <Compile Include="BLL\ChatServer\ServerObject.cs" />
+    <Compile Include="BLL\BaseManager.cs" />
     <Compile Include="BLL\SearchManager.cs" />
     <Compile Include="BLL\FavoritesManager.cs" />
     <Compile Include="BLL\ClientManager.cs" />
@@ -355,7 +356,7 @@
     <Compile Include="Misc\BaseApiController.cs" />
     <Compile Include="Misc\BaseController.cs" />
     <Compile Include="Misc\BaseUrl.cs" />
-    <Compile Include="Utils\CRUD.cs" />
+    <Compile Include="Utils\CRUDResult.cs" />
     <Compile Include="Utils\Message.cs" />
     <Compile Include="Utils\Settings.cs" />
     <Compile Include="ViewModels\CategoryVM.cs" />

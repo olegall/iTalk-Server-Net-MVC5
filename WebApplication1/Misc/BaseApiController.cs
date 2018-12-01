@@ -1,21 +1,14 @@
 ﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 using System.Linq;
-using System.Net.Http;
-using System.Web;
 using System.Web.Http;
 using WebApplication1.Utils;
+using WebApplication1.Models;
 
 namespace WebApplication1.Misc
 {
     public class BaseApiController<TUserManager> : ApiController
     {
         protected const string USERNAME_EXISTS = "username_exists";
-
-        //protected TUserManager UserManager => Request.GetOwinContext().GetUserManager<TUserManager>();
-        //protected IAuthenticationManager AuthManager => Request.GetOwinContext().Authentication;
-
         protected long? UserId => User?.Identity?.GetUserId<long>();
 
         protected int GetUserTimezone()
@@ -27,12 +20,12 @@ namespace WebApplication1.Misc
             return successParse ? result : 0;
         }
 
-        protected IHttpActionResult SendResult(CRUD.Result result)
+        protected IHttpActionResult SendResult(CRUDResult<Client> result)
         {
-            if (result == CRUD.Result.OK)
-                return Ok(result);
+            if (result.Mistake == (int)CRUDResult<Client>.Mistakes.None)
+                return Ok(true);
 
-            return BadRequest(result.ToString());
+            return BadRequest(result.Mistake.ToString());
         }
     }
 }

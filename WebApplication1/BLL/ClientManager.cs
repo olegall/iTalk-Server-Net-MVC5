@@ -8,7 +8,7 @@ using WebApplication1.Utils;
 
 namespace WebApplication1.BLL
 {
-    public class ClientManager : IClientManager
+    public class ClientManager : BaseManager, IClientManager
     {
         private readonly IGenericRepository<Client> rep;
         private static readonly DataContext _db = new DataContext();
@@ -18,65 +18,64 @@ namespace WebApplication1.BLL
             this.rep = rep;
         }
 
-        public async Task<CRUD.Result> CreateAsync(string name, string phone)
+        public async Task<CRUDResult<Client>> CreateAsync(string name, string phone)
         {
+            CRUDResult<Client> CRUDResult = new CRUDResult<Client>();
             try
             {
                 await rep.CreateAsync(new Client(name, phone));
             }
             catch
             {
-                return CRUD.Result.ServerOrConnectionFailed;
+                CRUDResult.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
             }
-            return CRUD.Result.OK;
-        }
-               // !
-        public object GetAsync(long id, bool adPush)
-        {
-            object result = TryGetClient(id);
-            if (result.GetType() == typeof(Client))
-                return (Client)result;
-
-            return (CRUD.Result)result;
+            return CRUDResult;
         }
 
-        public async Task<CRUD.Result> UpdateAsync(long id, string name, bool adPush) // adPush - позже
+        public CRUDResult<Client> GetAsync(long id, bool adPush)
         {
-            object result = TryGetClient(id);
-            if (result.GetType() == typeof(Client))
+            return TryGetEntity<Client>(rep, id);
+        }
+
+        public async Task<CRUDResult<Client>> UpdateAsync(long id, string name, bool adPush) // adPush - позже
+        {
+            CRUDResult<Client> result = TryGetEntity<Client>(rep, id);
+            if (result.Entity == null)
             {
-                Client client = (Client)result;
-                client.Name = name;
-                try
-                {
-                    await rep.UpdateAsync(client);
-                }
-                catch
-                {
-                    return CRUD.Result.ServerOrConnectionFailed;
-                }
-                return CRUD.Result.OK;
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.EntityNotFound;
+                return result;
             }
-            return (CRUD.Result)result;
+
+            result.Entity.Name = name;
+            try
+            {
+                await rep.UpdateAsync(result.Entity);
+            }
+            catch
+            {
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
+            }
+            return result;
         }
 
-        public async Task<CRUD.Result> DeleteAsync(long id)
+        public async Task<CRUDResult<Client>> DeleteAsync(long id)
         {
-            object result = TryGetClient(id);
-            if (result.GetType() == typeof(Client))
+            CRUDResult<Client> result = TryGetEntity<Client>(rep, id);
+            if (result.Entity == null)
             {
-                Client client = (Client)result;
-                try
-                {
-                    await rep.DeleteAsync(client);
-                }
-                catch
-                {
-                    return CRUD.Result.ServerOrConnectionFailed;
-                }
-                return CRUD.Result.OK;
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.EntityNotFound;
+                return result;
             }
-            return (CRUD.Result)result;
+
+            try
+            {
+                await rep.DeleteAsync(result.Entity);
+            }
+            catch
+            {
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
+            }
+            return result;
         }
 
         public IEnumerable<Client> GetAllTest() // !
@@ -95,23 +94,6 @@ namespace WebApplication1.BLL
             }
             _db.SaveChanges();
             return rep.Get();
-        }
-
-        private object TryGetClient(long id)
-        {
-            Client client;
-            try
-            {
-                client = rep.GetAsync(id);
-                if (client == null)
-                    return CRUD.Result.EntityNotFound;
-
-                return client;
-            }
-            catch
-            {
-                return CRUD.Result.ServerOrConnectionFailed;
-            }
         }
     }
 }

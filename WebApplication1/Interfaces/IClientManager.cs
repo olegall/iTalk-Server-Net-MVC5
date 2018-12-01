@@ -7,10 +7,10 @@ namespace WebApplication1.Interfaces
 {
     public interface IClientManager
     {
-        Task<CRUD.Result> CreateAsync(string name, string phone);
-        object GetAsync(long id, bool adPush);
-        Task<CRUD.Result> UpdateAsync(long id, string name, bool adPush);
-        Task<CRUD.Result> DeleteAsync(long id);
+        Task<CRUDResult<Client>> CreateAsync(string name, string phone);
+        CRUDResult<Client> GetAsync(long id, bool adPush);
+        Task<CRUDResult<Client>> UpdateAsync(long id, string name, bool adPush);
+        Task<CRUDResult<Client>> DeleteAsync(long id);
 
         IEnumerable<Client> GetAllTest();
     }
