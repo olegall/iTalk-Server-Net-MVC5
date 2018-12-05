@@ -8,10 +8,11 @@ using WebApplication1.Misc;
 using WebApplication1.ViewModels;
 using WebApplication1.Interfaces;
 using WebApplication1.DAL;
+using System.Threading.Tasks;
 
 namespace WebApplication1.Controllers
 {
-    public class CategoriesController : ApiController
+    public class CategoriesController : BaseApiController<Misc.Auth.ConsultantManager>
     {
         private readonly ICategoryManager mng;
         private readonly ISubcategoryManager subcategoryMng;
@@ -47,10 +48,10 @@ namespace WebApplication1.Controllers
         /// Добавить категорию
         /// </summary>
         [HttpPost]
-        public Object Post()
+        public async Task<IHttpActionResult> Post()
         {
-            mng.CreateAsync(ServiceUtil.Request.Form); 
-            return Ok(true);
+            CRUDResult<Category> result = await mng.CreateAsync(ServiceUtil.Request.Form);
+            return SendResult(result);
         }
 
         /// <summary>
@@ -58,10 +59,10 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpPost]
         [Route("api/categories/{id}")]
-        public Object CreateImage(long id)
+        public async Task<IHttpActionResult> CreateImage(long id)
         {
-            mng.CreateImageAsync(ServiceUtil.Request.Files["image"], id);
-            return Ok(true);
+            CRUDResult<CategoryImage> result = await mng.CreateImageAsync(ServiceUtil.Request.Files["image"], id);
+            return SendResult(result);
         }
 
         /// <summary>
@@ -69,10 +70,10 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpDelete]
         [Route("api/categories/{id}")]
-        public Object Delete(long id) // !!! Object - типизировать
+        public async Task<IHttpActionResult> Delete(long id) // !!! Object - типизировать
         {
-            mng.HideAsync(id);
-            return Ok(true);
+            CRUDResult<Category> result = await mng.HideAsync(id);
+            return SendResult(result);
         }
     }
 }

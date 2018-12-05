@@ -1,10 +1,10 @@
 ﻿using System;
-using WebApplication1.Utils;
-using WebApplication1.Misc;
 using System.Web.Http;
-using WebApplication1.Interfaces;
 using System.Threading.Tasks;
 using System.Collections.Specialized;
+using WebApplication1.Utils;
+using WebApplication1.Misc;
+using WebApplication1.Interfaces;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -21,6 +21,10 @@ namespace WebApplication1.Controllers
             this.mng = mng;
         }
 
+        public ClientsController() // ! убрать. пока нужен для тестов
+        {
+        }
+
         /// <summary>
         /// Зарегистрировать клиента
         /// </summary>
@@ -28,7 +32,7 @@ namespace WebApplication1.Controllers
         public async Task<IHttpActionResult> Post()
         {
             CRUDResult<Client> result = await mng.CreateAsync(form["name"], form["phone"]);
-            return SendResult(result);
+            return SendResult<Client>(result);
         }
 
         /// <summary>
@@ -59,7 +63,7 @@ namespace WebApplication1.Controllers
             bool adPush = Convert.ToBoolean(form["adPush"]);
 
             CRUDResult<Client> result = await mng.UpdateAsync(/*UserId.Value*/id, name, adPush);
-            return SendResult(result);
+            return SendResult<Client>(result);
         }
 
         /// <summary>
@@ -69,7 +73,7 @@ namespace WebApplication1.Controllers
         public async Task<IHttpActionResult> Delete()
         {
             CRUDResult<Client> result = await mng.DeleteAsync(/*UserId.Value*/Convert.ToInt32(ServiceUtil.Request.Form["id"]));
-            return SendResult(result);
+            return SendResult<Client>(result);
         }
     }
 }

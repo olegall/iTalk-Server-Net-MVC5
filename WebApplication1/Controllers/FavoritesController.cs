@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Web.Http;
+using System.Threading.Tasks;
 using WebApplication1.BLL;
 using WebApplication1.Interfaces;
 using WebApplication1.Misc;
 using WebApplication1.Misc.Auth;
 using WebApplication1.DAL;
+using WebApplication1.Utils;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -22,10 +25,10 @@ namespace WebApplication1.Controllers
         [Route("api/favorites/{consultantId}")]
         [HttpPost]
         [UserApiAuthorize]
-        public Object Post(long consultantId)
+        public async Task<IHttpActionResult> Post(long consultantId)
         {
-            mng.CreateAsync(UserId.Value, consultantId);
-            return Ok(true);
+            CRUDResult<Favorite> result = await mng.CreateAsync(UserId.Value, consultantId);
+            return SendResult<Favorite>(result);
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/favorites/client/{id}")]
-        public Object Get(long id)
+        public object Get(long id)
         {
             return Ok(mng.GetVMs(id));
         }
@@ -44,10 +47,10 @@ namespace WebApplication1.Controllers
         [Route("api/favorites/{consultantId}")]
         [HttpDelete]
         [UserApiAuthorize]
-        public Object Delete(long consultantId)
+        public async Task<IHttpActionResult> Delete(long consultantId)
         {
-            mng.DeleteAsync(UserId.Value, consultantId);
-            return Ok(true);
+            CRUDResult<Favorite> result = await mng.DeleteAsync(UserId.Value, consultantId);
+            return SendResult<Favorite>(result);
         }
     }
 }

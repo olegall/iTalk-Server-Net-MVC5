@@ -307,5 +307,4 @@ D:\Работа\Компании\AppCraft\iTalk\italk-server\iTalk-Server-Net-MV
 D:\Работа\Компании\AppCraft\iTalk\italk-server\iTalk-Server-Net-MVC5\WebApplication1\obj\Debug\WebApplication1.csproj.CoreCompileInputs.cache
 D:\Работа\Компании\AppCraft\iTalk\italk-server\iTalk-Server-Net-MVC5\WebApplication1\obj\Debug\WebApplication1.dll
 D:\Работа\Компании\AppCraft\iTalk\italk-server\iTalk-Server-Net-MVC5\WebApplication1\obj\Debug\WebApplication1.pdb
-D:\Работа\Компании\AppCraft\iTalk\italk-server\iTalk-Server-Net-MVC5\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
 D:\Работа\Компании\AppCraft\iTalk\italk-server\iTalk-Server-Net-MVC5\WebApplication1\obj\Debug\WebApplication1.Migrations.Migration.resources

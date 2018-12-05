@@ -8,10 +8,11 @@ using System.Web;
 using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.ViewModels;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class OrderManager
+    public class OrderManager : BaseManager, IOrderManager
     {   // !!! инициализация через конструктор - IoC. Завязка на интерфейсы в констуркторе
         #region Fields
         private readonly IGenericRepository<Order> rep;
@@ -23,7 +24,7 @@ namespace WebApplication1.BLL
         private readonly ServiceManager serviceMng = new ServiceManager();
         #endregion
 
-        #region ctor
+        #region Ctor
         public OrderManager(IGenericRepository<Order> rep, 
                             IGenericRepository<ConsultationType> consultationTypesRep, 
                             IGenericRepository<OrderStatus> orderStatusesRep, 
@@ -36,37 +37,10 @@ namespace WebApplication1.BLL
         }
         #endregion
 
-        #region Private methods
-        // !!! GetAsync
-        private IEnumerable<Order> GetByClientId(long id)
-        {
-            return rep.Get().Where(x => x.ClientId == id);
-        }
-        // !!! GetAsync
-        private IEnumerable<Order> GetByConsId(long id)
-        {
-            return rep.Get().Where(x => x.ConsultantId == id);
-        }
-        // !!! GetPagingAsync
-        private IEnumerable<Order> GetRangeWithOffset(int offset, int limit)
-        {
-            return rep.Get().Skip(offset).Take(limit);
-        }
-        // !!! GetAsync
-        private string GetStatus(long code)
-        {
-            return orderStatusesRep.Get().SingleOrDefault(x => x.Code == code).Text;
-        }
-        // !!! await, async Task
-        private string GetPaymentStatusAsync(long id)
-        {
-            return paymentStatusesRep.GetAsync(id).Text;
-        }
-        #endregion
-
         #region Public methods
-        public async Task CreateAsync(NameValueCollection formData)
+        public async Task<CRUDResult<Order>> CreateAsync(NameValueCollection formData)
         {
+            CRUDResult<Order> CRUDResult = new CRUDResult<Order>();
             try
             {
                 await rep.CreateAsync(new Order(ServiceUtil.GetLong(formData["consultationtypeid"]), 
@@ -77,54 +51,77 @@ namespace WebApplication1.BLL
             }
             catch
             {
-                throw new HttpException(500, "Не удалось создать заказ");
+                CRUDResult.Mistake = (int)CRUDResult<Order>.Mistakes.ServerOrConnectionFailed;
             }
+            return CRUDResult;
         }
 
-        public async Task ConfirmAsync(long id)
+        public async Task<CRUDResult<Order>> ConfirmAsync(long id)
         {
-            Order order = rep.GetAsync(id);
-            order.StatusCode = (int)OrderStatuses.Принят_консультантом;
+            CRUDResult<Order> result = TryGetEntity<Order>(rep, id);
+            if (result.Entity == null)
+            {
+                result.Mistake = (int)CRUDResult<Order>.Mistakes.EntityNotFound;
+                return result;
+            }
+
+            result.Entity.StatusCode = (int)OrderStatuses.Принят_консультантом;
             try
             {
-                await rep.UpdateAsync(order);
+                await rep.UpdateAsync(result.Entity);
             }
             catch
             {
-                throw new HttpException(500, "Не удалось подтвердить заказ клиентом");
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
             }
+            return result;
         }
 
-        public async Task CancelByClientAsync(long id)
+        public async Task<CRUDResult<Order>> CancelByClientAsync(long id)
         {
-            Order order = rep.GetAsync(id);
-            order.StatusCode = (int)OrderStatuses.Отменён_клиентом;
+            CRUDResult<Order> result = TryGetEntity<Order>(rep, id);
+            if (result.Entity == null)
+            {
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.EntityNotFound;
+                return result;
+            }
+
+            result.Entity.StatusCode = (int)OrderStatuses.Отменён_клиентом;
             try
             {
-                await rep.UpdateAsync(order);
+                await rep.UpdateAsync(result.Entity);
             }
             catch
             {
-                throw new HttpException(500, "Не удалось отменить заказ клиентом");
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
             }
+            return result;
         }
 
-        public async Task CancelByConsAsync(long id)
+        public async Task<CRUDResult<Order>> CancelByConsAsync(long id)
         {
-            Order order = rep.GetAsync(id);
-            order.StatusCode = (int)OrderStatuses.Отменён_консультантом;
+            CRUDResult<Order> result = TryGetEntity<Order>(rep, id);
+            if (result.Entity == null)
+            {
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.EntityNotFound;
+                return result;
+            }
+
+            result.Entity.StatusCode = (int)OrderStatuses.Отменён_консультантом;
             try
             {
-                await rep.UpdateAsync(order);
+                await rep.UpdateAsync(result.Entity);
             }
             catch
             {
-                throw new HttpException(500, "Не удалось отменить заказ консультантом");
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
             }
+            return result;
         }
+
 
         // !!! все id ulong или проверка на отриц id
-        public async Task<OrderForClientVM> GetVMAsync(long id)
+        public async Task<OrderForClientVM> GetVMAsync(long id) // ! обработать
         {
             Order order = rep.GetAsync(id);
             return new OrderForClientVM
@@ -137,7 +134,7 @@ namespace WebApplication1.BLL
             };
         }
 
-        public IEnumerable<OrderForClientVM> GetClientVMs(long clientId)
+        public IEnumerable<OrderForClientVM> GetClientVMs(long clientId) // ! обработать
         {
             IList<OrderForClientVM> vms = new List<OrderForClientVM>();
             foreach (Order order in GetByClientId(clientId))
@@ -187,23 +184,58 @@ namespace WebApplication1.BLL
             return vms;
         }
 
-        public IEnumerable<ConsultationType> GetConsultationTypes()
+        public IEnumerable<ConsultationType> GetConsultationTypes() // ! обработать
         {
             return consultationTypesRep.Get();
         }
 
-        public async Task UpdateTimeAsync(long id, long timestamp)
+        public async Task<CRUDResult<Order>> UpdateTimeAsync(long id, long timestamp)
         {
-            Order order = rep.GetAsync(id);
-            order.DateTime = ServiceUtil.UnixTimestampToDateTime(timestamp);
+            CRUDResult<Order> result = TryGetEntity<Order>(rep, id);
+            if (result.Entity == null)
+            {
+                result.Mistake = (int)CRUDResult<Order>.Mistakes.EntityNotFound;
+                return result;
+            }
+
+            result.Entity.DateTime = ServiceUtil.UnixTimestampToDateTime(timestamp);
             try
             {
-                await rep.UpdateAsync(order);
+                await rep.UpdateAsync(result.Entity);
             }
             catch
             {
-                throw new HttpException(500, "Не удалось изменить время заказа");
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
             }
+            return result;
+        }
+        #endregion
+
+        #region Private methods
+        // !!! GetAsync
+        private IEnumerable<Order> GetByClientId(long id)
+        {
+            return rep.Get().Where(x => x.ClientId == id);
+        }
+        // !!! GetAsync
+        private IEnumerable<Order> GetByConsId(long id)
+        {
+            return rep.Get().Where(x => x.ConsultantId == id);
+        }
+        // !!! GetPagingAsync
+        private IEnumerable<Order> GetRangeWithOffset(int offset, int limit)
+        {
+            return rep.Get().Skip(offset).Take(limit);
+        }
+        // !!! GetAsync
+        private string GetStatus(long code)
+        {
+            return orderStatusesRep.Get().SingleOrDefault(x => x.Code == code).Text;
+        }
+        // !!! await, async Task
+        private string GetPaymentStatusAsync(long id)
+        {
+            return paymentStatusesRep.GetAsync(id).Text;
         }
         #endregion
     }

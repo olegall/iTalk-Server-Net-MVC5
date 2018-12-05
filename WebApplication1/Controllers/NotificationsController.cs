@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpGet]
         [Route("api/notifications/consultant/{id}")]
-        public Object Get(long id)
+        public Object Get(long id) // ! обработать
         {
             return Ok(mng.GetVMs(id));
         }

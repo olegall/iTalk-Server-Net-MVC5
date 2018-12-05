@@ -298,6 +298,9 @@
     <Compile Include="BLL\ClientManager.cs" />
     <Compile Include="BLL\NotificationManager.cs" />
     <Compile Include="BLL\OrderManager.cs" />
+    <Compile Include="Interfaces\ISubcategoriesManager.cs" />
+    <Compile Include="Interfaces\IServiceManager.cs" />
+    <Compile Include="Interfaces\IOrderManager.cs" />
     <Compile Include="Models\SearchField.cs" />
     <Compile Include="BLL\SubcategoryManager.cs" />
     <Compile Include="BLL\CategoryManager.cs" />

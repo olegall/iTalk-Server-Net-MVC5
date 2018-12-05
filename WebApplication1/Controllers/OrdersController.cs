@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Web.Http;
+using System.Threading.Tasks;
 using WebApplication1.BLL;
 using WebApplication1.Utils;
 using WebApplication1.DAL;
+using WebApplication1.Models;
+using WebApplication1.Misc;
 
 namespace WebApplication1.Controllers
 {
-    public class OrdersController : ApiController
+    public class OrdersController : BaseApiController<Misc.Auth.ConsultantManager>
     {
         private readonly OrderManager mng = new OrderManager(Reps.Orders, 
                                                              Reps.ConsultationTypes, 
@@ -17,10 +20,10 @@ namespace WebApplication1.Controllers
         /// Оформить (создать) клиентом
         /// </summary>
         [HttpPost]
-        public Object Post()
+        public async Task<IHttpActionResult> Post()
         {
-            mng.CreateAsync(ServiceUtil.Request.Form);
-            return Ok(true);
+            CRUDResult<Order> result = await mng.CreateAsync(ServiceUtil.Request.Form);
+            return SendResult<Order>(result);
         }
 
         /// <summary>
@@ -28,10 +31,10 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpPut]
         [Route("api/orders/{id}/confirm")]
-        public Object Confirm(long id)
+        public async Task<IHttpActionResult> Confirm(long id)
         {
-            mng.ConfirmAsync(id);
-            return Ok(true);
+            CRUDResult<Order> result = await mng.ConfirmAsync(id);
+            return SendResult<Order>(result);
         }
 
         /// <summary>
@@ -39,10 +42,10 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpPut]
         [Route("api/orders/{id}/CancelByClient")]
-        public Object CancelByClient(long id)
+        public async Task<IHttpActionResult> CancelByClient(long id)
         {
-            mng.CancelByClientAsync(id);
-            return Ok(true);
+            CRUDResult<Order> result = await mng.CancelByClientAsync(id);
+            return SendResult<Order>(result);
         }
 
         /// <summary>
@@ -50,10 +53,10 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpPut]
         [Route("api/orders/{id}/CancelByCons")]
-        public Object CancelByConsAsync(long id)
+        public async Task<IHttpActionResult> CancelByConsAsync(long id)
         {
-            mng.CancelByConsAsync(id);
-            return Ok(true);
+            CRUDResult<Order> result = await mng.CancelByConsAsync(id);
+            return SendResult<Order>(result);
         }
 
         /// <summary>
@@ -111,10 +114,10 @@ namespace WebApplication1.Controllers
         /// </summary>
         [HttpPut]
         [Route("api/order/{id}/{timestamp}")]
-        public Object UpdateTime(long id, long timestamp)
+        public async Task<IHttpActionResult> UpdateTime(long id, long timestamp)
         {
-            mng.UpdateTimeAsync(id, timestamp);
-            return Ok(true);
+            CRUDResult<Order> result = await mng.UpdateTimeAsync(id, timestamp);
+            return SendResult<Order>(result);
         }
     }
 }

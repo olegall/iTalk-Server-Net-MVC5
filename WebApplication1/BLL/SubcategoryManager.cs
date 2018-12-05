@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Threading.Tasks;
 using WebApplication1.Models;
 using WebApplication1.ViewModels;
 using WebApplication1.Interfaces;
+using WebApplication1.Utils;
 
 namespace WebApplication1.BLL
 {
-    public class SubcategoryManager : ISubcategoryManager 
+    public class SubcategoryManager : BaseManager, ISubcategoryManager
     {
         private readonly IGenericRepository<Subcategory> rep;
 
@@ -40,19 +40,25 @@ namespace WebApplication1.BLL
             }
             return vm;
         }
-
-        public async Task HideAsync(long id)
+        public async Task<CRUDResult<Subcategory>> HideAsync(long id)
         {
-            Subcategory subcat = rep.GetAsync(id);
-            subcat.Deleted = true;
+            CRUDResult<Subcategory> result = TryGetEntity<Subcategory>(rep, id);
+            if (result.Entity == null)
+            {
+                result.Mistake = (int)CRUDResult<Subcategory>.Mistakes.EntityNotFound;
+                return result;
+            }
+
+            result.Entity.Deleted = true;
             try
             {
-                await rep.UpdateAsync(subcat);
+                await rep.UpdateAsync(result.Entity);
             }
-            catch (Exception e)
+            catch
             {
-                throw new HttpException(500, "Не получилось скрыть подкатегорию");
+                result.Mistake = (int)CRUDResult<Subcategory>.Mistakes.ServerOrConnectionFailed;
             }
+            return result;
         }
         #endregion
     }

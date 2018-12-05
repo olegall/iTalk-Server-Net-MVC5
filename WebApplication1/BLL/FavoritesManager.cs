@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Threading.Tasks;
 using WebApplication1.Models;
 using WebApplication1.ViewModels;
 using WebApplication1.Interfaces;
+using WebApplication1.Utils;
 
 namespace WebApplication1.BLL
 {
-    public class FavoritesManager : IFavoritesManager
+    public class FavoritesManager : BaseManager, IFavoritesManager
     {
         #region Fields
         private readonly IGenericRepository<Favorite> rep;
@@ -38,19 +38,21 @@ namespace WebApplication1.BLL
         }
 
         #region Public methods
-        public async Task CreateAsync(long clientId, long consultantId)
+        public async Task<CRUDResult<Favorite>> CreateAsync(long clientId, long consultantId)
         {
+            CRUDResult<Favorite> CRUDResult = new CRUDResult<Favorite>();
             try
             {
                 await rep.CreateAsync(new Favorite(clientId, consultantId));
             }
             catch
             {
-                throw new HttpException(500, "Не удалось добавить консультанта в избранное");
+                CRUDResult.Mistake = (int)CRUDResult<Favorite>.Mistakes.ServerOrConnectionFailed;
             }
+            return CRUDResult;
         }
 
-        public IEnumerable<FavoriteConsultantVM> GetVMs(long clientId)
+        public IEnumerable<FavoriteConsultantVM> GetVMs(long clientId) // ! обработать
         {
             IList<FavoriteConsultantVM> vms = new List<FavoriteConsultantVM>();
             foreach (long consId in GetFavoriteConsIds(clientId))
@@ -86,18 +88,33 @@ namespace WebApplication1.BLL
             return vms;
         }
 
-        public async Task DeleteAsync(long clientId, long consultantId)
+        public async Task<CRUDResult<Favorite>> DeleteAsync(long clientId, long consultantId) // ! проверить
         {
-            Favorite favorite = rep.Get().SingleOrDefault(x => x.ClientId == clientId && 
-                                                          x.ConsultantId == consultantId);
-            try
+            CRUDResult<Favorite> result = new CRUDResult<Favorite>();
+            try // ! использовать TryGetEntity - с условием-делегатом
             {
-                await rep.DeleteAsync(favorite);
+                result.Entity = rep.Get().SingleOrDefault(x => x.ClientId == clientId &&
+                                                               x.ConsultantId == consultantId);
+                if (result.Entity == null)
+                {
+                    result.Mistake = (int)CRUDResult<Favorite>.Mistakes.EntityNotFound;
+                    return result;
+                }
+
+                try
+                {
+                    await rep.DeleteAsync(result.Entity);
+                }
+                catch
+                {
+                    result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
+                }
             }
             catch
             {
-                throw new HttpException(500, "Не удалось удалить консультанта из избранного");
+                result.Mistake = (int)CRUDResult<Favorite>.Mistakes.ServerOrConnectionFailed;
             }
+            return result;
         }
         #endregion
     }

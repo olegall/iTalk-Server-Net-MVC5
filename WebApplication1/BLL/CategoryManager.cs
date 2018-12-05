@@ -11,7 +11,7 @@ using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class CategoryManager : ICategoryManager
+    public class CategoryManager : BaseManager, ICategoryManager
     {
         private readonly IGenericRepository<Category> rep;
         private readonly IGenericRepository<CategoryImage> categoryImagesRep;
@@ -25,20 +25,25 @@ namespace WebApplication1.BLL
 
         // !!! убрать папку Packages
         #region Public methods
-        public async Task CreateAsync(NameValueCollection formData)
+
+        public async Task<CRUDResult<Category>> CreateAsync(NameValueCollection formData)
         {
+            CRUDResult<Category> CRUDResult = new CRUDResult<Category>();
             try
             {
-                 await rep.CreateAsync(new Category(formData["title"], formData["description"]));
+                await rep.CreateAsync(new Category(formData["title"], formData["description"]));
             }
-            catch (Exception e)
+            catch
             {
-                throw new HttpException(500, "Не удалось добавить категорию");
+                CRUDResult.Mistake = (int)CRUDResult<Category>.Mistakes.ServerOrConnectionFailed;
             }
+            return CRUDResult;
         }
-                                                                    // !!! что за Id?
-        public async Task CreateImageAsync(HttpPostedFile file, long id)
+
+        // !!! что за Id?
+        public async Task<CRUDResult<CategoryImage>> CreateImageAsync(HttpPostedFile file, long id)
         {
+            CRUDResult<CategoryImage> CRUDResult = new CRUDResult<CategoryImage>();
             try
             {
                 await categoryImagesRep.CreateAsync(new CategoryImage(id, 
@@ -47,29 +52,36 @@ namespace WebApplication1.BLL
                                                                       file.ContentLength,
                                                                       DateTime.Now));
             }
-            catch (Exception e)
+            catch
             {
-                throw new HttpException(500, "Не удалось добавить изображение в категорию");
+                CRUDResult.Mistake = (int)CRUDResult<CategoryImage>.Mistakes.ServerOrConnectionFailed;
             }
+            return CRUDResult;
         }
 
-        public IEnumerable<Category> GetAll(int offset, int limit)
+        public IEnumerable<Category> GetAll(int offset, int limit) // ! как обработать?
         {
             return rep.Get().Skip(offset).Take(limit);
         }
 
-        public async Task HideAsync(long id)
+        public async Task<CRUDResult<Category>> HideAsync(long id)
         {
-            Category category = rep.GetAsync(id);
-            category.Deleted = true;
+            CRUDResult<Category> result = TryGetEntity<Category>(rep, id);
+            if (result.Entity == null)
+            {
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.EntityNotFound;
+                return result;
+            }
+            result.Entity.Deleted = true;
             try
             {
-                await rep.UpdateAsync(category);
+                await rep.UpdateAsync(result.Entity);
             }
-            catch (Exception e)
+            catch
             {
-                throw new HttpException(500, "Не получилось скрыть категорию");
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
             }
+            return result;
         }
         #endregion
     }

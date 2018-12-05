@@ -9,10 +9,11 @@ using WebApplication1.Models;
 using WebApplication1.Utils;
 using WebApplication1.Models.ServiceJSON;
 using WebApplication1.ViewModels;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.BLL
 {
-    public class ServiceManager
+    public class ServiceManager : BaseManager, IServiceManager
     {
         #region Fields
         private readonly ConsultantManager consMng = new ConsultantManager();
@@ -22,7 +23,7 @@ namespace WebApplication1.BLL
         private readonly IGenericRepository<Subcategory> subcategoriesRep;
         #endregion
 
-        #region ctor
+        #region Ctor
         public ServiceManager()
         {
         }
@@ -165,8 +166,9 @@ namespace WebApplication1.BLL
             return vm;
         }
 
-        public async Task CreateAsync(NameValueCollection formData)
+        public async Task<CRUDResult<Service>> CreateAsync(NameValueCollection formData)
         {
+            CRUDResult<Service> CRUDResult = new CRUDResult<Service>();
             try
             {
                 await rep.CreateAsync(GetInstance(ServiceUtil.GetLong(formData["consid"]),
@@ -179,10 +181,11 @@ namespace WebApplication1.BLL
                                                   Convert.ToBoolean(formData["available"]),
                                                   Convert.ToInt16(formData["availablePeriod"])));
             }
-            catch (Exception e)
+            catch
             {
-                throw new HttpException(500, "Не получилось добавить услугу");
+                CRUDResult.Mistake = (int)CRUDResult<Service>.Mistakes.ServerOrConnectionFailed;
             }
+            return CRUDResult;
         }
 
         public async Task CreateManyAsync(NameValueCollection formData)
@@ -203,42 +206,65 @@ namespace WebApplication1.BLL
             }
         }
 
-        public async Task UpdateAsync(NameValueCollection formData)
+        public async Task<CRUDResult<Service>> UpdateAsync(NameValueCollection formData)
         {
-            Service service = GetInstance(ServiceUtil.GetLong(formData["consid"]), 
-                                          formData["category"],
-                                          formData["subcategory"],
-                                          formData["title"],
-                                          formData["description"],
-                                          Convert.ToDecimal(formData["cost"]),
-                                          Convert.ToInt16(formData["duration"]),
-                                          Convert.ToBoolean(formData["available"]),
-                                          Convert.ToInt16(formData["availablePeriod"]));
-            service.Id = ServiceUtil.GetLong(formData["id"]);
+            CRUDResult<Service> CRUDResult = new CRUDResult<Service>();
             try
             {
-                await rep.UpdateAsync(service);
-            }
-            catch (Exception e)
-            {
-                throw new HttpException(500, "Не получилось редактировать услугу");
-            }
-        }
+                CRUDResult.Entity = GetInstance(ServiceUtil.GetLong(formData["consid"]),
+                                                                    formData["category"],
+                                                                    formData["subcategory"],
+                                                                    formData["title"],
+                                                                    formData["description"],
+                                                                    Convert.ToDecimal(formData["cost"]),
+                                                                    Convert.ToInt16(formData["duration"]),
+                                                                    Convert.ToBoolean(formData["available"]),
+                                                                    Convert.ToInt16(formData["availablePeriod"]));
+                if (CRUDResult.Entity == null)
+                {
+                    CRUDResult.Mistake = (int)CRUDResult<Service>.Mistakes.EntityNotFound;
+                    return CRUDResult;
+                }
 
-        public async void HideAsync(long id)
-        {
-            Service service = rep.GetAsync(id);
-            service.Deleted = true;
-            try
-            {
-                await rep.UpdateAsync(service);
+                CRUDResult.Entity.Id = ServiceUtil.GetLong(formData["id"]);
+                try
+                {
+                    await rep.UpdateAsync(CRUDResult.Entity);
+                }
+                catch
+                {
+                    CRUDResult.Mistake = (int)CRUDResult<Service>.Mistakes.ServerOrConnectionFailed;
+                    return CRUDResult;
+                }
             }
             catch
             {
-                throw new HttpException(500, "Не получилось скрыть услугу");
+                CRUDResult.Mistake = (int)CRUDResult<Service>.Mistakes.ServerOrConnectionFailed;
             }
+            return CRUDResult;
         }
 
+        public async Task<CRUDResult<Service>> HideAsync(long id)
+        {
+            CRUDResult<Service> result = TryGetEntity<Service>(rep, id);
+            if (result.Entity == null)
+            {
+                result.Mistake = (int)CRUDResult<Service>.Mistakes.EntityNotFound;
+                return result;
+            }
+
+            result.Entity.Deleted = true;
+            try
+            {
+                await rep.UpdateAsync(result.Entity);
+            }
+            catch
+            {
+                result.Mistake = (int)CRUDResult<Client>.Mistakes.ServerOrConnectionFailed;
+            }
+            return result;
+        }
+        // ! перетасовать согласно CRUD
         public async Task CreateImageAsync(HttpRequest request)
         {
             try

@@ -5,7 +5,7 @@ using WebApplication1.Utils;
 
 namespace WebApplication1.Interfaces
 {
-    public interface IClientManager
+    public interface ISubcategoriesManager
     {
         Task<CRUDResult<Client>> CreateAsync(string name, string phone);
         CRUDResult<Client> GetAsync(long id, bool adPush);

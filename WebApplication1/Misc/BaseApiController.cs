@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Http;
 using WebApplication1.Utils;
-using WebApplication1.Models;
 
 namespace WebApplication1.Misc
 {
@@ -20,9 +19,9 @@ namespace WebApplication1.Misc
             return successParse ? result : 0;
         }
 
-        protected IHttpActionResult SendResult(CRUDResult<Client> result)
+        protected IHttpActionResult SendResult<TEntity>(CRUDResult<TEntity> result) where TEntity: class
         {
-            if (result.Mistake == (int)CRUDResult<Client>.Mistakes.None)
+            if (result.Mistake == (int)CRUDResult<TEntity>.Mistakes.None)
                 return Ok(true);
 
             return BadRequest(result.Mistake.ToString());
